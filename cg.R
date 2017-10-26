@@ -24,7 +24,7 @@ options(stringsAsFactors = FALSE)
     #   character vector, each element is one file line that contains `pattern`
     # Side Effect
     #   prints an HTML viewer of line matches in the Viewer panel
-    cmd <- str_interp('grep -rn --include="*.R" ${pattern} server.R ui.R global.R', env = list(pattern=pattern))
+    cmd <- str_interp('grep -rn --include="*.R" ${pattern} server.R ui.R global.R', envir = list(pattern=pattern))
     hits <- system(cmd, intern=TRUE)
     str_view(hits, pattern) %>% print
     hits
@@ -41,7 +41,7 @@ meta_rxtive_var_match <- function(coarse_fixed_pat, fine_regex_pat) {
 # Reactive variable extraction
 rxtive_inpts <- meta_rxtive_var_match("Input", regex_inpt_type_id) %>%
     `[`(, 2:3) %>%
-    as.df() %>%
+    as.data.frame() %>%
     deframe()
 
 rxtive_exprs <- meta_rxtive_var_match("reactive", regex_cond_id) %>%
@@ -59,7 +59,7 @@ ui_expr_template <- "tags$strong('${var}'), verbatimTextOutput('${var}Print'),"
 # Code/string manipulation functions
 embed_code <- function(x, template) {
     map_chr(x,
-            ~ str_interp(template, env = list(var = .x)))
+            ~ str_interp(template, envir = list(var = .x)))
 }
 
 generate_diagnostic_code <- function(app_file, inpt_template, expr_template, section_f,

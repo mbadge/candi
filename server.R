@@ -30,7 +30,7 @@ function(input, output, session) {
     ids <- reactive({
         x <- map(id_fields, function(x) x=input[[x]])
         x$timestamp <- Sys.time()
-        x %<>% as.df %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
+        x %<>% as.data.frame() %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
     })
 
     bboxCoordinates <- reactive({
