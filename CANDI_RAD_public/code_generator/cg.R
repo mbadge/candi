@@ -49,7 +49,6 @@ rxtive_inpts <- meta_rxtive_var_match("Input", regex_inpt_type_id) %>%
 rxtive_exprs <- meta_rxtive_var_match("reactive", regex_cond_id) %>%
     `[`(, 2)
 
-
 # Code Generation output -------------------------------------------------------
 # Code line string templates
 server_inpt_template <- "output$${var}Print <- renderPrint(input$${var} %>% str())"

@@ -8,7 +8,7 @@ function(input, output, session) {
     # Clinical Outputs
     ## Radiograph
     output$radiographImage <- renderImage({
-        filename <- stringr::str_interp("www/${input$img_id}.jpg")
+        filename <- stringr::str_interp("${img_dir}/${input$img_id}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Radiograph"))
     }, deleteFile = FALSE)
 

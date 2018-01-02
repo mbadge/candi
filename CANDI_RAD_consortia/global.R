@@ -4,6 +4,7 @@ library("magrittr")
 library("stringr")
 library("rebus")
 library("purrr")
+library("glue")
 
 library("shinythemes")
 library("shinyjs")

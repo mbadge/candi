@@ -29,7 +29,7 @@ function(input, output, session) {
     output$radiographImage <- renderImage({
         if (is_empty(img_id2fp_chr())) {return(NULL)}
         fp <- img_id2fp_chr()[input$img_id]
-        return(list(src = fp, filetype = "image/jpeg", alt = "Please upload radiograph(s)"))
+        return(list(src = fp, contentType = "image/jpeg", alt = "Please upload radiograph(s)"))
     }, deleteFile = FALSE)
 
     # Other outputs ------------------------------------------------------------
@@ -54,7 +54,7 @@ function(input, output, session) {
         if (is_empty(filesInDf())) {return(NULL)}
         x <- map(id_fields, function(x) x = input[[x]])
         x$timestamp <- Sys.time()
-        x %<>% as.df %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
+        x %<>% as.data.frame %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
         x
     })
 

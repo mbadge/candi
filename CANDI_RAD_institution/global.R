@@ -4,6 +4,7 @@ library("magrittr")
 library("stringr")
 library("rebus")
 library("purrr")
+library("glue")
 
 library("shinythemes")
 library("shinyjs")
@@ -34,6 +35,7 @@ load_annotation <- function(ann_type) {
     df <- map_dfr(fps, read.csv, stringsAsFactors=FALSE)
     df
 }
+
 handle_annotation_download <- function(ann_type) {
     downloadHandler(
         filename = function() {glue("{ann_type}_annotations.csv")},
