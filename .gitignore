@@ -2,3 +2,4 @@
 **/usr_input/*.csv
 **/usr_usage/*.csv
 **/annotations/*
+.Rproj.user

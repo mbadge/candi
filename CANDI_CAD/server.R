@@ -6,11 +6,8 @@ function(input, output, session) {
         x %<>% as.data.frame() %>% purrr::set_names(c(kID_FIELDS))
         #!TODO: add session id to ids
     })
-    usrInptDf <- reactive({
-        data.frame(
-            pathologies = toString(input$dxChkbxIn),
-            clinical_note = input$noteTxtIn)
-    })
+
+    usrInptDf <- callModule(impression, "impression")
 
     # Compute similarities of historical images for the current test image
     testImgPcDf <- reactive({test_pc_df %>%

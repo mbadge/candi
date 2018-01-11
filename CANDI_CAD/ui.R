@@ -22,13 +22,7 @@ fluidPage(
         ),
         # Current Radiologist Impression ----------
         column(4,
-            h3("Your Impression"),
-            p(strong("Is there radiographic evidence for a diagnosis?")),
-            checkboxGroupInput("dxChkbxIn", label=NULL, choices=kDXS_CHR),
-            hr(),
-            p(strong("Clinical Note:")),
-            textAreaInput("noteTxtIn", NULL, "Clinical Impression", resize = "both"),
-            actionButton("submit_impression", "Submit Impression")
+            impressionUi("impression", dx_chr=kDXS_CHR)
         ),
         # ConvNet Assistance --------------
         column(4,
