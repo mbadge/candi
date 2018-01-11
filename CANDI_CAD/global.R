@@ -56,6 +56,3 @@ test_py_df <-test_imgs_df %>%
 test_pc_df <- test_imgs_df %>%
     select(img_id, starts_with("PC"))
 rm(test_imgs_df)
-
-hist_pc_df <- hist_imgs_df %>%
-    select(img_id, starts_with("PC"))

@@ -22,7 +22,7 @@ fluidPage(
         ),
         # Current Radiologist Impression ----------
         column(4,
-            impressionUi("impression", dx_chr=kDXS_CHR)
+            impressionUi("impression", dx_chr=kDXS_CHR)  # Shiny module
         ),
         # ConvNet Assistance --------------
         column(4,
@@ -35,37 +35,7 @@ fluidPage(
     hr(),
 
     # Optional Similar Image Browser Utility -----------------------------------
-    a(id="toggleBrowseSimilar", "Show/hide Similar Image Records"),
-    #shinyjs::hidden(div(id="browseSimilarUi",
-    div(id="browseSimilarUi",
-        fluidRow(
-            # User Input Panel -------------------
-            column(4,
-                   wellPanel(
-                       selectInput("x", label="x variable:", choices=str_c("PC", 1:10), selected="PC1"),
-                       selectInput("y", label="y variable:", choices=str_c("PC", 1:10), selected="PC2"),
-                       uiOutput("colorUi"),
-                       uiOutput("facetRowUi"),
-                       uiOutput("facetColUi")
-            )),
-            # PC scatter -------------------------
-            column(4,
-                   plotOutput('pcaPlot', width="100%", click="plot_click",
-                              hover = hoverOpts(id="plot_hover", delayType="throttle"),
-                              brush = brushOpts(id="plot_brush"))
-            ),
-            # Historical Documentation Panel -----------------
-            column(4,
-                   h3("Historical Documentation:"),
-                   div(id="similarImageUi", align="center",
-                       imageOutput("hoverImage", width = 299, height=299)),
-                   tableOutput("hoverYTbl"),  # Diagnosis Tbl
-                   textOutput("hoverNoteText")  # Free Text Note
-        )),
-        fluidRow(
-            dataTableOutput("brushedPointsTable")
-        )
-    ), #),  # END `browseSimilarUi` div
+    similarImgUi("similarImg"),  # Shiny module
     hr(),
 
     a(id="toggleAdvanced", "Show/hide Advanced Information"),
@@ -94,8 +64,6 @@ fluidPage(
                 shiny::tags$strong('idDf'), verbatimTextOutput('idDfPrint'),
                 shiny::tags$strong('usrInptDf'), verbatimTextOutput('usrInptDfPrint'),
                 shiny::tags$strong('testImgPcDf'), verbatimTextOutput('testImgPcDfPrint'),
-                shiny::tags$strong('similarImgsDf'), verbatimTextOutput('similarImgsDfPrint'),
-                shiny::tags$strong('usage_data'), verbatimTextOutput('usage_dataPrint'),
-                shiny::tags$strong('pcaPlot'), verbatimTextOutput('pcaPlotPrint'),
-                shiny::tags$strong('hoverImgId'), verbatimTextOutput('hoverImgIdPrint')
+                shiny::tags$strong('similarImgDf'), verbatimTextOutput('similarImgDfPrint'),
+                shiny::tags$strong('usage_data'), verbatimTextOutput('usage_dataPrint')
 ))))
