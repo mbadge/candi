@@ -47,9 +47,6 @@ function(input, output, session) {
             arrange(desc(probability))
     })
 
-
-
-
     # Reactive Event Handlers --------------------------------------------------
     observeEvent(input$submit_impression, {
         usr_input <- bind_cols(idDf(), usrInptDf()) %>%
@@ -99,4 +96,3 @@ function(input, output, session) {
     output$similarImgsDfPrint <- renderPrint(similarImgDf() %>% str())
     output$usage_dataPrint <- renderPrint(usage_data() %>% str())
 }
-
