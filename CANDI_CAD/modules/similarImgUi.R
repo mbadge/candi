@@ -41,7 +41,6 @@ similarImg <- function(input, output, session, testImgId, test_pc_df, hist_imgs_
         test_img_pc_df <- test_pc_df %>%
             filter(img_id == testImgId()) %>%
             select(starts_with("PC"))
-        cat("test_img_pc_df:\n", str(test_img_pc_df))
         test_img_pc_df
     })
 
@@ -61,7 +60,9 @@ similarImg <- function(input, output, session, testImgId, test_pc_df, hist_imgs_
     })
 
     # Similar Image Search ---------------
-    pcaPlot <- reactive({
+    output$pcaPlot <- renderPlot({
+        req(input$x, input$y, input$colorIn, input$facetRowIn, input$facetColIn)
+
         hist_imgs_df %<>% map_if(is.factor, fct_explicit_na) %>% as.data.frame()
         p <- ggplot(hist_imgs_df, aes_string(x=input$x, y=input$y))
 
@@ -82,8 +83,6 @@ similarImg <- function(input, output, session, testImgId, test_pc_df, hist_imgs_
         p + theme(legend.position = "bottom",
                   axis.text=element_blank(), axis.title = element_blank())
     })
-    output$pcaPlot <- renderPlot({pcaPlot()})
-
 
     # Table of pca selected point region; or most similar points
     output$brushedPointsTable <- renderDataTable({
