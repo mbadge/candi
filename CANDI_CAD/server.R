@@ -2,9 +2,7 @@ function(input, output, session) {
     # Reactive elements bound to lower camel case names
 
     # Invoke modules ----------------------
-    usrInptDf <- callModule(impression, "impression",
-                            idDf = reactive(idDf()),
-                            usageLst = reactive(usageLst()))
+    usrInptDf <- callModule(impression, "impression")
     similarImgDf <- callModule(similarImg, "similarImg",
                                testImgId = reactive(input$testImgId),
                                test_pc_df = test_pc_df,
@@ -42,9 +40,18 @@ function(input, output, session) {
             arrange(desc(probability))
     })
 
-    # Reactive Event Handlers --------------------------------------------------
 
-   # UI toggle panel events
+    # Reactive Event Handlers --------------------------------------------------
+    observeEvent(input$submit_impression, {
+        usr_input <- bind_cols(idDf(), usrInptDf()) %>%
+            add_column(timestamp = date_time_stamp(), .before=1)
+        log <- bind_cols(idDf(), usageLst()) %>%
+            add_column(timestamp = date_time_stamp(), .before=1)
+        save_usr_input(usr_input)
+        save_usr_usage(log)
+    })
+
+    # UI toggle panel events
     shinyjs::onclick("toggleCnnPy",
         shinyjs::toggle("cnnPyUi", anim=TRUE))
 

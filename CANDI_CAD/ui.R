@@ -22,8 +22,17 @@ fluidPage(
         ),
         # Current Radiologist Impression ----------
         column(4,
-            impressionUi("impression", dx_chr=kDXS_CHR)  # Shiny module
-        ),
+            impressionUi("impression", dx_chr=kDXS_CHR),  # Shiny module
+            actionButton("submit_impression", "Submit Impression")
+        )
+    ),
+
+    # #! INSERT MODE RANDOMIZER STATE BANNER
+    # textOutput("cadModeStr")
+
+    #! conditionalPanel("output.is_assist_mode", )
+    #! \/ Control from py to similarImgUi output as a function of randomizer state
+    fluidRow(
         # ConvNet Assistance ---------
         column(4,
 	        a(id="toggleCnnPy", "Show/hide CNN Prediction"),
@@ -31,12 +40,13 @@ fluidPage(
 	        div(id="cnnPyUi", wellPanel(
                 h3('CNN Prediction'),
 	            tableOutput("cnnPyTbl")
-    )))),  # end main fluidrow
+    )))),  # end cnn py fluidrow
     hr(),
 
     # Optional Similar Image Browser Utility
     similarImgUi("similarImg"),  # Shiny module
     hr(),
+    #! /\ Control from py to similarImgUi output as a function of randomizer state
 
     traceOutput("trace")
 )
