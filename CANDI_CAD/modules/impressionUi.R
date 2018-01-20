@@ -17,7 +17,7 @@ impressionUi <- function(id, dx_chr) {
 
 
 # Module Server Function
-impression <- function(input, output, session, idDf, usage_data) {
+impression <- function(input, output, session, idDf, usageLst) {
     usrInptDf <- reactive({
         data.frame(
             pathologies = toString(input$dxChkbxIn),
@@ -27,7 +27,7 @@ impression <- function(input, output, session, idDf, usage_data) {
     observeEvent(input$submit_impression, {
         usr_input <- bind_cols(idDf(), usrInptDf()) %>%
             add_column(timestamp = date_time_stamp(), .before=1)
-        log <- bind_cols(idDf(), usage_data()) %>%
+        log <- bind_cols(idDf(), usageLst()) %>%
             add_column(timestamp = date_time_stamp(), .before=1)
         save_usr_input(usr_input)
         save_usr_usage(log)

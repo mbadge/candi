@@ -12,7 +12,7 @@ fluidPage(
                 column(6,
                     textInput("radiologist", "Radiologist Name:", value = "Marcus")),
                 column(6,
-                    selectInput("mainImageId", "Image:", choices=stem(test_img_fns)))
+                    selectInput("testImgId", "Image:", choices=stem(test_img_fns)))
             ),
             hr(),
             # Radiograph --------------

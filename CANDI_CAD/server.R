@@ -4,9 +4,9 @@ function(input, output, session) {
     # Invoke modules ----------------------
     usrInptDf <- callModule(impression, "impression",
                             idDf = reactive(idDf()),
-                            usage_data = reactive(usage_data()))
+                            usageLst = reactive(usageLst()))
     similarImgDf <- callModule(similarImg, "similarImg",
-                               testImgId = reactive(input$mainImageId),
+                               testImgId = reactive(input$testImgId),
                                test_pc_df = test_pc_df,
                                hist_imgs_df = hist_imgs_df,
                                hist_img_dir = kHIST_IMG_IN_DIR,
@@ -20,7 +20,7 @@ function(input, output, session) {
     })
 
     cdata <- session$clientData
-    usage_data <- reactive({
+    usageLst <- reactive({
         cnames <- names(cdata)
         cvals <- lapply(cnames, function(name) {cdata[[name]]})
         cvals %>% set_names(cnames)
@@ -29,14 +29,14 @@ function(input, output, session) {
     # Serve outputs -----------------------
     # Radiographs
     output$mainImage <- renderImage({
-        filename <- stringr::str_interp("${kTEST_IMG_IN_DIR}/${input$mainImageId}.jpg")
+        filename <- stringr::str_interp("${kTEST_IMG_IN_DIR}/${input$testImgId}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
     }, deleteFile = FALSE)
 
     # CNN Test Image Predictions
     output$cnnPyTbl <- renderTable({
         test_py_df %>%
-            filter(img_id == input$mainImageId) %>%
+            filter(img_id == input$testImgId) %>%
             select(-img_id) %>%
             gather(key=diagnosis, value=probability) %>%
             arrange(desc(probability))
@@ -51,9 +51,9 @@ function(input, output, session) {
     callModule(trace, "trace",
                radHover = reactive(input$radHover),
                radiologistIn = reactive(input$radiologist),
-               mainImageIdIn = reactive(input$mainImageId),
+               testImgIdIn = reactive(input$testImgId),
                idDf = reactive(idDf()),
                usrInptDf = reactive(usrInptDf()),
                similarImgDf = reactive(similarImgDf()),
-               usage_data = reactive(usage_data()))
+               usageLst = reactive(usageLst()))
 }

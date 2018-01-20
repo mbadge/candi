@@ -19,7 +19,7 @@ walk(list.files("modules", full.names=TRUE), source)  # Load all shiny modules
 
 
 # Flags -----------------------
-kID_FIELDS <- c("radiologist", "mainImageId")  # ui input mappers
+kID_FIELDS <- c("radiologist", "testImgId")  # ui input mappers
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
 # fs i/o
