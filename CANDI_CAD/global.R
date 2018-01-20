@@ -13,12 +13,8 @@ library("shinythemes")
 library("shinyjs")
 library("shiny")
 
-# Load all R helpers
-walk(list.files("R", full.names = TRUE), source)
-# Load all shiny modules
-walk(list.files("modules", full.names=TRUE), source)
-
-theme_set(theme_dark())
+walk(list.files("R", full.names = TRUE), source)  # Load all R helpers
+walk(list.files("modules", full.names=TRUE), source)  # Load all shiny modules
 
 
 
@@ -27,10 +23,10 @@ kID_FIELDS <- c("radiologist", "mainImageId")  # ui input mappers
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
 # fs i/o
-kTEST_IMG_IN_DIR <- file.path('www', 'test_images')
-kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')
-kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')
-kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')
+kTEST_IMG_IN_DIR <- file.path('www', 'test_images')  # images to be interpreted
+kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')  # images for similar search
+kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
+kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference ofr similar
 
 
 # FS I/O Interface -------------

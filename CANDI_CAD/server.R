@@ -9,8 +9,8 @@ function(input, output, session) {
                                testImgId = reactive(input$mainImageId),
                                test_pc_df = test_pc_df,
                                hist_imgs_df = hist_imgs_df,
-                               hist_img_dir=kHIST_IMG_IN_DIR,
-                               dx_chr=kDXS_CHR)
+                               hist_img_dir = kHIST_IMG_IN_DIR,
+                               dx_chr = kDXS_CHR)
 
     # Reactive Conductors -----------------
     idDf <- reactive({
@@ -26,8 +26,8 @@ function(input, output, session) {
         cvals %>% set_names(cnames)
     })
 
-    # Serve outputs ------------------------------------------------------------
-    # Test Radiograph
+    # Serve outputs -----------------------
+    # Radiographs
     output$mainImage <- renderImage({
         filename <- stringr::str_interp("${kTEST_IMG_IN_DIR}/${input$mainImageId}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
@@ -44,8 +44,7 @@ function(input, output, session) {
 
     # Reactive Event Handlers --------------------------------------------------
 
-
-    # UI toggle panel events
+   # UI toggle panel events
     shinyjs::onclick("toggleCnnPy",
         shinyjs::toggle("cnnPyUi", anim=TRUE))
 

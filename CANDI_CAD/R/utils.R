@@ -1,3 +1,5 @@
+theme_set(theme_dark())
+
 date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
 
 `%ni%` <- Negate(`%in%`)

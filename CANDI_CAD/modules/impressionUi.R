@@ -5,8 +5,10 @@ impressionUi <- function(id, dx_chr) {
     tagList(
         h3("Your Impression"),
         p(strong("Is there radiographic evidence for a diagnosis?")),
+        # Diagnosis_lglndx ----------
         checkboxGroupInput(ns("dxChkbxIn"), label=NULL, choices=dx_chr),
         hr(),
+        # Impression_chr1 ---------
         p(strong("Clinical Note:")),
         textAreaInput(ns("noteTxtIn"), NULL, "Clinical Impression", resize = "both"),
         actionButton(ns("submit_impression"), "Submit Impression")
