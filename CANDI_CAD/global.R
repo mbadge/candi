@@ -19,14 +19,13 @@ walk(list.files("modules", full.names=TRUE), source)  # Load all shiny modules
 
 
 # Flags -----------------------
-kID_FIELDS <- c("radiologist", "testImgId")  # ui input mappers
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
 # fs i/o
 kTEST_IMG_IN_DIR <- file.path('www', 'test_images')  # images to be interpreted
 kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')  # images for similar search
 kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
-kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference ofr similar
+kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference for similar
 
 
 # FS I/O Interface -------------
@@ -34,6 +33,7 @@ kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN i
 stopifnot(dir.exists(c(kTEST_IMG_IN_DIR, kHIST_IMG_IN_DIR)))
 test_img_fns <- list.files(kTEST_IMG_IN_DIR, pattern = ".jpg")  # used for image select dropdown menu
 hist_img_fns <- list.files(kHIST_IMG_IN_DIR, pattern= ".jpg")
+
 
 # load data ----
 # CNN provides probability of each diagnosis, as well as PCs used to compute image similarity scores

@@ -17,12 +17,10 @@ impressionUi <- function(id, dx_chr) {
 
 # Module Server Function
 impression <- function(input, output, session) {
-    usrInptDf <- reactive({
+    usrImpressionDf <- reactive({
         data.frame(
             pathologies = toString(input$dxChkbxIn),
             clinical_note = input$noteTxtIn)
     })
-
-
-    return(usrInptDf)
+    return(usrImpressionDf)
 }
