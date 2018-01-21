@@ -6,8 +6,7 @@ fluidPage(
 
     # User name / submission button
     fluidRow(
-        column(6, textInput("radiologist", "Radiologist Name:", value = "Marcus")),
-        column(6, actionButton("submitBtn", "Submit Impression"))
+        column(6, textInput("radiologist", "Radiologist Name:", value = "Marcus"))
     ),
 
     # Test Radiograph Row (Display test radiograph + user impression input form)
@@ -17,25 +16,23 @@ fluidPage(
                 imageOutput("mainImage", width = 299, height=299))
         ),
         column(4,
-            impressionUi("impression", dx_chr=kDXS_CHR)  # Shiny module
+             shinyjs::hidden(div(id="impressionPanel",
+                 impressionUi("impression", dx_chr=kDXS_CHR)))  # Shiny module
         )
     ),
+    actionButton("submitBtn", "Submit Impression"),
 
-    # #! INSERT MODE RANDOMIZER STATE BANNER
+    hr(),
     textOutput("readerModeTxt"),
+    hr(),
 
     #! ConvNet Assistance
-    #! \/ Control from py to similarImgUi output as a function of randomizer state
     shinyjs::hidden(div(id = "cnnCadUi",
         h3('CNN Prediction'),
-        tableOutput("cnnPyTbl")
-    )),
-    hr(),
+        tableOutput("cnnPyTbl"),
+        similarImgUi("similarImg")
+    ))
+    #hr(),
 
-    # Optional Similar Image Browser Utility
-    #similarImgUi("similarImg"),  # Shiny module
-    hr(),
-    #! /\ Control from py to similarImgUi output as a function of randomizer state
-
-    traceOutput("trace")
+    #traceOutput("trace")
 )

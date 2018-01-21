@@ -3,59 +3,52 @@ function(input, output, session) {
 
     # Invoke modules -----------------------------
     usrImpressionDf <- callModule(impression, "impression")
-    # callModule(similarImg, "similarImg",
-    #     testImgId = reactive(SD()[["test_img_id"]]),
-    #     test_pc_df = test_pc_df,
-    #     hist_imgs_df = hist_imgs_df,
-    #     hist_img_dir = kHIST_IMG_IN_DIR,
-    #     dx_chr = kDXS_CHR)
+    callModule(similarImg, "similarImg",
+        testImgId = reactive(SD()[["test_img_id"]]),
+        test_pc_df = test_pc_df,
+        hist_imgs_df = hist_imgs_df,
+        hist_img_dir = kHIST_IMG_IN_DIR,
+        dx_chr = kDXS_CHR)
 
 
     # Reactive Event Handlers --------------------------------------------------
     SD <- eventReactive(input$submitBtn, {
-        if (!session$clientData[["output_cnnPyTbl_hidden"]]) {
+        if (!session$clientData[["output_cnnPyTbl_hidden"]] || input$submitBtn == 1) {  # User had cad available
             cat("\nnext case")
             # if CAD was availabe, go to next case
+
             df <- getNewCaseDf()
             df$is_cad_available <- (df$reader_mode[1] == "concurrent")
-            if (df$is_cad_available) {show("cnnCadUi")
-            } else {hide("cnnCadUi")}
-#            toggle("cnnCadUi", anim = TRUE, condition = df$is_cad_available)
+
+            if (df$is_cad_available) {shinyjs::show("cnnCadUi")
+            } else {shinyjs::hide("cnnCadUi")}
+
             return(df)
         } else {
             cat("\nadd cad to current case")
-            df <- getLastCaseDf()
-            df$is_cad_available <- TRUE
-            show("cnnCadUi", anim=TRUE)
-            df$reader_mode <- "second"
+
+            df <- data.frame(
+                test_img_id = getLastCaseChr(input$radiologist),
+                reader_mode = "second",
+                is_cad_available = TRUE
+            )
+
+            shinyjs::show("cnnCadUi", anim=TRUE)
             return(df)
         }
     })
 
-    getNewCaseDf <- function() {
-        data.frame(
-            test_img_id = sample(x = stem(test_img_fns), size = 1),
-            reader_mode = sample(x = c("concurrent", "second"), size = 1)
-        )
-    }
-    getLastCaseDf <- function() {
-        data.frame(
-            test_img_id = "iu_25_1"
-        )
-    }
-
-    # observe({
-    #     shinyjs::toggle("cnnCadUi", anim=TRUE, condition = SD()[["is_cad_available"]])
-    # })
-
 
     # Save impression form everytime user clicks submit
     observeEvent(input$submitBtn, {
+        if (input$submitBtn == 1) {shinyjs::show("impressionPanel"); invisible(return(NULL))}
+
         # save annotated user input
-        usr_input <- usrImpressionDf() %>%
+        submit_data_df <- usrImpressionDf() %>%
             add_column(username = input$radiologist,
-                       timestamp = date_time_stamp(), .before=1)
-        save_usr_input(usr_input)
+                       timestamp = date_time_stamp(), .before=1) %>%
+            bind_cols(SD())
+        save_usr_input(submit_data_df)
     })
 
     # Serve outputs --------------------------------
@@ -78,25 +71,22 @@ function(input, output, session) {
 
     output$readerModeTxt <- renderText({
         req(SD())
-        SD()[["reader_mode"]]
+        switch(SD()[["reader_mode"]],
+               "second" = "Second Reader Mode: first, submit your unaided impression.  CNN utilities will then be provided and you can optionally modify answers.",
+               "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
     })
 
 
     # Trace -----------------------------------------
-    callModule(trace, "trace",
-               radiologistIn = reactive(input$radiologist),
-               usrImpressionDf = reactive(usrImpressionDf()),
-               SD = reactive(SD()),
-               usageLst = reactive({
-                   cdata <- session$clientData
-                   cnames <- names(cdata)
-                   cvals <- lapply(cnames, function(name) {cdata[[name]]})
-                   cvals %>% set_names(cnames)
-               })
-    )
+    # callModule(trace, "trace",
+    #            radiologistIn = reactive(input$radiologist),
+    #            usrImpressionDf = reactive(usrImpressionDf()),
+    #            SD = reactive(SD()),
+    #            usageLst = reactive({
+    #                cdata <- session$clientData
+    #                cnames <- names(cdata)
+    #                cvals <- lapply(cnames, function(name) {cdata[[name]]})
+    #                cvals %>% set_names(cnames)
+    #            })
+    #)
 }
-
-
-# is_cad_available <- function() {
-#     !session$clientData[["output_cnnPyTbl_hidden"]]
-# }
