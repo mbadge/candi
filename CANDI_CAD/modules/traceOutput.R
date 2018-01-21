@@ -20,7 +20,7 @@ traceOutput <- function(id) {
 #! TODO: trace <- function(input, output, session, ...) {}
 #        traceOutput <- function(id, ...) {}
 trace <- function(input, output, session,
-                  radiologistIn, usrImpressionDf,
+                  radiologistIn, usrImpressionDf, newCaseDf,
                   SD, usageLst) {
     # Supplementary Info panel for diagnostics
     shinyjs::onclick("toggleAdvanced",

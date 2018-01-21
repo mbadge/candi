@@ -10,6 +10,54 @@ function(input, output, session) {
     #     hist_img_dir = kHIST_IMG_IN_DIR,
     #     dx_chr = kDXS_CHR)
 
+
+    # Reactive Event Handlers --------------------------------------------------
+    SD <- eventReactive(input$submitBtn, {
+        if (!session$clientData[["output_cnnPyTbl_hidden"]]) {
+            cat("\nnext case")
+            # if CAD was availabe, go to next case
+            df <- getNewCaseDf()
+            df$is_cad_available <- (df$reader_mode[1] == "concurrent")
+            if (df$is_cad_available) {show("cnnCadUi")
+            } else {hide("cnnCadUi")}
+#            toggle("cnnCadUi", anim = TRUE, condition = df$is_cad_available)
+            return(df)
+        } else {
+            cat("\nadd cad to current case")
+            df <- getLastCaseDf()
+            df$is_cad_available <- TRUE
+            show("cnnCadUi", anim=TRUE)
+            df$reader_mode <- "second"
+            return(df)
+        }
+    })
+
+    getNewCaseDf <- function() {
+        data.frame(
+            test_img_id = sample(x = stem(test_img_fns), size = 1),
+            reader_mode = sample(x = c("concurrent", "second"), size = 1)
+        )
+    }
+    getLastCaseDf <- function() {
+        data.frame(
+            test_img_id = "iu_25_1"
+        )
+    }
+
+    # observe({
+    #     shinyjs::toggle("cnnCadUi", anim=TRUE, condition = SD()[["is_cad_available"]])
+    # })
+
+
+    # Save impression form everytime user clicks submit
+    observeEvent(input$submitBtn, {
+        # save annotated user input
+        usr_input <- usrImpressionDf() %>%
+            add_column(username = input$radiologist,
+                       timestamp = date_time_stamp(), .before=1)
+        save_usr_input(usr_input)
+    })
+
     # Serve outputs --------------------------------
     # Test Radiograph
     output$mainImage <- renderImage({
@@ -33,48 +81,8 @@ function(input, output, session) {
         SD()[["reader_mode"]]
     })
 
-    # Reactive Event Handlers --------------------------------------------------
-    SD <- eventReactive(input$submitBtn, {
 
-
-        session_state_df <-
-            data.frame(
-                username = input$radiologist,
-                # Select new test case
-                #! TODO (random sample from kIMGS_AVAIL_CHR %ni% imgs_done)
-                test_img_id = sample(x = stem(test_img_fns), size = 1),
-                reader_mode = sample(x = c("concurrent", "second"), size = 1)
-            ) %>%
-            mutate(is_cad_available = map_lgl(reader_mode, ~ .x == "concurrent"))
-
-        # Variably show CAD
-        #shinyjs::toggle("cnnPyUi", anim=TRUE, condition = session_state_df$is_cad_available)
-
-        # F -> show CAD; update is_cad_available to TRUE
-        session_state_df
-    })
-
-    observe(
-        shinyjs::toggle("cnnCadUi", anim=TRUE, condition = SD()[["is_cad_available"]])
-    )
-
-
-
-    # Save impression form everytime user clicks submit
-    observeEvent(input$submitBtn, {
-        # save annotated user input
-        usr_input <- usrImpressionDf() %>%
-            add_column(username = input$radiologist,
-                       timestamp = date_time_stamp(), .before=1)
-        save_usr_input(usr_input)
-    })
-
-    # UI toggle panel events
-    shinyjs::onclick("toggleCnnPy",
-        shinyjs::toggle("cnnPyUi", anim=TRUE))
-
-
-    # Trace --------------------------------------------------------------------
+    # Trace -----------------------------------------
     callModule(trace, "trace",
                radiologistIn = reactive(input$radiologist),
                usrImpressionDf = reactive(usrImpressionDf()),
@@ -87,3 +95,8 @@ function(input, output, session) {
                })
     )
 }
+
+
+# is_cad_available <- function() {
+#     !session$clientData[["output_cnnPyTbl_hidden"]]
+# }
