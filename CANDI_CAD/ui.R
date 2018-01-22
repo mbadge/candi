@@ -29,7 +29,13 @@ fluidPage(
     #! ConvNet Assistance
     shinyjs::hidden(div(id = "cnnCadUi",
         h3('CNN Prediction'),
-        tableOutput("cnnPyTbl"),
+        fluidRow(
+            column(8,
+                div(id="bboxImageUi", align="center",
+                    imageOutput("bboxImage", width=299, height=299))
+            ),
+            column(4, tableOutput("cnnPyTbl"))
+        ),
         similarImgUi("similarImg")
     ))
     #hr(),

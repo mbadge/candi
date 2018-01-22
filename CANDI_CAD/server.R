@@ -59,7 +59,14 @@ function(input, output, session) {
         return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
     }, deleteFile = FALSE)
 
+
     # CNN Test Image Predictions
+    output$bboxImage <- renderImage({
+        req(SD())
+        filename <- stringr::str_interp("${kBBOX_IMG_IN_DIR}/${SD()[['test_img_id']]}.jpg")
+        return(list(src = filename, filetype="image/jpeg", alt="Bbox Radiograph"))
+    }, deleteFile = FALSE)
+
     output$cnnPyTbl <- renderTable({
         req(SD())
         test_py_df %>%
@@ -69,6 +76,7 @@ function(input, output, session) {
             arrange(desc(probability))
     })
 
+    # Randomized Reader Mode Banner
     output$readerModeTxt <- renderText({
         req(SD())
         switch(SD()[["reader_mode"]],

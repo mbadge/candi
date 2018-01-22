@@ -24,14 +24,15 @@ kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include 
 # fs i/o
 kTEST_IMG_IN_DIR <- file.path('www', 'test_images')  # images to be interpreted
 kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')  # images for similar search
+kBBOX_IMG_IN_DIR <- file.path('www', 'bbox')  # Localization inference images
 kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
 kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference for similar
 
 
 # FS I/O Interface -------------
 # find available images
-stopifnot(dir.exists(c(kTEST_IMG_IN_DIR, kHIST_IMG_IN_DIR)))
-test_img_fns <- list.files(kTEST_IMG_IN_DIR, pattern = ".jpg")  # used for image select dropdown menu
+stopifnot(dir.exists(c(kTEST_IMG_IN_DIR, kHIST_IMG_IN_DIR, kBBOX_IMG_IN_DIR)))
+test_img_fns <- list.files(kTEST_IMG_IN_DIR, pattern = ".jpg")
 hist_img_fns <- list.files(kHIST_IMG_IN_DIR, pattern= ".jpg")
 
 
