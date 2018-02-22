@@ -1,14 +1,22 @@
-#' Run candi cad example application.
+#' Run candi cad example or candi rad applications.
 #'
-#' Launch a Shiny app to demo the CAD clinical trial app.
+#' \code{runCAD()} Launch a Shiny app to demo the CAD clinical trial app.
+#' \code{runExample()} Lists all available example apps and runs any of them.
 #'
 #' @examples
 #' if (interactive()) {
 #'    runCAD()
+#'    runExample()
 #' }
+#' @name run
+NULL
+
+
+
+#' @rdname run
 #' @export
 runCAD <- function() {
-    appDir <- system.file("init", "examples", "CANDI_CAD", package="candi")
+    appDir <- system.file("examples", "CANDI_CAD", package="candi")
     if (appDir == "") {
         stop("Could not find example directory. Try re-installing `candi`.", call.=FALSE)
     }
@@ -17,8 +25,10 @@ runCAD <- function() {
     shiny::runApp(appDir, display.mode = "normal")
 }
 
+
+#' @rdname run
 #' @export
-runExample <- function() {
+runExample <- function(example) {
     validExamples <- list.files(system.file("examples", package = "candi"))
 
     validExamplesMsg <-
@@ -37,6 +47,6 @@ runExample <- function() {
     }
 
     # find and launch the app
-    appDir <- system.file("init", "examples", example, package="candi")
+    appDir <- system.file("examples", example, package="candi")
     shiny::runApp(appDir, display.mode = "normal")
 }
