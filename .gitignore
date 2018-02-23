@@ -1,5 +1,3 @@
 *.jpg
-**/usr_input/*.csv
-**/usr_usage/*.csv
-**/annotations/*
+*.csv
 .Rproj.user

@@ -1,5 +1,5 @@
-source('global.R')
-
+# Run once from desktop ubuntu to build example_input_data folder to support all candi apps and
+# scp to public remotes
 PROJECT_DIR <- Sys.getenv('PROJECT_DIR')
 
 # FLAGS ----

@@ -3,10 +3,13 @@
 #' \code{runCAD()} Launch a Shiny app to demo the CAD clinical trial app.
 #' \code{runExample()} Lists all available example apps and runs any of them.
 #'
+#' @param example chr(1) name of example file to run; default lists available examples
+#'
 #' @examples
 #' if (interactive()) {
 #'    runCAD()
-#'    runExample()
+#'    candi::runExample()
+#'    candi::runExample("CANDI_CAD")
 #' }
 #' @name run
 NULL
