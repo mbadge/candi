@@ -1,10 +1,10 @@
 Package: candi
-Title: What the Package Does (one line, title case)
+Title: CANDI, A Web Platform for Collaboratively Annotating Radiographs and Evaluating Computer-Aided Diagnosis
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.4.3), shiny
-License: What license is it under?
+Authors@R: person("Marcus", "Badgeley", email = "mabadgeley@gmail.com", role = c("aut", "cre"))
+Description: Computer-Assisted Diagnosis (CAD) has helped radiologists in clinical practice for decades, but has yet to benefit from emerging deep learning models.  To translate deep learning into radiology, the algorithms need more labelled data and we need to understand how the algorithms perform in terms of clinical endpoints.  We developed the Computer-Aided Note and Diagnosis Interface (CANDI) to enable accessible and collaborative radiograph annotation, and rapid but rigorous Computer-Aided Diagnosis clinical evaluation.  CANDI Radiograph Annotation Dashboard (RAD) collects diagnosis, pathology localization, and free text data, which we use to train deep learning models for classification, segmentation, and image captioning, respectively.  CANDI CAD provides these supervised models as well as unsupervised image similarity search to aid in radiograph interpretation. CANDI CAD randomizes display modes and collects usage data to thoroughly characterize how CAD technologies augment radiologists’ decision-making.
+Depends: R (>= 3.4.1), shiny
+License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
