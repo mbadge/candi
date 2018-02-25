@@ -6,7 +6,7 @@ fluidPage(
 
     sidebarLayout(
         sidebarPanel(
-            textInput("radiologist", "Radiologist Name:", value = "Marcus"),
+            textInput("user_name", "Radiologist Name:", value = "Marcus"),
             uiOutput("img_select"),   # Drop-down menu of all images files avail
             hr(),
 
@@ -72,7 +72,7 @@ fluidPage(
 
                 h2('Inputs'),
                 shiny::tags$strong('img_id'), verbatimTextOutput('img_idPrint'),
-                shiny::tags$strong('radiologist'), verbatimTextOutput('radiologistPrint'),
+                shiny::tags$strong('user_name'), verbatimTextOutput('user_namePrint'),
                 shiny::tags$strong('pathologies'), verbatimTextOutput('pathologiesPrint'),
                 shiny::tags$strong('note'), verbatimTextOutput('notePrint'),
 

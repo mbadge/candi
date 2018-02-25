@@ -28,7 +28,7 @@ function(input, output, session) {
             cat("\nadd cad to current case")
 
             df <- data.frame(
-                test_img_id = getLastCaseChr(input$radiologist),
+                test_img_id = getLastCaseChr(input$user_name),
                 reader_mode = "second",
                 is_cad_available = TRUE
             )
@@ -45,7 +45,7 @@ function(input, output, session) {
 
         # save annotated user input
         submit_data_df <- usrImpressionDf() %>%
-            add_column(username = input$radiologist,
+            add_column(username = input$user_name,
                        timestamp = date_time_stamp(), .before=1) %>%
             bind_cols(SD())
         save_usr_input(submit_data_df)
@@ -87,7 +87,7 @@ function(input, output, session) {
 
     # Trace -----------------------------------------
     # callModule(trace, "trace",
-    #            radiologistIn = reactive(input$radiologist),
+    #            user_nameIn = reactive(input$user_name),
     #            usrImpressionDf = reactive(usrImpressionDf()),
     #            SD = reactive(SD()),
     #            usageLst = reactive({

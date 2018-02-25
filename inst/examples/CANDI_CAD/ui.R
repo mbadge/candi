@@ -6,7 +6,7 @@ fluidPage(
 
     # User name / submission button
     fluidRow(
-        column(6, textInput("radiologist", "Radiologist Name:", value = "Marcus"))
+        column(6, textInput("user_name", "Radiologist Name:", value = "Marcus"))
     ),
 
     # Test Radiograph Row (Display test radiograph + user impression input form)

@@ -2,7 +2,7 @@ library("candi")
 
 
 # ui config
-id_fields <- c("radiologist", "img_id") %>% set_names()
+id_fields <- c("user_name", "img_id") %>% set_names()
 indications <- c("cardiomegaly", "emphysema", "effusion")
 
 # i/o config

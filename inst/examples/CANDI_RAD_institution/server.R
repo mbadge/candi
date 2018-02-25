@@ -92,7 +92,7 @@ function(input, output, session) {
 
     # Reactive Inputs
     output$img_idPrint <- renderPrint(input$img_id %>% str())
-    output$radiologistPrint <- renderPrint(input$radiologist %>% str())
+    output$user_namePrint <- renderPrint(input$user_name %>% str())
     output$pathologiesPrint <- renderPrint(input$pathologies %>% str())
     output$notePrint <- renderPrint(input$note %>% str())
 

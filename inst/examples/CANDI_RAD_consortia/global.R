@@ -1,14 +1,5 @@
 library("candi")
 
-library("dplyr")
-library("tibble")
-library("magrittr")
-library("stringr")
-library("rebus")
-library("purrr")
-library("glue")
-
-
 library("googlesheets")
 
 
