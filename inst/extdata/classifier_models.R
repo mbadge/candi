@@ -1,36 +1,23 @@
 # Run once from desktop ubuntu to build example_input_data folder to support all candi apps and
 # scp to public remotes
-library(AnalysisToolkit)
-library(MlAnalysis)
-
-# FLAGS ----
-kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
-
-# fsio
-# Imgs
-kIMG_DIR <- "/media/marcus/Projects/radiology/data/images"
-
-# CNN inference
-kPC_DIR <- "/media/marcus/Projects/radiology/data/dl/pretrained/pcs_iuFit.rds"  # Image PCs fit to IU
-kBBOX_DIR <- "/media/marcus/Vulcan/radiology/iu_cxr/bbox_inference/"  # IU BBox inference
-
-# Data from other pkgs
-# data("lut_img_id2original", package="ProjUtilsRads")
-# attr(lut_img_id2original, "spec") <- NULL
-# codec_imgId <- lut_img_id2original
-# devtools::use_data(codec_imgId)
-
-data(scalars_df, package="ProjUtilsRads")
 
 #! CANDI CAD needs the most input data
 #! CANDI_INSTITUTIONAL: needs 50 msh input images
 # CANDI_CONSORTIA: nothing needed; prompts user for upload
 # CANDI_PUBLIC: need image id 2 url map to fetch images from openI RESTFUL API
 
+library(AnalysisToolkit)
+library(MlAnalysis)
 
-# MODELS ----
+# FLAGS ----
+kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
+
+# classification models
 kMODEL_FP <- "/media/marcus/Vulcan/radiology/cxrRoundRobin/iter_train_dataset_combo_X_predictor_set_batches/iuMshNih_all_train_by_trainDatasetCombo_X_predictorSet_model_lst.Rdata"
 kTRAIN_PARAMS_FP <- "/media/marcus/Projects/cxrRoundRobin/analysis/ml/iter_train_dataset_combo_X_predictor_set/batches/iuMshNih_train_params.csv"
+
+
+# MAIN ----
 # Load and semi_join
 load(kMODEL_FP)
 mymodels.info <- read_csv(kTRAIN_PARAMS_FP)
@@ -96,12 +83,14 @@ devtools::use_data(roc_tbl)
 
 
 
+
 # --------------------------------- IMAGES ------------------------------------------
 # Test Images ----
 # CNN predictions: btlnck_pcs, pYs
 img_fns <- list.files(kIMG_DIR, pattern="*.jpg")
 nih_fns <- img_fns %>% str_subset("^nih_")
 iu_fns <- img_fns %>% str_subset("^iu_")
+
 
 
 
