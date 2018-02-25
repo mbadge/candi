@@ -1,3 +1,4 @@
+library("candi")
 library("dplyr")
 library("tibble")
 library("magrittr")
@@ -8,14 +9,6 @@ library("readr")
 library("tidyr")
 library("ggplot2")
 library("forcats")
-
-library("shinythemes")
-library("shinyjs")
-library("shiny")
-
-walk(list.files("R", full.names = TRUE), source)  # Load all R helpers
-walk(list.files("modules", full.names=TRUE), source)  # Load all shiny modules
-
 
 
 # Flags -----------------------

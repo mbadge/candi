@@ -1,14 +1,4 @@
-library("dplyr")
-library("tibble")
-library("magrittr")
-library("stringr")
-library("rebus")
-library("purrr")
-library("glue")
-
-library("shinythemes")
-library("shinyjs")
-library("shiny")
+library("candi")
 
 
 # ui config

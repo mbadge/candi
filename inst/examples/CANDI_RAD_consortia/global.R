@@ -1,3 +1,5 @@
+library("candi")
+
 library("dplyr")
 library("tibble")
 library("magrittr")
@@ -6,9 +8,6 @@ library("rebus")
 library("purrr")
 library("glue")
 
-library("shinythemes")
-library("shinyjs")
-library("shiny")
 
 library("googlesheets")
 

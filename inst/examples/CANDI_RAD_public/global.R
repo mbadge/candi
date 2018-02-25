@@ -1,15 +1,6 @@
-library("purrr")
-library("dplyr")
-library("tibble")
-library("magrittr")
-library("stringr")
-library("rebus")
-library("glue")
-library("readr")
+library("candi")
 
-library("shinythemes")
-library("shinyjs")
-library("shiny")
+library("readr")
 
 library("EBImage")
 library("googlesheets")
