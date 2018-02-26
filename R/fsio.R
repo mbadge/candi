@@ -24,6 +24,8 @@ load_gs_annotation <- function(gSpreadSheet, ann_type) {
 }
 
 
+
+#' @export
 #' @examples
 #' load_csv_annotation(kANN_DIR, "classification")
 load_csv_annotation <- function(kANN_DIR, ann_type) {
