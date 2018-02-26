@@ -38,7 +38,7 @@ fluidPage(
             fluidRow(
                 column(width = 8,
                        checkboxGroupInput("pathologies", "What pathologies are present in the image?",
-                                          choices=indications)
+                                          choices=kDXS_CHR)
                 ),
                 column(width = 4,
                        shiny::tags$br(),

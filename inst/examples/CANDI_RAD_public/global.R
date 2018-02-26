@@ -8,7 +8,7 @@ library("googlesheets")
 
 # ui config
 kID_FIELDS <- c("user_name", "img_id") %>% set_names(., .)
-kINDICATIONS <- c("cardiomegaly", "emphysema", "effusion")
+kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
 
 # FLAGS --------------------------------

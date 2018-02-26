@@ -1,4 +1,5 @@
 library("candi")
+
 library("readr")
 library("tidyr")
 library("ggplot2")
@@ -8,12 +9,18 @@ library("forcats")
 # Flags -----------------------
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
-# fs i/o
+# FS Input ----
+# Tables
+kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
+kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference for similar
+# Images
 kTEST_IMG_IN_DIR <- file.path('www', 'test_images')  # images to be interpreted
 kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')  # images for similar search
 kBBOX_IMG_IN_DIR <- file.path('www', 'bbox')  # Localization inference images
-kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
-kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference for similar
+
+# FS Output ----
+kUSR_INPT_OUT_DIR <- 'usr_input'
+
 
 
 # FS I/O Interface -------------

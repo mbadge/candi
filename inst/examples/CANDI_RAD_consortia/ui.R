@@ -53,7 +53,7 @@ fluidPage(
                     p(strong("What pathologies are present in the image?")),
                     fluidRow(
                         column(width = 5, offset=1,
-                               checkboxGroupInput("pathologies", label=NULL, choices=indications)
+                               checkboxGroupInput("pathologies", label=NULL, choices=kDXS_CHR)
                         ),
                         column(width = 4,
                                actionButton("submit_classification", "Submit Classifications")

@@ -87,7 +87,7 @@ function(input, output, session) {
         save_annotation(classificationDF(), "Classification"))
 
     save_segmentation <- function(path) {
-        stopifnot(path %in% indications)
+        stopifnot(path %in% kDXS_CHR)
         df <- segmentationDF() %>%
             add_column(Pathology=path)
         save_annotation(df, "Segmentation")

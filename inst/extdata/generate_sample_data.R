@@ -1,6 +1,6 @@
 source('global.R')
 
-img_ids <- img_fns %>%
+img_ids <- kIMG_FNS %>%
     str_sub(end=-5)
 
 # Simulate Inference

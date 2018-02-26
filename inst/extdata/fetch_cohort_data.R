@@ -99,21 +99,21 @@ devtools::use_data(roc_tbl)
 # --------------------------------- IMAGES ------------------------------------------
 # Test Images ----
 # CNN predictions: btlnck_pcs, pYs
-img_fns <- list.files(kIMG_DIR, pattern="*.jpg")
-nih_fns <- img_fns %>% str_subset("^nih_")
-iu_fns <- img_fns %>% str_subset("^iu_")
+kIMG_FNS <- list.files(kIMG_DIR, pattern="*.jpg")
+nih_fns <- kIMG_FNS %>% str_subset("^nih_")
+iu_fns <- kIMG_FNS %>% str_subset("^iu_")
 
 
 
-test_img_ids <- img_fns %>% stem()
+test_img_ids <- kIMG_FNS %>% stem()
 test_img_pcs <- PCsNihIu_pretrainedFeat_nihFit %>%
     filter(img_id %in% test_img_ids)
 
 #! TODO: snag dl predictions on iu data
-test_img_pys <- rerun(.n=length(kDXS_CHR), runif(n=length(fp_stem(img_fns))) %>% round(digits = 2)) %>%
+test_img_pys <- rerun(.n=length(kDXS_CHR), runif(n=length(fp_stem(kIMG_FNS))) %>% round(digits = 2)) %>%
     set_names(str_c("pY", kDXS_CHR, sep="_")) %>%
     as.data.frame() %>%
-    tibble::add_column(img_id = fp_stem(img_fns))
+    tibble::add_column(img_id = fp_stem(kIMG_FNS))
 
 test_imgs <- inner_join(test_img_pcs, test_img_pys, by="img_id")
 write_csv(test_imgs, path="www/test_images.csv")
@@ -131,9 +131,9 @@ write_csv(historical_imgs, path="www/historical_images.csv")
 # BBoxs ----
 IMG_DIR <- "V://radiology/iu_cxr/bbox_inference/iu_inference"
 SHINY_BBOX_DIR <- "www/bbox"
-img_fns <- list.files(IMG_DIR)
+kIMG_FNS <- list.files(IMG_DIR)
 
-f_patterns <- img_fns %>%
+f_patterns <- kIMG_FNS %>%
     str_match("result_" %R%
                   capture(one_or_more(DGT) %R% "_IM-" %R% one_or_more(DGT) %R%
                               "-" %R% one_or_more(DGT) %R% zero_or_more("-" %R% one_or_more(DGT))) %R%

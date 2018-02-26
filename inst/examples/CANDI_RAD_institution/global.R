@@ -3,20 +3,20 @@ library("candi")
 
 # ui config
 kID_FIELDS <- c("user_name", "img_id") %>% set_names()
-kINDICATIONS <- c("cardiomegaly", "emphysema", "effusion")
+kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
 
 # i/o config
-img_dir <- getwd() %>% file.path('www/images')
-img_fns <- list.files(img_dir)
+kIMG_DIR <- getwd() %>% file.path('www/images')
+kIMG_FNS <- list.files(kIMG_DIR)
 
-ann_dir <- getwd() %>% file.path('www/annotations')
+kUSR_INPT_OUT_DIR <- 'usr_input'
 
 
 # i/o helper fxns
 save_annotation <- function(data, ann_type) {
     stopifnot(ann_type %in% kANNOTATION_TYPES)
     resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% str_c(".csv")
-    write.csv(x=data, file=file.path(ann_dir, ann_type, resp_fn), row.names=FALSE)
+    write.csv(x=data, file=file.path(kUSR_INPT_OUT_DIR, ann_type, resp_fn), row.names=FALSE)
 }
 

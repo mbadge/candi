@@ -2,13 +2,13 @@ function(input, output, session) {
     # Serve outputs -----------------------
     # Reactive UI elements
     output$img_select <- renderUI({
-        selectInput("img_id", "Image:", choices=str_sub(img_fns, end=-5))
+        selectInput("img_id", "Image:", choices=str_sub(kIMG_FNS, end=-5))
     })
 
     # Clinical Outputs
     ## Radiograph
     output$radiographImage <- renderImage({
-        filename <- stringr::str_interp("${img_dir}/${input$img_id}.jpg")
+        filename <- stringr::str_interp("${kIMG_DIR}/${input$img_id}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Radiograph"))
     }, deleteFile = FALSE)
 
@@ -16,9 +16,14 @@ function(input, output, session) {
     output$coordinatesTable <- renderTable({bboxCoordinates()})
 
     # Downloads
-    output$downloadClassification <- handle_annotation_download("Classification")
-    output$downloadSegmentation <- handle_annotation_download("Segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("ClinicalNote")
+    download_usr_input_csvs <- function(ann_type, usr_input_dir = kANN_DIR) {
+        .f_load <- purrr::partial(load_csv_annotation, kANN_DIR=usr_input_dir, ann_type=ann_type)
+        handle_annotation_download(ann_type, f_load=.f_load)
+    }
+    output$downloadClassification <- download_usr_input_csvs(ann_type = "classification")
+    #output$downloadClassification <- handle_annotation_download("classification", )
+    output$downloadSegmentation <- handle_annotation_download("segmentation")
+    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
 
     # Reactive Conductors -----------------
     ids <- reactive({
@@ -43,7 +48,7 @@ function(input, output, session) {
         bind_cols(df, coords)
     })
 
-    clinicalNoteDF <- reactive({
+    clinical_noteDF <- reactive({
         df <- ids()
         df$ClinicalNote <- input$note
         df
@@ -53,20 +58,20 @@ function(input, output, session) {
     # Reactive Observers -------------------------------------------------------
     # I/O buttons
     observeEvent(input$submit_classification,
-                 save_annotation(classificationDF(), "Classification"))
+                 save_annotation(classificationDF(), "classification"))
 
     save_segmentation <- function(path) {
-        stopifnot(path %in% indications)
+        stopifnot(path %in% kDXS_CHR)
         df <- segmentationDF() %>%
             add_column(Pathology=path)
-        save_annotation(df, "Segmentation")
+        save_annotation(df, "segmentation")
     }
     observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
     observeEvent(input$submit_emphysema, save_segmentation("emphysema"))
     observeEvent(input$submit_effusion, save_segmentation("effusion"))
 
     observeEvent(input$submit_note,
-                 save_annotation(clinicalNoteDF(), "ClinicalNote"))
+                 save_annotation(clinical_noteDF(), "ClinicalNote"))
 
     # Conditionally hide/disable segmentation submission
     observe(shinyjs::toggle("segmentation", anim=TRUE, condition=!is.null(input$pathologies)))
@@ -79,8 +84,8 @@ function(input, output, session) {
 
 
     # Image/Annotation Sources ---------
-    output$imgFp <- renderPrint(img_dir %>% cat())
-    output$annFp <- renderPrint(ann_dir %>% cat())
+    output$imgFp <- renderPrint(kIMG_DIR %>% cat())
+    output$annFp <- renderPrint(kANN_DIR %>% cat())
 
 
     # Trace -----------------------------
@@ -101,5 +106,5 @@ function(input, output, session) {
     output$bboxCoordinatesPrint <- renderPrint(bboxCoordinates() %>% str())
     output$classificationDFPrint <- renderPrint(classificationDF() %>% str())
     output$segmentationDFPrint <- renderPrint(segmentationDF() %>% str())
-    output$clinicalNoteDFPrint <- renderPrint(clinicalNoteDF() %>% str())
+    output$clinical_noteDFPrint <- renderPrint(clinical_noteDF() %>% str())
 }
