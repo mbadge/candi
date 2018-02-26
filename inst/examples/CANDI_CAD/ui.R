@@ -1,6 +1,6 @@
 fluidPage(
     shinyjs::useShinyjs(),
-    theme = shinytheme("darkly"),
+    theme = shinythemes::shinytheme("darkly"),
     div(id="title", align="center",
         titlePanel("CANDI for Computer Assisted Diagnosis", windowTitle="CANDI CAD")),
 
