@@ -3,6 +3,7 @@
 export(Tab.Perf)
 export(Viz.Roc)
 export(handle_annotation_download)
+export(load_csv_annotation)
 export(runCAD)
 export(runExample)
 import(ggplot2)

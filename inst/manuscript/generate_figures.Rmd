@@ -1,0 +1,122 @@
+---
+title: "Generating JAMIA Classifier Perf Figs/Tbls"
+author: mabadgeley
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r config, include=FALSE}
+library(knitr); library(pander)
+library(MlAnalysis); library(ProjUtilsRads); library(AnalysisToolkit); library(vizR)
+library(RColorBrewer)
+devtools::load_all()
+
+knitr::opts_chunk$set(comment="#>",
+                      fig.show='hold', fig.align="center", fig.height=8, fig.width=8,
+                      warning=FALSE, tidy=TRUE)
+
+ggplot2::theme_set(vizR::theme_())
+
+set.seed(123)
+```
+
+
+
+Render this R script to html by running (from parent dir):
+`render_rmd.r -f generate_figures.R -m final`
+
+
+```{r params}
+manuscript_dir <- file.path(.PROJECT_DIR(), 'inst', 'manuscript')
+setwd(manuscript_dir)
+
+# Preconditions ----
+stopifnot(
+    dir.exists(manuscript_dir)
+)
+```
+# JAMIA GUIDELINES
+
+## Images
+https://academic.oup.com/journals/pages/authors/figures
+Must be uploaded as separate files
+Preferred file format .tif or .eps
+line drawings: 600 DPI
+Color images: 300 DPI
+### Sizes:
+* Single col: 3.54 in width
+
+### Configure journal figure size options
+```{r jamia_config_fxns}
+save_figure_1col <- partial(cowplot::ggsave, width=3.54, units="in", dpi=600)
+save_figure_2col <- partial(cowplot::ggsave, width=7.09, units="in", dpi=600)
+```
+
+legends at the end of the manuscript
+appendices should be uploaded using the file designation Supplementary File and cited in main text
+
+## Tables:
+word format and placed in main text where the table is first cited
+
+## Data:
+Deposit data in public repo Dryad
+
+
+# Generate Figures
+```{r configure_figs}
+# Output
+# Save svg for each mutability, and tiff b/c that's the preferred journal format
+SAVE_TYPES <- c("svg", "tiff")
+```
+
+## ROC curves
+```{r gen_figs}
+F_STEM <- "rocs"
+COLOR_LEGEND <- guide_legend("Imaging Indicaiton", direction="vertical", ncol=2)
+
+save_fps <- map_chr(SAVE_TYPES, ~str_c(F_STEM, .x, sep="."))
+rocs <- Viz.Roc() %+%
+    ggplot2::ggtitle("") %+%
+    theme(legend.position = "bottom") %+%
+    guides(color=COLOR_LEGEND)
+
+roc <- rocs %+% theme(plot.margin = margin(0, 1.5, 0, 0, "cm"))
+roc
+walk(save_fps, save_figure_1col, plot=roc)
+```
+
+## Classificaiton Perf table
+```{r perf_table}
+# I'll copy paste into word for the real submission, for now make html tables to paste to doc
+perf_tbl %>% knitr::kable(digits = 2)
+```
+
+## Disease Frequencies by Dataset Table, plus numeric and binary covars
+```{r freq_tbl}
+data(scalars_df, package="ProjUtilsRads")
+dataset_summary_tbl <- scalars_df %>%
+    select(img_id, age_years, sex, Cardiomegaly:Consolidation) %>%
+    sep_id() %>%
+    group_by(dataset) %>%
+    summarise(mean_age = mean_(age_years) %>% round(0),
+              female_prevalence = mean_(sex == "f"),
+              cardiomegaly_prevalence = mean_(Cardiomegaly),
+              emphysema_prevalence = mean_(Emphysema),
+              effusion_prevalence = mean_(Effusion),
+              hernia_prevalence = mean_(Hernia),
+              nodule_prevalence = mean_(Nodule),
+              atelectasis_prevalence = mean_(Atelectasis),
+              pneumonia_prevalence = mean_(Pneumonia),
+              edema_prevalence = mean_(Edema),
+              consolidation_prevalence = mean_(Consolidation)) %>%
+    mutate_if(.p=is.numeric, .f= partial(round, digits=3)) %>%
+    t %>%
+    as.df() %>%
+    tibble::rownames_to_column(var = "V0") %>%
+    mutate(V0 = map_chr(V0, str_case_title))
+
+dataset_summary_tbl %>% 
+    knitr::kable(digits = 2)
+```
+
+
