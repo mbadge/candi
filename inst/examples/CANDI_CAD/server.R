@@ -5,9 +5,7 @@ function(input, output, session) {
     usrImpressionDf <- callModule(impression, "impression")
     callModule(similarImg, "similarImg",
         testImgId = reactive(SD()[["test_img_id"]]),
-        test_pc_df = test_pc_df,
-        hist_imgs_df = hist_imgs_df,
-        hist_img_dir = kHIST_IMG_IN_DIR,
+        img_dir = kDIR_SMALL_IMGS,
         dx_chr = kDXS_CHR)
 
 
@@ -55,20 +53,19 @@ function(input, output, session) {
     # Test Radiograph
     output$mainImage <- renderImage({
         req(SD())
-        filename <- stringr::str_interp("${kTEST_IMG_IN_DIR}/${SD()[['test_img_id']]}.jpg")
+        filename <- stringr::str_interp("${kDIR_SMALL_IMGS}/${SD()[['test_img_id']]}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
     }, deleteFile = FALSE)
-
-
-    # CNN Test Image Predictions
+    # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
         req(SD())
-        filename <- stringr::str_interp("${kBBOX_IMG_IN_DIR}/${SD()[['test_img_id']]}.jpg")
+        filename <- stringr::str_interp("${kDIR_BBOX_IMGS}/${SD()[['test_img_id']]}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Bbox Radiograph"))
     }, deleteFile = FALSE)
-
+    # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
         req(SD())
+
         test_py_df %>%
             filter(img_id == SD()[['test_img_id']]) %>%
             select(-img_id) %>%

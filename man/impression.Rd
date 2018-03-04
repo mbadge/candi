@@ -18,5 +18,6 @@ CANDI User Impression Interface Module Server Function
 \seealso{
 \code{\link{impressionUi}}
 
-Other shiny_module: \code{\link{impressionUi}}
+Other shiny_module: \code{\link{impressionUi}},
+  \code{\link{similarImgUi}}, \code{\link{similarImg}}
 }

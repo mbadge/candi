@@ -20,5 +20,6 @@ Shiny Module User Impression Input Interface
 \seealso{
 \code{\link{impression}}
 
-Other shiny_module: \code{\link{impression}}
+Other shiny_module: \code{\link{impression}},
+  \code{\link{similarImgUi}}, \code{\link{similarImg}}
 }

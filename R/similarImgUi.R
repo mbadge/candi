@@ -1,3 +1,11 @@
+#' Shiny module for PC based similar historical image lookup
+#'
+#' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
+#' @return \code{\link[shiny]{tagList}} of similar image search ui components
+#'
+#' @family shiny_module
+#' @seealso \code{\link{similarImg}}
+#' @export
 similarImgUi <- function(id) {
     ns <- NS(id)
 
@@ -36,9 +44,26 @@ similarImgUi <- function(id) {
     )
 }
 
-similarImg <- function(input, output, session, testImgId, test_pc_df, hist_imgs_df, hist_img_dir, dx_chr) {
+
+#' CANDI PC-based Similar Image Search Shiny Module Server
+#'
+#' @param input,output,session shiny module server-client mgmt
+#' @param testImgId reactive expression that returns chr(1) img_id of current test image
+#' @param img_dir chr(1)
+#' @param dx_chr chr(n) diagnoses to incldue
+#'
+#' @return data.frame similarImgsDf
+#'
+#' @family shiny_module
+#' @seealso \code{\link{similarImgUi}}
+#' @export
+similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
+    ggplot2::theme_set(theme_dark())
+    data("test_imgs_df", package="candi")
+    data("hist_imgs_df", package="candi")
+
     testImgPcDf <- reactive({
-        test_img_pc_df <- test_pc_df %>%
+        test_img_pc_df <-test_imgs_df %>%
             filter(img_id == testImgId()) %>%
             select(starts_with("PC"))
         test_img_pc_df
@@ -101,7 +126,7 @@ similarImg <- function(input, output, session, testImgId, test_pc_df, hist_imgs_
         hover_row$img_id
     })
     output$hoverImage <- renderPlot({
-        img_fp <- file.path(hist_img_dir, str_c(hoverImgId(), ".jpg"))
+        img_fp <- file.path(img_dir, str_c(hoverImgId(), ".jpg"))
         img <- EBImage::readImage(img_fp) %>% Viz.Image()
     })
     output$hoverYTbl <- renderTable({
