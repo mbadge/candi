@@ -18,6 +18,7 @@ handle_annotation_download <- function(ann_type, f_load) {
 }
 
 
+#' @export
 load_gs_annotation <- function(gSpreadSheet, ann_type) {
     stopifnot(ann_type %in% kANNOTATION_TYPES)
     googlesheets::gs_read(gSpreadSheet, ws=ann_type)

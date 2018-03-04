@@ -1,6 +1,10 @@
 library("candi")
-
-library("readr")
+library("dplyr")
+library("tibble")
+library("magrittr")
+library("stringr")
+library("rebus")
+library("purrr")
 library("tidyr")
 library("ggplot2")
 library("forcats")
@@ -9,41 +13,25 @@ library("forcats")
 # Flags -----------------------
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
-# FS Input ----
-# Tables
-kTEST_CNN_IN_PTH <- file.path('www', 'test_images.csv')  # CNN inference of test images
-kHIST_REC_IN_PTH <- file.path('www', 'historical_images.csv')  # scalars + CNN inference for similar
-# Images
-kTEST_IMG_IN_DIR <- file.path('www', 'test_images')  # images to be interpreted
-kHIST_IMG_IN_DIR <- file.path('www', 'historical_images')  # images for similar search
-kBBOX_IMG_IN_DIR <- file.path('www', 'bbox')  # Localization inference images
+# fs i/o
+kDIR_APP_DATA <- '/www/app_data_candi/CANDI_CAD'
+kDIR_SMALL_IMGS <- file.path(kDIR_APP_DATA, 'images')  # 299 x 299 normalized jpgs
+kDIR_BBOX_IMGS <- file.path(kDIR_APP_DATA, 'bbox')  # Images annotated with bbox localization
+kDIR_USR_INPT <- file.path(kDIR_APP_DATA, 'usr_inpt')
 
-# FS Output ----
-kUSR_INPT_OUT_DIR <- 'usr_input'
-
-
-
-# FS I/O Interface -------------
-# find available images
-stopifnot(dir.exists(c(kTEST_IMG_IN_DIR, kHIST_IMG_IN_DIR, kBBOX_IMG_IN_DIR)))
-test_img_fns <- list.files(kTEST_IMG_IN_DIR, pattern = ".jpg")
-hist_img_fns <- list.files(kHIST_IMG_IN_DIR, pattern= ".jpg")
+# Check Flags ----
+inpt_dirs <- c(kDIR_APP_DATA, kDIR_SMALL_IMGS, kDIR_BBOX_IMGS, kDIR_USR_INPT)
+stopifnot(all(map_lgl(inpt_dirs, dir.exists)))
+# load info tables
+data("hist_imgs_df", package="candi")
+data("test_imgs_df", package="candi")
 
 
-# load data ----
-# CNN provides probability of each diagnosis, as well as PCs used to compute image similarity scores
-test_imgs_df <- suppressMessages(read_csv(kTEST_CNN_IN_PTH)) %>%
-    filter(img_id %in% stem(test_img_fns))
-hist_imgs_df <- suppressMessages(read_csv(kHIST_REC_IN_PTH)) %>%
-    filter(img_id %in% stem(hist_img_fns),
-           img_id %ni% stem(test_img_fns)) %>%
-    mutate_at(.vars = vars(sex, view, cassette_orientation), .f=as.factor)
-
-# non-rxtive processing ----
-# cnn inferences
-test_py_df <-test_imgs_df %>%
-    select(img_id, starts_with("pY_")) %>%
-    set_colnames(., value = colnames(.) %>% str_replace("pY_", ""))
-test_pc_df <- test_imgs_df %>%
-    select(img_id, starts_with("PC"))
-rm(test_imgs_df)
+# # non-rxtive processing ----
+# # cnn inferences
+# test_py_df <-test_imgs_df %>%
+#     select(img_id, starts_with("pY_")) %>%
+#     set_colnames(., value = colnames(.) %>% str_replace("pY_", ""))
+# test_pc_df <- test_imgs_df %>%
+#     select(img_id, starts_with("PC"))
+# rm(test_imgs_df)

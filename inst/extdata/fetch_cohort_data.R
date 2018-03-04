@@ -148,3 +148,82 @@ walk2(f_patterns$from_fn, f_patterns$to_stem,
 )
 apply(f_patterns, MARGIN = 1, FUN = function(row) copy_file(from_fn = row["from_fn"], to_stem = row["to_stem"]))
 
+
+
+# Pkg data ----
+# fs i/o
+# Source IU BBox inference
+kDIR_BBOX_ORIG <- "/media/marcus/Vulcan/radiology/iu_cxr/bbox_inference/"
+
+kDIR_APP_DATA <- '/www/app_data_candi/CANDI_CAD'
+kDIR_SMALL_IMGS <- file.path(kDIR_APP_DATA, 'images')  # 299 x 299 normalized jpgs
+kDIR_BBOX_IMGS <- file.path(kDIR_APP_DATA, 'bbox')  # Images annotated with bbox localization
+kFP_TEST <- file.path(kDIR_APP_DATA, 'test_images.csv')
+kFP_HIST <- file.path(kDIR_APP_DATA, 'historical_images.csv')
+
+# Check Flags ----
+inpt_dirs <- c(kDIR_APP_DATA, kDIR_SMALL_IMGS, kDIR_BBOX_IMGS)
+stopifnot(all(map_lgl(inpt_dirs, dir.exists)))
+inpt_fps <- c(kFP_TEST, kFP_HIST)
+stopifnot(all(map_lgl(inpt_fps, file.exists)))
+
+# find available images
+avail_input_ids <- list.files(kDIR_SMALL_IMGS, pattern = ".jpg") %>% MyUtils::fp_stem()
+avail_bbox_ids <- list.files(kDIR_BBOX_IMGS, pattern= ".jpg") %>% MyUtils::fp_stem()
+
+
+# load info tables ----
+# CNN provides probability of each diagnosis, as well as PCs used to compute image similarity scores
+test_imgs_df <- suppressMessages(read_csv(kFP_TEST))
+hist_imgs_df <- suppressMessages(read_csv(kFP_HIST))
+
+attr(test_imgs_df, "spec") <- NULL
+attr(hist_imgs_df, "spec") <- NULL
+
+# QA ----
+# there should be no img_id overlap between hist and test tables
+stopifnot(purrr::is_empty(purrr::map(list(test_imgs_df, hist_imgs_df), "img_id") %>%
+    purrr::lift_dl(intersect)(.)))
+
+# find available images
+avail_input_imgs <- list.files(kDIR_SMALL_IMGS, pattern = ".jpg") %>% MyUtils::fp_stem()
+avail_bbox_ids <- list.files(kDIR_BBOX_IMGS, pattern= ".jpg") %>% MyUtils::fp_stem()
+avail_bbox_orig <- list.files(kDIR_BBOX_ORIG, pattern= ".jpg") %>% MyUtils::fp_stem()
+
+# there should be perfect overlap between available bbox images and test
+stopifnot(all(purrr::map_lgl(test_imgs_df$img_id, `%in%`, table = avail_bbox_ids)))
+#! FAIL!
+# Move bbox of all test images from kDIR_BBOX_IMGS to kDIR_BBOX_IMGS
+# avail_bbox_orig
+# data("codec_imgId", package="candi")
+# bbox_fp_orig <-list.files(kDIR_BBOX_ORIG, pattern=".jpg", full.names = TRUE)
+#
+# bbox_fp_dest <- file.path(kDIR_BBOX_ORIG, fn_dest)
+# map2(bbox_fp_orig, bbox_fp_dest, file.rename)
+# fps_in_test_bbox <- file.path(kDIR_BBOX_ORIG, str_c(test_imgs_df$img_id, ".jpg"))
+# stopifnot(all(map_lgl(fps_in_test_bbox, file.exists)))
+# fps_out_test_bbox <- file.path(kDIR_BBOX_IMGS, str_c(test_imgs_df$img_id, ".jpg"))
+#
+# map2(fps_in_test_bbox, fps_out_test_bbox, file.copy)
+
+
+
+# there should be perfect overlap between available images and hist
+img_ids <- map(list(hist_imgs_df, test_imgs_df), "img_id") %>% unlist
+# stopifnot(all(img_ids %in% avail_input_imgs))
+#! FAIL - only 1315 images are currently in the app folder
+
+hist_imgs_df %<>%
+    filter(img_id %in% avail_input_imgs)
+img_ids <- map(list(hist_imgs_df, test_imgs_df), "img_id") %>% unlist
+stopifnot(all(img_ids %in% avail_input_imgs))
+
+
+# Craft ----
+hist_imgs_df %<>%
+    mutate_at(.vars=vars(sex, view, cassette_orientation), .f=as.factor)
+
+
+# Save to pkg ----
+# devtools::use_data(hist_imgs_df, overwrite = TRUE)
+# devtools::use_data(test_imgs_df, overwrite = TRUE)

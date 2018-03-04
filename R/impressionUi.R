@@ -1,4 +1,14 @@
 # Module UI Function
+
+
+#' Shiny Module User Impression Input Interface
+#'
+#' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
+#' @param dx_chr chr(n) diagnosis to include in the classification input
+#' @return shiny module ui component
+#'
+#' @family shiny_module
+#' @export
 impressionUi <- function(id, dx_chr) {
     ns <- NS(id)
 
@@ -15,7 +25,17 @@ impressionUi <- function(id, dx_chr) {
 }
 
 
-# Module Server Function
+
+#' Title
+#'
+#' @param input
+#' @param output
+#' @param session
+#'
+#' @return
+#' @export
+#'
+#' @examples
 impression <- function(input, output, session) {
     usrImpressionDf <- reactive({
         data.frame(
