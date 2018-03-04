@@ -15,7 +15,7 @@ function(input, output, session) {
             cat("\nnext case")
             # if CAD was availabe, go to next case
 
-            df <- getNewCaseDf()
+            df <- getNewCaseDf(test_imgs_df$img_id)
             df$is_cad_available <- (df$reader_mode[1] == "concurrent")
 
             if (df$is_cad_available) {shinyjs::show("cnnCadUi")
@@ -50,26 +50,27 @@ function(input, output, session) {
     })
 
     # Serve outputs --------------------------------
+
     # Test Radiograph
     output$mainImage <- renderImage({
         req(SD())
         filename <- stringr::str_interp("${kDIR_SMALL_IMGS}/${SD()[['test_img_id']]}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
     }, deleteFile = FALSE)
+
     # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
         req(SD())
         filename <- stringr::str_interp("${kDIR_BBOX_IMGS}/${SD()[['test_img_id']]}.jpg")
         return(list(src = filename, filetype="image/jpeg", alt="Bbox Radiograph"))
     }, deleteFile = FALSE)
+
     # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
         req(SD())
-
         test_py_df %>%
-            filter(img_id == SD()[['test_img_id']]) %>%
-            select(-img_id) %>%
-            gather(key=diagnosis, value=probability) %>%
+            df_filter_trans(img_id = SD()[['test_img_id']]) %>%
+            set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
     })
 

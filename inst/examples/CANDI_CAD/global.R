@@ -27,11 +27,14 @@ data("hist_imgs_df", package="candi")
 data("test_imgs_df", package="candi")
 
 
-# # non-rxtive processing ----
-# # cnn inferences
-# test_py_df <-test_imgs_df %>%
-#     select(img_id, starts_with("pY_")) %>%
-#     set_colnames(., value = colnames(.) %>% str_replace("pY_", ""))
-# test_pc_df <- test_imgs_df %>%
-#     select(img_id, starts_with("PC"))
-# rm(test_imgs_df)
+# Non-reactive data crafting
+test_py_df <- test_imgs_df %>%
+    select(img_id, starts_with("pY_")) %>%
+    set_colnames(., value = colnames(.) %>% str_replace("pY_", ""))
+
+
+df_filter_trans <- function(df, img_id) {
+    df[df$img_id == img_id, ] %>%
+        dplyr::select(-img_id) %>%
+        AnalysisToolkit::t2idf()
+}

@@ -78,10 +78,12 @@ load_radiograph <- function(img_id, img_dir) {
     return(img)
 }
 
+#' Randomly select CAD state variables for a new test image: test_img_id and reader_mode
+#'
 #' @export
-getNewCaseDf <- function() {
+getNewCaseDf <- function(test_img_ids) {
     data.frame(
-        test_img_id = sample(x = stem(test_img_fns), size = 1),
+        test_img_id = sample(x = fp_stem(test_img_ids), size = 1),
         reader_mode = sample(x = c("concurrent", "second"), size = 1)
     )
 }
