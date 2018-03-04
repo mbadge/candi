@@ -39,11 +39,43 @@ load_csv_annotation <- function(kANN_DIR, ann_type) {
 
 
 ## ---- CAD ----
+#' Save a data frame with user input to csv
+#'
+#' The filename is computed as the md5 hash of the data.frame
+#'
+#' @param x data.frame to save
+#' @param dir chr(1)
+#'
+#' @return called for side effect
 #' @export
-save_usr_input <- function(data_df) {
-    stopifnot(dir.exists(file.path("www", "usr_input")))
-    fn <- str_c(str_c(data_df$username, data_df$test_img_id, sep="-"), ".csv")
-    write_csv(x=data_df, path=file.path('www', "usr_input", fn))
+#'
+#' @examples
+#' save_usr_input(mtcars, "~/app_data_cxrTargetDiff/usr_inpt")
+save_usr_input <- function(x, dir) {
+    stopifnot(is.data.frame(x))
+
+    x$timestamp <- MyUtils::date_time_stamp()
+    x <- dplyr::select(x, timestamp, dplyr::everything())
+
+    fn <- stringr::str_c(digest::digest(x, algo="md5"), ".csv")
+    readr::write_csv(x, path = file.path(dir, fn))
+}
+
+#' Load radiographs into EBImage Images
+#'
+#' \code{\link[EBImage]{readImage}}
+#'
+#' @param img_id chr(1)
+#' @param img_dir chr(1)
+#'
+#' @return \code{\link[EBImage]{Image}}
+#'
+#' @importFrom EBImage "readImage"
+#' @export
+load_radiograph <- function(img_id, img_dir) {
+    fp <- file.path(img_dir, paste0(img_id, ".jpg"))
+    img <- EBImage::readImage(fp)
+    return(img)
 }
 
 #' @export

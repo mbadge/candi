@@ -1,9 +1,6 @@
-theme_set(theme_dark())
-
-
-# lubridate::ymd_hms(date_time_stamp())
+#' @export
 date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
-
+#' @export
 `%ni%` <- Negate(`%in%`)
 
 # Boolean predicate fxn operators ----
@@ -106,8 +103,8 @@ str_case_title <- function(x_chr) {
     x_title
 }
 
-
-stem <- function(x_chr) {
+#' @export
+fp_stem <- function(x_chr) {
     bn <- basename(x_chr)
     stem <- str_replace(bn,
                         pattern=DOT %R% one_or_more(ALNUM) %R% END,
