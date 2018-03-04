@@ -5,9 +5,10 @@
 #'
 #' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
 #' @param dx_chr chr(n) diagnosis to include in the classification input
-#' @return shiny module ui component
+#' @return \code{\link[shiny]{tagList}} of impression ui components
 #'
 #' @family shiny_module
+#' @seealso \code{\link{impression}}
 #' @export
 impressionUi <- function(id, dx_chr) {
     ns <- NS(id)
@@ -26,16 +27,14 @@ impressionUi <- function(id, dx_chr) {
 
 
 
-#' Title
+#' CANDI User Impression Interface Module Server Function
 #'
-#' @param input
-#' @param output
-#' @param session
+#' @param input,output,session shiny module server-client mgmt
+#' @return reactive conductor usrImpressionDf with user input values
 #'
-#' @return
+#' @family shiny_module
+#' @seealso \code{\link{impressionUi}}
 #' @export
-#'
-#' @examples
 impression <- function(input, output, session) {
     usrImpressionDf <- reactive({
         data.frame(
