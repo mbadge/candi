@@ -88,13 +88,31 @@ getNewCaseDf <- function(test_img_ids) {
     )
 }
 
+#' Utility fxn to search all user input data to identify the most recent case reviewed by a user
+#'
+#' This function is used by the CANDI_CAD trial state manager to reserve an image
+#' for second reader mode after initially having the user review an image without assistance.
+#'
+#' @param user_name chr(1) must match a col user_name in the user input data frames
+#' @param usr_input_dir chr(1) directory containing user input records
+#' @return chr(1) img_id of last image reviewed
+#'
 #' @export
-getLastCaseChr <- function(user) {
+#' @examples
+#' getLastCaseChr(user_name="Marcus", usr_input_dir="/www/app_data_candi/CANDI_CAD/usr_inpt")
+getLastCaseChr <- function(user_name, usr_input_dir) {
+    # Precondition
+    stopifnot(dir.exists(usr_input_dir))
+
+    # Load all user input records
     suppressMessages({
-        all_records <- list.files(file.path("www", "usr_input"), full.names = TRUE) %>%
-            map_dfr(., read_csv)
+        all_records <- list.files(usr_input_dir, full.names = TRUE) %>%
+            map_dfr(., readr::read_csv)
     })
-    user_records <- all_records[all_records$user_name == user, ]
+
+    # Isolate just `user_name`s records
+    user_records <- all_records[all_records$user_name == user_name, ]
+    # Find the most recent case submitted by `user_name`
     user_records %>%
         mutate(rank = rank(desc(lubridate::ymd_hms(timestamp)))) %>%
         filter(rank == 1) %>%

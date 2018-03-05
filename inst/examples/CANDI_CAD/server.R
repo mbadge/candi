@@ -21,12 +21,16 @@ function(input, output, session) {
             if (df$is_cad_available) {shinyjs::show("cnnCadUi")
             } else {shinyjs::hide("cnnCadUi")}
 
+            # Clear entry forms since we're onto a new case
+            updateCheckboxGroupInput(session=session, inputId = NS("impression", id="dxChkbxIn"), selected = character(0))
+            updateTextAreaInput(session=session, inputId = NS("impression", id="noteTxtIn"), value="Clinical Impression")
+
             return(df)
         } else {
             cat("\nadd cad to current case")
 
             df <- data.frame(
-                test_img_id = getLastCaseChr(input$user_name),
+                test_img_id = getLastCaseChr(user_name = input$user_name, usr_input_dir = kDIR_USR_INPT),
                 reader_mode = "second",
                 is_cad_available = TRUE
             )
@@ -38,6 +42,7 @@ function(input, output, session) {
 
     # Save impression form everytime user clicks submit
     observeEvent(input$submitBtn, {
+        # Initialize this button as "Begin Trial", and perform this setup routine on first click
         if (input$submitBtn == 1) {
             shinyjs::show("impressionPanel")
             updateActionButton(session = session, inputId = "submitBtn", label = "Submit Impression")
