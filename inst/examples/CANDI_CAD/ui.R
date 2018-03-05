@@ -6,27 +6,26 @@ fluidPage(
 
     # User name / submission button
     fluidRow(
-        column(6, textInput("user_name", "Radiologist Name:", value = "Marcus"))
-    ),
-
-    # Test Radiograph Row (Display test radiograph + user impression input form)
-    fluidRow(
-        column(8,
+        column(3,
+               textInput("user_name", "Radiologist Name:", value = "Marcus"),
+               hr(),
+               actionButton("submitBtn", "Begin Trial"),  # After first click, the label is updated to "Submit Impression"
+               hr(),
+               textOutput("readerModeTxt")
+        ),
+        # Test Radiograph Row (Display test radiograph + user impression input form)
+        column(6,
             div(id="mainImageUi", align="center",
                 imageOutput("mainImage", width = 299, height=299))
         ),
-        column(4,
+        column(3,
              shinyjs::hidden(div(id="impressionPanel",
                  impressionUi("impression", dx_chr=kDXS_CHR)))  # Shiny module
         )
     ),
-    actionButton("submitBtn", "Submit Impression"),
 
     hr(),
-    textOutput("readerModeTxt"),
-    hr(),
-
-    #! ConvNet Assistance
+    # ConvNet Assistance
     shinyjs::hidden(div(id = "cnnCadUi",
         h3('CNN Prediction'),
         fluidRow(

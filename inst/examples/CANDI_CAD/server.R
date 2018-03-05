@@ -36,17 +36,19 @@ function(input, output, session) {
         }
     })
 
-
     # Save impression form everytime user clicks submit
     observeEvent(input$submitBtn, {
-        if (input$submitBtn == 1) {shinyjs::show("impressionPanel"); invisible(return(NULL))}
+        if (input$submitBtn == 1) {
+            shinyjs::show("impressionPanel")
+            updateActionButton(session = session, inputId = "submitBtn", label = "Submit Impression")
+            invisible(return(NULL))
+        }
 
         # save annotated user input
         submit_data_df <- usrImpressionDf() %>%
-            add_column(username = input$user_name,
-                       timestamp = date_time_stamp(), .before=1) %>%
+            add_column(user_name = input$user_name, .before=1) %>%
             bind_cols(SD())
-        save_usr_input(submit_data_df)
+        save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
     })
 
     # Serve outputs --------------------------------

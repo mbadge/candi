@@ -94,7 +94,7 @@ getLastCaseChr <- function(user) {
         all_records <- list.files(file.path("www", "usr_input"), full.names = TRUE) %>%
             map_dfr(., read_csv)
     })
-    user_records <- all_records[all_records$username == user, ]
+    user_records <- all_records[all_records$user_name == user, ]
     user_records %>%
         mutate(rank = rank(desc(lubridate::ymd_hms(timestamp)))) %>%
         filter(rank == 1) %>%
