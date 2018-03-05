@@ -20,7 +20,7 @@ fluidPage(
         ),
         column(3,
              shinyjs::hidden(div(id="impressionPanel",
-                 impressionUi("impression", dx_chr=kDXS_CHR)))  # Shiny module
+                 impressionInput("impression", dx_chr=kDXS_CHR)))  # Shiny module
         )
     ),
 

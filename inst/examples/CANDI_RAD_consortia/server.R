@@ -4,11 +4,11 @@ function(input, output, session) {
         df <- input$filesInputDf %||% data.frame()
     })
 
-    # Predicate reactive expression for gating UI controls
-    output$is_uploaded <- reactive({
+    # Predicate reactive expression for conditional UI
+    output$isUploaded <- reactive({
         !is_empty(filesInDf())
     })
-    outputOptions(output, "is_uploaded", suspendWhenHidden = FALSE)
+    outputOptions(output, "isUploaded", suspendWhenHidden = FALSE)
 
     img_id2fp_chr <- reactive({
         df <- filesInDf()
@@ -37,9 +37,10 @@ function(input, output, session) {
     output$coordinatesTable <- renderTable({bboxCoordinates()})
 
     # Downloads
-    output$downloadClassification <- handle_annotation_download("Classification")
-    output$downloadSegmentation <- handle_annotation_download("Segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("ClinicalNote")
+    load_gs <- partial(load_gs_annotation, gSpreadSheet = )
+    output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_gs_annotation)
+    output$downloadSegmentation <- handle_annotation_download("segmentation")
+    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
 
     # Image/Annotation sources
     output$imgTmpFp <- renderPrint({
@@ -84,13 +85,13 @@ function(input, output, session) {
     # Reactive Observers -------------------------------------------------------
     # I/O buttons
     observeEvent(input$submit_classification,
-        save_annotation(classificationDF(), "Classification"))
+        save_annotation(classificationDF(), "classification"))
 
     save_segmentation <- function(path) {
         stopifnot(path %in% kDXS_CHR)
         df <- segmentationDF() %>%
             add_column(Pathology=path)
-        save_annotation(df, "Segmentation")
+        save_annotation(df, "segmentation")
     }
     observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
     observeEvent(input$submit_emphysema, save_segmentation("emphysema"))

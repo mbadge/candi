@@ -8,16 +8,15 @@ fluidPage(
     	# User Controls --------------------
         sidebarPanel(
             textInput("user_name", "User Name:", value = "Marcus"),
-
             fileInput("filesInputDf", label="Upload files:",
                       multiple=TRUE, accept="image/jpeg"),
 
-            conditionalPanel("output.is_uploaded",
+            conditionalPanel("output.isUploaded",
                              uiOutput("img_select")),  # Drop-down menu of all images files avail
             hr(),
 
             p("Data Locations:"),
-            conditionalPanel("output.is_uploaded",
+            conditionalPanel("output.isUploaded",
                 tagList(
                     p("Image temporarily stored on server:"),
                     verbatimTextOutput("imgTmpFp")
@@ -36,7 +35,7 @@ fluidPage(
         ),
 
         mainPanel(
-            conditionalPanel("output.is_uploaded",
+            conditionalPanel("output.isUploaded",
                 tagList(
                     # Display Radiograph ---------------
                     fluidRow(

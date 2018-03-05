@@ -2,20 +2,24 @@
 % Please edit documentation in R/impressionUi.R
 \name{impressionUi}
 \alias{impressionUi}
-\title{Shiny Module User Impression Input Interface}
+\title{Impression User Interface Module}
 \usage{
 impressionUi(id, dx_chr)
 }
 \arguments{
 \item{id}{chr(1) namespace for the module, decided by the caller at the time the module is used}
 
-\item{dx_chr}{chr(n) diagnosis to include in the classification input}
+\item{dx_chr}{chr(n) diagnoses to include in the classification input}
 }
 \value{
 \code{\link[shiny]{tagList}} of impression ui components
 }
 \description{
-Shiny Module User Impression Input Interface
+Create a collection of ui inputs for a user to indicate binary classification of
+each dx in \code{dx_chr}.
+}
+\examples{
+impressionUi(id="imp", dx="Cardiomegaly")
 }
 \seealso{
 \code{\link{impression}}

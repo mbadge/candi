@@ -10,7 +10,7 @@ impression(input, output, session)
 \item{input, output, session}{shiny module server-client mgmt}
 }
 \value{
-reactive conductor usrImpressionDf with user input values
+a function, wrapped in S3 class reactive.  see \code{\link[shiny]{reactive}}
 }
 \description{
 CANDI User Impression Interface Module Server Function

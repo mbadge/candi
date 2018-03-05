@@ -1,16 +1,22 @@
 # Module UI Function
 
 
-#' Shiny Module User Impression Input Interface
+#' Impression User Interface Module
+#'
+#' Create a collection of ui inputs for a user to indicate binary classification of
+#' each dx in \code{dx_chr}.
 #'
 #' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
-#' @param dx_chr chr(n) diagnosis to include in the classification input
+#' @param dx_chr chr(n) diagnoses to include in the classification input
+#'
 #' @return \code{\link[shiny]{tagList}} of impression ui components
 #'
 #' @family shiny_module
 #' @seealso \code{\link{impression}}
 #' @export
-impressionUi <- function(id, dx_chr) {
+#' @examples
+#' impressionInput(id="imp", dx="Cardiomegaly")
+impressionInput <- function(id, dx_chr) {
     ns <- NS(id)
 
     tagList(
@@ -26,17 +32,17 @@ impressionUi <- function(id, dx_chr) {
 }
 
 
-
 #' CANDI User Impression Interface Module Server Function
 #'
 #' @param input,output,session shiny module server-client mgmt
-#' @return reactive conductor usrImpressionDf with user input values
+#'
+#' @return a function, wrapped in S3 class reactive.  see \code{\link[shiny]{reactive}}
 #'
 #' @family shiny_module
-#' @seealso \code{\link{impressionUi}}
+#' @seealso \code{\link{impressionInput}}
 #' @export
 impression <- function(input, output, session) {
-    usrImpressionDf <- reactive({
+    usrImpressionDf <- shiny::reactive({
         data.frame(
             pathologies = toString(input$dxChkbxIn),
             clinical_note = input$noteTxtIn)
