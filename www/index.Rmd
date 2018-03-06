@@ -1,0 +1,29 @@
+---
+output: html_document
+---
+
+## CANDI: Computer Aided Note and Diagnosis Interface
+
+User Interfaces for Collaboratively Annotating Radiographs and Evaluating Computer-Aided Diagnosis
+
+Computer-Aided Diagnosis (CAD) has helped radiologists in clinical practice for decades, but has yet to benefit from emerging deep learning models.  To translate deep learning into radiology, the algorithms need more labelled data and we need to understand how the algorithms perform in terms of clinical endpoints.  We developed the Computer-Aided Note and Diagnosis Interface (CANDI) to enable accessible and collaborative radiograph annotation, and rapid but rigorous CAD clinical evaluation.  CANDI Radiograph Annotation Dashboard (RAD) collects diagnosis information, pathology localization, and free text data, which is used to train deep learning models for classification, segmentation, and image captioning, respectively. We implement CANDI CAD with these supervised models as well as unsupervised image similarity search. CANDI CAD randomizes display modes and collects usage data to thoroughly characterize how CAD technologies augment radiologists’ decision-making.
+
+
+**CANDI is freely available to research groups, balances flexible access with data security, incorporates non-image patient data used in current medical practice, and can be directly connected to downstream Machine Learning and Deep Learning Pipelines.**
+
+_Let's deliver the power of deep learning to patients._
+
+## Select Use Scenario
+
+#### [Radiogrpah Annotation](visualizations.html)
+Generate Training Data
+
+#### [CAD Evaluation](visualizations.html)
+Evaluate the Clinical Potential of CAD Utilities.
+
+
+## Who We Are
+Design and development of CANDI is supported by [Verily Life Sciences](https://verily.com/) and the [Institute for Next Generation Healthcare](http://www.nextgenhealthcare.org/)
+
+[Help](help.html)  
+[Get Source Code](source.html)
