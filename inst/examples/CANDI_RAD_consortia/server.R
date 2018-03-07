@@ -15,23 +15,24 @@ function(input, output, session) {
     outputOptions(output, "isUploaded", suspendWhenHidden = FALSE)
 
     img_id2fp_chr <- reactive({
+        req(!is_empty(filesInDf()))
         df <- filesInDf()
-        if (is_empty(df)) {return(character(0))}
         # 'deframe' user uploaded file df into LUT
-        img_id2fp_lut <- df$datapath %>% set_names(df$name)
-        names(img_id2fp_lut) %<>% str_sub(end = -5)  # Remove .jpg extension
+        img_id2fp_lut <- df$datapath %>% purrr::set_names(df$name)
+        names(img_id2fp_lut) %<>% stringr::str_sub(end = -5)  # Remove .jpg extension
         img_id2fp_lut
     })
 
     # Render UI drop-down to select which uploaded file to display
     output$img_select <- renderUI({
-        if (is_empty(filesInDf())) {return(NA_character_)}
+        req(!is_empty(filesInDf()))
         selectInput("img_id", "Image:", choices = names(img_id2fp_chr()))
     })
 
     # Radiograph
     output$radiographImage <- renderImage({
-        if (is_empty(img_id2fp_chr())) {return(NULL)}
+        req(!is_empty(filesInDf()))
+        req(input$img_id)
         fp <- img_id2fp_chr()[input$img_id]
         return(list(src = fp, contentType = "image/jpeg", alt = "Please upload radiograph(s)"))
     }, deleteFile = FALSE)
@@ -41,32 +42,33 @@ function(input, output, session) {
     output$coordinatesTable <- renderTable({bboxCoordinates()})
 
     # Downloads
-    load_gs <- partial(load_gs_annotation, gSpreadSheet = )
-    output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_gs_annotation)
-    output$downloadSegmentation <- handle_annotation_download("segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
-    
+    load_gs <- partial(load_gs_annotation, gSpreadSheet = gs)
+    output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_gs)
+    output$downloadSegmentation <- handle_annotation_download(ann_type = "segmentation", f_load = load_gs)
+    output$downloadClinicalNote <- handle_annotation_download(ann_type = "clinical_note", f_load = load_gs)
+
     output$downloadSampleImages <- downloadHandler(
         filename = "sample_images.tar.gz",
         content = function(file) {
             file.copy(kFP_SAMPLE_IMGS, to=file)
         }
     )
-    
+
     # Image/Annotation sources
     output$imgTmpFp <- renderPrint({
-        if (is_empty(filesInDf())) {return(NA_character_)}
-        pth <- filesInDf() %>% filter(str_sub(name, end = -5) == input$img_id) %$% datapath
+        req(!is_empty(filesInDf()))
+        req(input$img_id)
+        pth <- filesInDf() %>% filter(stringr::str_sub(name, end = -5) == input$img_id) %$% datapath
         cat(pth)
     })
     output$annotationURL <- renderPrint(cat(gsURL))
 
     # Reactive Conductors -----------------
     ids <- reactive({
-        if (is_empty(filesInDf())) {return(NULL)}
+        req(!is_empty(filesInDf()))
         x <- map(kID_FIELDS, function(x) x = input[[x]])
         x$timestamp <- Sys.time()
-        x %<>% as.data.frame %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
+        x %<>% as.data.frame %>% purrr::set_names(c("Radiologist Name", "Image ID", "Timestamp"))
         x
     })
 
@@ -96,12 +98,13 @@ function(input, output, session) {
     # Reactive Observers -------------------------------------------------------
     # I/O buttons
     observeEvent(input$submit_classification,
-        save_annotation(classificationDF(), "classification"))
+        save_annotation(data=classificationDF(), ann_type="classification")
+    )
 
     save_segmentation <- function(path) {
         stopifnot(path %in% kDXS_CHR)
         df <- segmentationDF() %>%
-            add_column(Pathology=path)
+            tibble::add_column(Pathology=path)
         save_annotation(df, "segmentation")
     }
     observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
@@ -109,7 +112,7 @@ function(input, output, session) {
     observeEvent(input$submit_effusion, save_segmentation("effusion"))
 
     observeEvent(input$submit_note,
-                 save_annotation(clinicalNoteDF(), "ClinicalNote"))
+                 save_annotation(clinicalNoteDF(), "clinical_note"))
 
     # Conditionally hide/disable segmentation submission
     observe(shinyjs::toggle("segmentation", anim=TRUE, condition=!is.null(input$pathologies)))

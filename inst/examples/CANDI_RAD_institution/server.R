@@ -2,7 +2,7 @@ function(input, output, session) {
     # Serve outputs -----------------------
     # Reactive UI elements
     output$img_select <- renderUI({
-        selectInput("img_id", "Image:", choices=str_sub(kIMG_FNS, end=-5))
+        selectInput("img_id", "Image:", choices=stringr::str_sub(kIMG_FNS, end=-5))
     })
 
     # Clinical Outputs
@@ -63,7 +63,7 @@ function(input, output, session) {
     save_segmentation <- function(path) {
         stopifnot(path %in% kDXS_CHR)
         df <- segmentationDF() %>%
-            add_column(Pathology=path)
+            tibble::add_column(Pathology=path)
         save_annotation(df, "segmentation")
     }
     observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))

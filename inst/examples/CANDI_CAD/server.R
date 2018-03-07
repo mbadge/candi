@@ -1,105 +1,129 @@
 function(input, output, session) {
-    # Reactive elements bound to lower camel case names
-
-    # Invoke modules -----------------------------
+    # Invoke modules ----
     usrImpressionDf <- callModule(impression, "impression")
     callModule(similarImg, "similarImg",
-        testImgId = reactive(SD()[["test_img_id"]]),
+        testImgId = reactive(input$imgIdIn),
         img_dir = kDIR_SMALL_IMGS,
         dx_chr = kDXS_CHR)
 
-
+    # Image Progression ----
+    # Get user-specific ordered queue
+    usrQueue <- reactive(candi::randomize_user_queue(input$user_name, kAVAIL_IMG_IDS))
+    
+    # UI
+    output$imgIdUi <- renderUI({
+        selectInput("imgIdIn", "Image Id:", choices = usrQueue())
+    })
+    outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)
+    
     # Reactive Event Handlers --------------------------------------------------
-    SD <- eventReactive(input$submitBtn, {
-        if (!session$clientData[["output_cnnPyTbl_hidden"]] || input$submitBtn == 1) {  # User had cad available
+    readerMode <- eventReactive(input$submitBtn, {
+        # Either initialize or save answer
+        if (input$submitBtn == 1) {
+            # Since we're timing user responses, gate the initiation of the app
+            # Initially show nothing but name and begin button, then reveal impression and submit
+            updateActionButton(session, "submitBtn", label = "Submit Impression")
+            shinyjs::disable("user_name")
+            shinyjs::show("mainImageUi")
+            shinyjs::show("impressionPanel")
+            
+            is_cad_available <- TRUE  # Coerce cad flag to TRUE to get a new case loaded
+        } else {
+            # Infer CAD state from clientData
+            is_cad_available <- !session$clientData[["output_cnnPyTbl_hidden"]]
+            
+            # save annotated user input
+            submit_data_df <- usrImpressionDf() %>%
+                add_column(is_cad_available = is_cad_available, .before=1) %>% 
+                add_column(img_id = input$imgIdIn, .before=1) %>% 
+                add_column(user_name = input$user_name, .before=1)
+            save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
+        }
+
+        # Load next case
+        if (is_cad_available) {  
             cat("\nnext case")
-            # if CAD was availabe, go to next case
-
-            df <- getNewCaseDf(test_imgs_df$img_id)
-            df$is_cad_available <- (df$reader_mode[1] == "concurrent")
-
-            if (df$is_cad_available) {shinyjs::show("cnnCadUi")
-            } else {shinyjs::hide("cnnCadUi")}
-
             # Clear entry forms since we're onto a new case
             updateCheckboxGroupInput(session=session, inputId = NS("impression", id="dxChkbxIn"), selected = character(0))
             updateTextAreaInput(session=session, inputId = NS("impression", id="noteTxtIn"), value="Clinical Impression")
-
-            return(df)
-        } else {
-            cat("\nadd cad to current case")
-
-            df <- data.frame(
-                test_img_id = getLastCaseChr(user_name = input$user_name, usr_input_dir = kDIR_USR_INPT),
-                reader_mode = "second",
-                is_cad_available = TRUE
-            )
-
+            
+            # Find next case in queue AFTER saving prior impression
+            complete_input_ids <- candi::load_usr_input(input$user_name, kDIR_USR_INPT) %>%
+                filter(is_cad_available == TRUE) %>% 
+                magrittr::use_series("img_id")
+            
+            # Get remaining portion of queue
+            todo_input_ids <- usrQueue()[usrQueue() %ni% complete_input_ids]
+            updateSelectInput(session, "imgIdIn", selected = todo_input_ids[1])
+            
+            # Randomize reader mode
+            reader_mode <- sample(x = c("concurrent", "second"), size = 1)
+            cat(glue::glue("reader_mode: {reader_mode}"))
+            
+            if (reader_mode == "concurrent") {
+                shinyjs::show("cnnCadUi", anim=TRUE)
+            } else {
+                shinyjs::hide("cnnCadUi", anim = TRUE)
+            } 
+            return(reader_mode)
+            
+        } else {  # if user did NOT have CAD available, they must have been doing second reader mode unaided
             shinyjs::show("cnnCadUi", anim=TRUE)
-            return(df)
+            return("second")
         }
     })
 
-    # Save impression form everytime user clicks submit
-    observeEvent(input$submitBtn, {
-        # Initialize this button as "Begin Trial", and perform this setup routine on first click
-        if (input$submitBtn == 1) {
-            shinyjs::show("impressionPanel")
-            updateActionButton(session = session, inputId = "submitBtn", label = "Submit Impression")
-            invisible(return(NULL))
-        }
-
-        # save annotated user input
-        submit_data_df <- usrImpressionDf() %>%
-            add_column(user_name = input$user_name, .before=1) %>%
-            bind_cols(SD())
-        save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
+    # Auxillary State Info for user ----
+    # Progress Message
+    output$progressTxt <- renderText({
+        readerMode()
+        complete_input_ids <- candi::load_usr_input(input$user_name, kDIR_USR_INPT) %>% 
+            filter(is_cad_available == TRUE) %>% 
+            magrittr::use_series("img_id")
+        glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS)} radiographs")
     })
-
+    
+    # Randomized Reader Mode Banner
+    output$readerModeTxt <- renderText({
+        switch(readerMode(),
+               "second" = "Second Reader Mode: first, submit your unaided impression.  CNN utilities will then be provided and you can optionally modify answers.",
+               "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
+    })
+    
+    
     # Serve outputs --------------------------------
-
     # Test Radiograph
     output$mainImage <- renderImage({
-        req(SD())
-        filename <- stringr::str_interp("${kDIR_SMALL_IMGS}/${SD()[['test_img_id']]}.jpg")
-        return(list(src = filename, filetype="image/jpeg", alt="Main Radiograph"))
+        req(input$imgIdIn)
+        src_fp <- file.path(kDIR_SMALL_IMGS, str_c(input$imgIdIn, ".jpg"))
+        return(list(src = src_fp, filetype="image/jpeg", alt="Main Radiograph"))
     }, deleteFile = FALSE)
 
+    # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
-        req(SD())
-        filename <- stringr::str_interp("${kDIR_BBOX_IMGS}/${SD()[['test_img_id']]}.jpg")
-        return(list(src = filename, filetype="image/jpeg", alt="Bbox Radiograph"))
+        src_fp <- file.path(kDIR_BBOX_IMGS, str_c(input$imgIdIn, ".jpg"))
+        return(list(src = src_fp, filetype="image/jpeg", alt="Bbox Radiograph"))
     }, deleteFile = FALSE)
 
     # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
-        req(SD())
         test_py_df %>%
-            df_filter_trans(img_id = SD()[['test_img_id']]) %>%
+            df_filter_trans(img_id = input$imgIdIn) %>%
             set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
     })
 
-    # Randomized Reader Mode Banner
-    output$readerModeTxt <- renderText({
-        req(SD())
-        switch(SD()[["reader_mode"]],
-               "second" = "Second Reader Mode: first, submit your unaided impression.  CNN utilities will then be provided and you can optionally modify answers.",
-               "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
-    })
 
-
-    # Trace -----------------------------------------
-    # callModule(trace, "trace",
-    #            user_nameIn = reactive(input$user_name),
-    #            usrImpressionDf = reactive(usrImpressionDf()),
-    #            SD = reactive(SD()),
-    #            usageLst = reactive({
-    #                cdata <- session$clientData
-    #                cnames <- names(cdata)
-    #                cvals <- lapply(cnames, function(name) {cdata[[name]]})
-    #                cvals %>% set_names(cnames)
-    #            })
-    #)
+    #Trace -----------------------------------------
+    callModule(trace, "trace",
+               user_nameIn = reactive(input$user_name),
+               usrImpressionDf = reactive(usrImpressionDf()),
+               usageLst = reactive({
+                   cdata <- session$clientData
+                   cnames <- names(cdata)
+                   cvals <- lapply(cnames, function(name) {cdata[[name]]})
+                   cvals %>% purrr::set_names(cnames)
+               })
+    )
 }

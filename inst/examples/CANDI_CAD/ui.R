@@ -4,20 +4,25 @@ fluidPage(
     div(id="title", align="center",
         titlePanel("CANDI for Computer Assisted Diagnosis", windowTitle="CANDI CAD")),
 
-    # User name / submission button
+    # 2 horizontal sections
+    # top: userInfo | mainRadiograph | userImpression
+    # bottom: CNN toolkit
     fluidRow(
         column(3,
-               textInput("user_name", "Radiologist Name:", value = "Marcus"),
-               hr(),
-               actionButton("submitBtn", "Begin Trial"),  # After first click, the label is updated to "Submit Impression"
-               hr(),
-               textOutput("readerModeTxt")
-        ),
-        # Test Radiograph Row (Display test radiograph + user impression input form)
-        column(6,
-            div(id="mainImageUi", align="center",
-                imageOutput("mainImage", width = 299, height=299))
-        ),
+            # User Info
+            textInput("user_name", "Radiologist Name:", value = "Marcus"),
+            uiOutput("imgIdUi"),  # shinyjs::hidden(uiOutput("imgIdUi"))
+            hr(),
+            # Submitting
+            div(align="center", 
+                actionButton("submitBtn", "Begin Trial"),
+                textOutput("progressTxt")
+        )),
+        # Test Radiograph
+        column(6, shinyjs::hidden(div(id="mainImageUi", align="center",
+                      imageOutput("mainImage", width = 299, height=299))
+        )),
+        # User Impression
         column(3,
              shinyjs::hidden(div(id="impressionPanel",
                  impressionInput("impression", dx_chr=kDXS_CHR)))  # Shiny module
@@ -25,6 +30,9 @@ fluidPage(
     ),
 
     hr(),
+    textOutput("readerModeTxt"),
+    hr(),
+    
     # ConvNet Assistance
     shinyjs::hidden(div(id = "cnnCadUi",
         fluidRow(
@@ -38,7 +46,7 @@ fluidPage(
             column(3, tableOutput("cnnPyTbl"))
         ),
         similarImgUi("similarImg")
-    ))
+    )),
 
-    #traceOutput("trace")
+    traceOutput("trace")
 )

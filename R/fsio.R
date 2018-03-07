@@ -74,6 +74,8 @@ save_usr_input <- function(x, dir) {
 #' @export
 load_radiograph <- function(img_id, img_dir) {
     fp <- file.path(img_dir, paste0(img_id, ".jpg"))
+    stopifnot(file.exists(fp))
+    
     img <- EBImage::readImage(fp)
     return(img)
 }
@@ -101,20 +103,34 @@ getNewCaseDf <- function(test_img_ids) {
 #' @examples
 #' getLastCaseChr(user_name="Marcus", usr_input_dir="/www/app_data_candi/CANDI_CAD/usr_inpt")
 getLastCaseChr <- function(user_name, usr_input_dir) {
-    # Precondition
-    stopifnot(dir.exists(usr_input_dir))
-
-    # Load all user input records
-    suppressMessages({
-        all_records <- list.files(usr_input_dir, full.names = TRUE) %>%
-            map_dfr(., readr::read_csv)
-    })
-
     # Isolate just `user_name`s records
-    user_records <- all_records[all_records$user_name == user_name, ]
+    user_records <- load_usr_input(user_name, usr_input_dir)
     # Find the most recent case submitted by `user_name`
     user_records %>%
         mutate(rank = rank(desc(lubridate::ymd_hms(timestamp)))) %>%
         filter(rank == 1) %>%
         use_series("test_img_id")
+}
+
+#' Load input app data from a user
+#'
+#' By default, data is loaded form a directory indicated by a
+#' global variable defined in the file that defines \code{load_usr_input}.
+#'
+#' @param user chr(1) user to filter user_name column by
+#'
+#' @return data.frame
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   load_usr_input("Marcus", "/www/app_data_cxrTargetDiff/usr_inpt/")
+#' }
+load_usr_input <- function(user, usr_inpt_dir) {
+    # precondition
+    stopifnot(dir.exists(usr_inpt_dir))
+    
+    all_records <- list.files(usr_inpt_dir, pattern = "*.csv$", full.names = TRUE) %>%
+        purrr::map_dfr(., ~suppressMessages(readr::read_csv(.x)))
+    all_records[all_records$user_name == user, ]
 }

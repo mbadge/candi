@@ -1,10 +1,10 @@
 library("candi")
 library("googlesheets")
-
+library("magrittr")
 
 # FLAGS ----
 # ui config
-kID_FIELDS <- c("user_name", "img_id") %>% set_names()
+kID_FIELDS <- c("user_name", "img_id") %>% purrr::set_names()
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
 
@@ -17,7 +17,7 @@ gsURL <- "https://docs.google.com/spreadsheets/d/1RXSgxHmcmDXdQjj0fkRn8DId0_yh2I
 gs <- gs_title(kSHEET_NAME)
 
 # i/o helper fxns
-save_annotation <- function(data, ann_type, gs=gs) {
+save_annotation <- function(data, ann_type, gS=gs) {
     stopifnot(ann_type %in% kANNOTATION_TYPES)
-    gs_add_row(gs, ws = ann_type, input=data)
+    gs_add_row(gS, ws = ann_type, input=data)
 }

@@ -2,7 +2,7 @@ library("candi")
 
 
 # ui config
-kID_FIELDS <- c("user_name", "img_id") %>% set_names()
+kID_FIELDS <- c("user_name", "img_id") %>% purrr::set_names()
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
 
@@ -16,7 +16,7 @@ stopifnot(dir.exists(kDIR_USR_INPT))
 # i/o helper fxns
 save_annotation <- function(data, ann_type) {
     stopifnot(ann_type %in% kANNOTATION_TYPES)
-    resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% str_c(".csv")
+    resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% stringr::str_c(".csv")
     write.csv(x=data, file=file.path(kDIR_USR_INPT, ann_type, resp_fn), row.names=FALSE)
 }
 

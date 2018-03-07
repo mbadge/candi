@@ -11,10 +11,11 @@ similarImgUi <- function(id) {
 
     tagList(
         a(id=ns("toggleBrowseSimilar"), "Show/hide Similar Image Records"),
-        shinyjs::hidden(div(id=ns("browseSimilarUi"),
+        div(id=ns("browseSimilarUi"), align = "center",
+            h3("Search for Similar Historical Images"),
             fluidRow(
                 # User Input Panel -------------------
-                column(4,
+                column(2,
                        wellPanel(
                            selectInput(ns("x"), label="x variable:", choices=str_c("PC", 1:10), selected="PC1"),
                            selectInput(ns("y"), label="y variable:", choices=str_c("PC", 1:10), selected="PC2"),
@@ -23,16 +24,16 @@ similarImgUi <- function(id) {
                            uiOutput(ns("facetColUi"))
                        )),
                 # PC scatter -------------------------
-                column(4,
+                column(3,
                        plotOutput(ns('pcaPlot'), width="100%", click="plot_click",
                                   hover = hoverOpts(id=ns("plot_hover"), delayType="throttle"),
                                   brush = brushOpts(id=ns("plot_brush")))
                 ),
-                # Historical Documentation Panel -----------------
                 column(4,
-                       h3("Historical Documentation:"),
                        div(id=ns("similarImageUi"), align="center",
-                           imageOutput(ns("hoverImage"), width = 299, height=299)),
+                           imageOutput(ns("hoverImage"), width = 299, height=299))
+                ),
+                column(3,
                        tableOutput(ns("hoverYTbl")),  # Diagnosis Tbl
                        textOutput(ns("hoverNoteText"))  # Free Text Note
                 )
@@ -40,7 +41,7 @@ similarImgUi <- function(id) {
             fluidRow(
                 dataTableOutput(ns("brushedPointsTable"))
             )
-        ))
+        )
     )
 }
 
