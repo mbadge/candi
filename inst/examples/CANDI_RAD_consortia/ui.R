@@ -35,6 +35,14 @@ fluidPage(
         ),
 
         mainPanel(
+            # Offer example images only until the user uploads some
+            conditionalPanel("output.notUploaded",
+                div(align="center",
+                    h1("Need sample images?? Try these:"),
+                    downloadButton("downloadSampleImages", label = "Sample Images")
+                )
+            ),
+            # Then and only then, display the radiograph
             conditionalPanel("output.isUploaded",
                 tagList(
                     # Display Radiograph ---------------

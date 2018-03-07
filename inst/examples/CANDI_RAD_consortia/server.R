@@ -5,9 +5,13 @@ function(input, output, session) {
     })
 
     # Predicate reactive expression for conditional UI
+    output$notUploaded <- reactive({
+        is_empty(filesInDf())
+    })
     output$isUploaded <- reactive({
         !is_empty(filesInDf())
     })
+    outputOptions(output, "notUploaded", suspendWhenHidden = FALSE)
     outputOptions(output, "isUploaded", suspendWhenHidden = FALSE)
 
     img_id2fp_chr <- reactive({
@@ -41,7 +45,14 @@ function(input, output, session) {
     output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_gs_annotation)
     output$downloadSegmentation <- handle_annotation_download("segmentation")
     output$downloadClinicalNote <- handle_annotation_download("clinical_note")
-
+    
+    output$downloadSampleImages <- downloadHandler(
+        filename = "sample_images.tar.gz",
+        content = function(file) {
+            file.copy(kFP_SAMPLE_IMGS, to=file)
+        }
+    )
+    
     # Image/Annotation sources
     output$imgTmpFp <- renderPrint({
         if (is_empty(filesInDf())) {return(NA_character_)}

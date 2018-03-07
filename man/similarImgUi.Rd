@@ -18,6 +18,6 @@ Shiny module for PC based similar historical image lookup
 \seealso{
 \code{\link{similarImg}}
 
-Other shiny_module: \code{\link{impressionUi}},
+Other shiny_module: \code{\link{impressionInput}},
   \code{\link{impression}}, \code{\link{similarImg}}
 }
