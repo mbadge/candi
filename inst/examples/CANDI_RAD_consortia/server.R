@@ -64,7 +64,7 @@ function(input, output, session) {
     # Reactive Conductors -----------------
     ids <- reactive({
         if (is_empty(filesInDf())) {return(NULL)}
-        x <- map(id_fields, function(x) x = input[[x]])
+        x <- map(kID_FIELDS, function(x) x = input[[x]])
         x$timestamp <- Sys.time()
         x %<>% as.data.frame %>% set_names(c("Radiologist Name", "Image ID", "Timestamp"))
         x

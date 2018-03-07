@@ -16,18 +16,18 @@ function(input, output, session) {
     output$coordinatesTable <- renderTable({bboxCoordinates()})
 
     # Downloads
-    download_usr_input_csvs <- function(ann_type, usr_input_dir = kANN_DIR) {
-        .f_load <- purrr::partial(load_csv_annotation, kANN_DIR=usr_input_dir, ann_type=ann_type)
+    download_usr_input_csvs <- function(ann_type, usr_input_dir = kDIR_USR_INPT) {
+        .f_load <- purrr::partial(load_csv_annotation, kANN_DIR=usr_input_dir)
         handle_annotation_download(ann_type, f_load=.f_load)
     }
     output$downloadClassification <- download_usr_input_csvs(ann_type = "classification")
     #output$downloadClassification <- handle_annotation_download("classification", )
-    output$downloadSegmentation <- handle_annotation_download("segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
+    output$downloadSegmentation <- download_usr_input_csvs(ann_type = "segmentation")
+    output$downloadClinicalNote <- download_usr_input_csvs(ann_type = "clinical_note")
 
     # Reactive Conductors -----------------
     ids <- reactive({
-        x <- map(id_fields, function(x) x=input[[x]])
+        x <- map(kID_FIELDS, function(x) x=input[[x]])
         x$timestamp <- Sys.time()
         x %<>% as.data.frame() %>% purrr::set_names(c("Radiologist Name", "Image ID", "Timestamp"))
     })
@@ -71,7 +71,7 @@ function(input, output, session) {
     observeEvent(input$submit_effusion, save_segmentation("effusion"))
 
     observeEvent(input$submit_note,
-                 save_annotation(clinical_noteDF(), "ClinicalNote"))
+                 save_annotation(clinical_noteDF(), "clinical_note"))
 
     # Conditionally hide/disable segmentation submission
     observe(shinyjs::toggle("segmentation", anim=TRUE, condition=!is.null(input$pathologies)))
@@ -85,7 +85,7 @@ function(input, output, session) {
 
     # Image/Annotation Sources ---------
     output$imgFp <- renderPrint(kIMG_DIR %>% cat())
-    output$annFp <- renderPrint(kANN_DIR %>% cat())
+    output$annFp <- renderPrint(kDIR_USR_INPT %>% cat())
 
 
     # Trace -----------------------------
