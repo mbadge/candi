@@ -46,7 +46,9 @@ Viz.Image <- function(img_arr) {
 #' @return pieces list with same length as x_chr, whose i-th element contains a
 #' character vector of split products of x_chr[i]
 #'
-#' @import rebus purrr stringr assertive.strings
+#' @import purrr stringr assertive.strings
+#' @importFrom rebus "%R%"
+#' @importFrom rebus capture
 #' @export
 split_pieces <- function(x_chr, split_pat = character()) {
     if (is_empty(split_pat)) {
