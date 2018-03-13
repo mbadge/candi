@@ -1,3 +1,32 @@
+#' Load radiographs into EBImage Images
+#'
+#' Wrapper for \code{\link[EBImage]{readImage}}
+#'
+#' @param img_id chr(1)
+#' @param img_dir chr(1)
+#'
+#' @return \code{\link[EBImage]{Image}}
+#'
+#' @importFrom EBImage "readImage"
+#' @export
+#' @examples
+#' \dontrun{
+#'   img <- load_radiograph(img_id="iu_101_2", img_dir="/www/app_data_cxrTargetDiff/large_jpgs")
+#'   EBImage::display(img)
+#' }
+load_radiograph <- function(img_id, img_dir) {
+    # precondition
+    stopifnot(dir.exists(img_dir))
+
+    fp <- file.path(img_dir, paste0(img_id, ".jpg"))
+    stopifnot(file.exists(fp))
+
+    img <- EBImage::readImage(fp)
+    return(img)
+}
+
+
+
 ## ---- RAD ----
 
 #' Create a download handler for one of the annotation types in \code{kANNOTATION_TYPES}
@@ -61,56 +90,6 @@ save_usr_input <- function(x, dir) {
     readr::write_csv(x, path = file.path(dir, fn))
 }
 
-#' Load radiographs into EBImage Images
-#'
-#' \code{\link[EBImage]{readImage}}
-#'
-#' @param img_id chr(1)
-#' @param img_dir chr(1)
-#'
-#' @return \code{\link[EBImage]{Image}}
-#'
-#' @importFrom EBImage "readImage"
-#' @export
-load_radiograph <- function(img_id, img_dir) {
-    fp <- file.path(img_dir, paste0(img_id, ".jpg"))
-    stopifnot(file.exists(fp))
-    
-    img <- EBImage::readImage(fp)
-    return(img)
-}
-
-#' Randomly select CAD state variables for a new test image: test_img_id and reader_mode
-#'
-#' @export
-getNewCaseDf <- function(test_img_ids) {
-    data.frame(
-        test_img_id = sample(x = fp_stem(test_img_ids), size = 1),
-        reader_mode = sample(x = c("concurrent", "second"), size = 1)
-    )
-}
-
-#' Utility fxn to search all user input data to identify the most recent case reviewed by a user
-#'
-#' This function is used by the CANDI_CAD trial state manager to reserve an image
-#' for second reader mode after initially having the user review an image without assistance.
-#'
-#' @param user_name chr(1) must match a col user_name in the user input data frames
-#' @param usr_input_dir chr(1) directory containing user input records
-#' @return chr(1) img_id of last image reviewed
-#'
-#' @export
-#' @examples
-#' getLastCaseChr(user_name="Marcus", usr_input_dir="/www/app_data_candi/CANDI_CAD/usr_inpt")
-getLastCaseChr <- function(user_name, usr_input_dir) {
-    # Isolate just `user_name`s records
-    user_records <- load_usr_input(user_name, usr_input_dir)
-    # Find the most recent case submitted by `user_name`
-    user_records %>%
-        mutate(rank = rank(desc(lubridate::ymd_hms(timestamp)))) %>%
-        filter(rank == 1) %>%
-        use_series("test_img_id")
-}
 
 #' Load input app data from a user
 #'
@@ -129,8 +108,15 @@ getLastCaseChr <- function(user_name, usr_input_dir) {
 load_usr_input <- function(user, usr_inpt_dir) {
     # precondition
     stopifnot(dir.exists(usr_inpt_dir))
-    
-    all_records <- list.files(usr_inpt_dir, pattern = "*.csv$", full.names = TRUE) %>%
-        purrr::map_dfr(., ~suppressMessages(readr::read_csv(.x)))
+
+    record_fps <- list.files(usr_inpt_dir, pattern = "*.csv$", full.names = TRUE)
+
+    if (length(record_fps) == 0) {
+        warning("No user input files found in ", usr_inpt_dir)
+        return(NULL)
+    }
+
+    all_records <- purrr::map_dfr(record_fps, ~suppressMessages(readr::read_csv(.x)))
     all_records[all_records$user_name == user, ]
 }
+
