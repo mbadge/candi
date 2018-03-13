@@ -21,20 +21,18 @@ set.seed(123)
 ```
 
 
-
 Render this R script to html by running (from parent dir):
 `render_rmd.r -f generate_figures.R -m final`
 
-
 ```{r params}
-manuscript_dir <- file.path(.PROJECT_DIR(), 'inst', 'manuscript')
-setwd(manuscript_dir)
+MANUSCRIPT_DIR <- "/media/marcus/Projects/candi/inst/manuscript/"
+
 
 # Preconditions ----
-stopifnot(
-    dir.exists(manuscript_dir)
-)
+stopifnot(dir.exists(MANUSCRIPT_DIR))
+setwd(MANUSCRIPT_DIR)
 ```
+
 # JAMIA GUIDELINES
 
 ## Images
