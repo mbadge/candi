@@ -25,7 +25,8 @@ Render this R script to html by running (from parent dir):
 `render_rmd.r -f generate_figures.R -m final`
 
 ```{r params}
-MANUSCRIPT_DIR <- "/media/marcus/Projects/candi/inst/manuscript/"
+MANUSCRIPT_DIR <- "P:/candi/inst/manuscript"
+    # "/media/marcus/Projects/candi/inst/manuscript/"
 
 
 # Preconditions ----
@@ -80,7 +81,13 @@ rocs <- Viz.Roc() %+%
 
 roc <- rocs %+% theme(plot.margin = margin(0, 1.5, 0, 0, "cm"))
 roc
-walk(save_fps, save_figure_1col, plot=roc)
+
+# save_figure_1col <- partial(cowplot::ggsave, width=3.54, units="in", dpi=600)
+# 
+# walk(save_fps, save_figure_1col, plot=roc)
+tiff("rocs.tiff", height =5, width=3.54, units = "in", compression = 'lzw', res=600)
+roc
+dev.off()
 ```
 
 ## Classificaiton Perf table
