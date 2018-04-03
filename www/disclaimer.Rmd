@@ -1,7 +1,0 @@
----
-output: html_document
----
-
-CANDI is intended for purely research purposed.  It should not be used for medical or professional advice.  
-
-The dudleylab.org/ehdviz website does not provide any medical or healthcare products, services or advice. Information contained on this website is not a substitute for a doctor's medical judgment or advice. We recommend that you discuss your specific, individual health concerns with your doctor or health care professional.
