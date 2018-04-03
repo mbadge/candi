@@ -15,5 +15,11 @@ load_radiograph(img_id, img_dir)
 \code{\link[EBImage]{Image}}
 }
 \description{
-\code{\link[EBImage]{readImage}}
+Wrapper for \code{\link[EBImage]{readImage}}
+}
+\examples{
+\dontrun{
+  img <- load_radiograph(img_id="iu_101_2", img_dir="/www/app_data_cxrTargetDiff/large_jpgs")
+  EBImage::display(img)
+}
 }
