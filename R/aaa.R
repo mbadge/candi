@@ -5,14 +5,20 @@
 # [pkg name] DOT [snake_case_option_name]
 # candi.option_one
 .onLoad <- function(libname, pkgname) {
-    # I/O
+    # FSIO ----
     SMALL_IMG_DIR <- '/www/app_data/candi/small_jpgs/'  # imageNet size 299x299
     LARGE_IMG_DIR <- '/www/app_data/candi/large_jpgs/'  # original resolution
 
     USR_INPUT_DIR <- '/www/app_data/candi/usr_input/'  # Parent for all data on users
 
+    # FLAGS ----
     # User input types (each will get it's own subfolder with USR_INPT_DIR)
     ANNOTATION_TYPES <- c("classificaiton", "segmentation", "clinical_note")
+    DXS_CHR <- c('Cardiomegaly', 'Emphysema', 'PleuralEffusion',
+                  'HerniaHiatal', 'Nodule', 'PulmonaryAtelectasis',
+                  'Pneumonia', 'PulmonaryEdema', 'Consolidation',
+                  'CathetersIndwelling', 'TechnicalQualityOfImageUnsatisfactory',
+                  'LungHypoinflation', 'LungHyperdistention')
 
     # NSE FXN
     #' @examples
@@ -28,6 +34,7 @@
                           Show(LARGE_IMG_DIR),
                           Show(USR_INPUT_DIR),
                           Show(ANNOTATION_TYPES),
+                          Show(DXS_CHR),
                           "\ncall candiOpt(<snake_case_opt>) to fetch; e.g. `candiOpt(annotation_types)`")
 
     opt <- options()
@@ -35,7 +42,8 @@
         candi.small_img_dir = SMALL_IMG_DIR,
         candi.large_img_dir = LARGE_IMG_DIR,
         candi.usr_input_dir = USR_INPUT_DIR,
-        candi.annotation_types = ANNOTATION_TYPES
+        candi.annotation_types = ANNOTATION_TYPES,
+        candi.dxs_chr = DXS_CHR
     )
 
     to_set <- !(names(opt_candi) %in% names(opt))
@@ -47,7 +55,7 @@
 
 #' Convenience fxn to fetch an option set by the hips package.
 #'
-#' getHipOpt uses NSE to save typing, use getHipOpt_ for SE
+#' candiOpt uses NSE to save typing, use candiOpt_ for SE
 #'
 #' Package option schema:
 #' [pkg name] DOT [snake_case_option_name]

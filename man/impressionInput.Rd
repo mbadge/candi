@@ -20,6 +20,20 @@ each dx in \code{dx_chr}.
 }
 \examples{
 impressionInput(id="imp", dx="Cardiomegaly")
+if (interactive()) {
+library(shiny)
+
+shinyApp(
+    ui = fluidPage(
+        impressionInput("impression", dx_chr = candiOpt(dxs_chr)),
+        shiny::tags$strong("User Impression:"),
+        tableOutput("usrImpressionTable")
+    ),
+    server = function(input, output) {
+        usrImpressionDf <- callModule(impression, "impression")
+        output$usrImpressionTable <- renderTable(usrImpressionDf())
+    }
+)}
 }
 \seealso{
 \code{\link{impression}}

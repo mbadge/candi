@@ -4,7 +4,7 @@
 #' Impression User Interface Module
 #'
 #' Create a collection of ui inputs for a user to indicate binary classification of
-#' each dx in \code{dx_chr}.
+#' each dx in \code{dx_chr} along with a free text note.
 #'
 #' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
 #' @param dx_chr chr(n) diagnoses to include in the classification input
@@ -16,6 +16,20 @@
 #' @export
 #' @examples
 #' impressionInput(id="imp", dx="Cardiomegaly")
+#' if (interactive()) {
+#' library(shiny)
+#'
+#' shinyApp(
+#'     ui = fluidPage(
+#'         impressionInput("impression", dx_chr = candiOpt(dxs_chr)),
+#'         shiny::tags$strong("User Impression:"),
+#'         tableOutput("usrImpressionTable")
+#'     ),
+#'     server = function(input, output) {
+#'         usrImpressionDf <- callModule(impression, "impression")
+#'         output$usrImpressionTable <- renderTable(usrImpressionDf())
+#'     }
+#' )}
 impressionInput <- function(id, dx_chr) {
     ns <- NS(id)
 
