@@ -9,7 +9,7 @@
     SMALL_IMG_DIR <- '/www/app_data/candi/small_jpgs/'  # imageNet size 299x299
     LARGE_IMG_DIR <- '/www/app_data/candi/large_jpgs/'  # original resolution
 
-    USR_INPUT_DIR <- '/www/app_data/candi/usr_input'  # Parent for all data on users
+    USR_INPUT_DIR <- '/www/app_data/candi/usr_input/'  # Parent for all data on users
 
     # User input types (each will get it's own subfolder with USR_INPT_DIR)
     ANNOTATION_TYPES <- c("classificaiton", "segmentation", "clinical_note")
