@@ -6,6 +6,21 @@
 #' @family shiny_module
 #' @seealso \code{\link{similarImg}}
 #' @export
+#' @examples
+#' if (interactive()) {
+#' library(shiny)
+#'
+#' shinyApp(
+#'     ui = fluidPage(
+#'         similarImgUi("similarImg")
+#'     ),
+#'     server = function(input, output) {
+#'         callModule(similarImg, "similarImg",
+#'                    testImgId = "iu_1_1",
+#'                    img_dir = candiOpt(large_img_dir),
+#'                    dx_chr = candiOpt(dxs_chr))
+#'     }
+#' )}
 similarImgUi <- function(id) {
     ns <- NS(id)
 

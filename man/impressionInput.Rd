@@ -16,7 +16,7 @@ impressionInput(id, dx_chr)
 }
 \description{
 Create a collection of ui inputs for a user to indicate binary classification of
-each dx in \code{dx_chr}.
+each dx in \code{dx_chr} along with a free text note.
 }
 \examples{
 impressionInput(id="imp", dx="Cardiomegaly")

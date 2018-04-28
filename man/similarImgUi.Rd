@@ -15,6 +15,22 @@ similarImgUi(id)
 \description{
 Shiny module for PC based similar historical image lookup
 }
+\examples{
+if (interactive()) {
+library(shiny)
+
+shinyApp(
+    ui = fluidPage(
+        similarImgUi("similarImg")
+    ),
+    server = function(input, output) {
+        callModule(similarImg, "similarImg",
+                   testImgId = "iu_1_1",
+                   img_dir = candiOpt(large_img_dir),
+                   dx_chr = candiOpt(dxs_chr))
+    }
+)}
+}
 \seealso{
 \code{\link{similarImg}}
 

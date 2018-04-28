@@ -1,4 +1,27 @@
+#' Trace verbatim outputs of reactive variables
+#'
 #' @export
+#' @examples
+#' if (interactive()) {
+#' library(shiny)
+#'
+#' shinyApp(
+#'     ui = fluidPage(
+#'         textInput("user_name", "Radiologist Name:", value = "Marcus"),
+#'         traceOutput("trace")
+#'     ),
+#'     server = function(input, output, session) {
+#'         callModule(trace, "trace",
+#'                    user_nameIn = reactive(input$user_name),
+#'                    usrImpressionDf = reactive(mtcars),
+#'                    usageLst = reactive({
+#'                        cdata <- session$clientData
+#'                        cnames <- names(cdata)
+#'                        cvals <- lapply(cnames, function(name) {cdata[[name]]})
+#'                        cvals %>% purrr::set_names(cnames)
+#'                    }))
+#'     }
+#' )}
 traceOutput <- function(id) {
     ns <- NS(id)
 
