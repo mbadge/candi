@@ -1,6 +1,3 @@
-kIMG_DIR <- getOption('radsUtils.img_dir')
-kLARGE_IMG_DIR <- getOption('radsUtils.large_img_dir')
-
 #' Load and Display radiographs via EBImage Images
 #'
 #' Wrapper for \code{\link[EBImage]{readImage}}
@@ -16,7 +13,7 @@ kLARGE_IMG_DIR <- getOption('radsUtils.large_img_dir')
 #' @examples
 #' load_radiograph("iu_1_1")
 #' load_radiograph("iu_1_1") %>% EBImage::display(.)
-load_radiograph <- function(img_id, img_dir = kIMG_DIR) {
+load_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
     fp <- file.path(img_dir, paste0(img_id, ".jpg"))
     stopifnot(file.exists(fp))
 
@@ -29,7 +26,7 @@ load_radiograph <- function(img_id, img_dir = kIMG_DIR) {
 #' @export
 #' @examples
 #' display_radiograph("iu_1_1")
-display_radiograph <- function(img_id, img_dir = kIMG_DIR) {
+display_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
     load_radiograph(img_id = img_id, img_dir = img_dir) %>%
         EBImage::display()
 }
@@ -39,9 +36,9 @@ display_radiograph <- function(img_id, img_dir = kIMG_DIR) {
 #'
 #' All images named <dataset>_<case_id>_* in img_dir are loaded.
 #'
-#' @param dataset chr(1)
-#' @param case_id chr(1)
-#' @param img_dir chr(1)
+#' @param dataset chr(1) default "iu"
+#' @param case_id chr(1) or int(1)
+#' @param img_dir chr(1) default candiOpt(large_img_dir)
 #'
 #' @return \code{\link[EBImage]{Image}} with 4 axes
 #' @export
@@ -49,9 +46,9 @@ display_radiograph <- function(img_id, img_dir = kIMG_DIR) {
 #'
 #' @name case
 #' @examples
-#' load_case("iu", "1") %>% EBImage::display(.)
-#' display_case("iu", "3")
-load_case <- function(dataset, case_id, img_dir=kIMG_DIR) {
+#' load_case("1") %>% EBImage::display(.)
+#' load_case(1) %>% EBImage::display(.)
+load_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
     if (compose(`!`, dir.exists)(img_dir)) {
         stop(glue::glue("image directory not found: \n{img_dir}"))
     }
@@ -73,7 +70,9 @@ load_case <- function(dataset, case_id, img_dir=kIMG_DIR) {
 
 #' @rdname case
 #' @export
-display_case <- function(dataset, case_id, img_dir=kIMG_DIR) {
+#' @examples
+#' display_case("3")
+display_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
     load_case(dataset=dataset, case_id=case_id, img_dir=img_dir) %>%
         EBImage::display()
 }

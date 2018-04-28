@@ -14,12 +14,6 @@ Viz.Image <- function(img_arr) {
 }
 
 
-
-
-
-
-
-
 #' @export
 date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
 #' @export
@@ -54,26 +48,25 @@ Not <- function(f1){
 #' character vector of split products of x_chr[i]
 #'
 #' @import purrr stringr assertive.strings
-#' @importFrom rebus "%R%"
-#' @importFrom rebus capture
+#' @importFrom rebus "%R%" capture one_or_more
 #' @export
 split_pieces <- function(x_chr, split_pat = character()) {
     if (is_empty(split_pat)) {
-        split_pat <- one_or_more(rebus::or("[[:space:]]", "[[:punct:]]"))
+        split_pat <- rebus::one_or_more(rebus::or("[[:space:]]", "[[:punct:]]"))
     }
     nms <- names(x_chr) %||% x_chr
 
     pieces <- x_chr %>%
-        str_replace_all(pattern=capture(LOWER) %R% capture(UPPER),
+        str_replace_all(pattern=capture(rebus::LOWER) %R% capture(rebus::UPPER),
                         replacement = "\\1 \\2") %>%
-        str_replace_all(pattern = capture(ALPHA) %R% capture(DIGIT),
+        str_replace_all(pattern = capture(rebus::ALPHA) %R% capture(rebus::DIGIT),
                         replacement = "\\1 \\2") %>%
-        str_replace_all(pattern = capture(DIGIT) %R% capture(ALPHA),
+        str_replace_all(pattern = capture(rebus::DIGIT) %R% capture(rebus::ALPHA),
                         replacement = "\\1 \\2") %>%
         str_split(pattern=split_pat)
 
     # Remove empty strings pieces
-    pieces %<>% lapply(FUN = discard, .p=is_empty_character)
+    pieces <- lapply(pieces, FUN = discard, .p=is_empty_character)
 
     names(pieces) <- nms
     pieces
@@ -112,6 +105,7 @@ str_case_title <- function(x_chr) {
     x_title
 }
 
+#' @importFrom rebus one_or_more
 #' @export
 fp_stem <- function(x_chr) {
     stopifnot(is.character(x_chr))
