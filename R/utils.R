@@ -1,3 +1,25 @@
+#' Rasterize an EBImage Image object figure.
+#'
+#' @param img_arr an EMIage `Image` object
+#'
+#' @return side-effect: draws figure
+#'
+#' @importFrom dplyr "%>%"
+#' @export
+Viz.Image <- function(img_arr) {
+    stopifnot(inherits(img_arr, "Image"))
+    img_arr %>%
+        EBImage::normalize() %>%
+        EBImage::display(method="raster")
+}
+
+
+
+
+
+
+
+
 #' @export
 date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
 #' @export
@@ -15,21 +37,6 @@ Not <- function(f1){
     function(...){!f1(...)}
 }
 
-
-#' Rasterize an EBImage Image object figure.
-#'
-#' @param img_arr an EMIage `Image` object
-#'
-#' @return side-effect: draws figure
-#'
-#' @importFrom dplyr "%>%"
-#' @export
-Viz.Image <- function(img_arr) {
-    stopifnot(inherits(img_arr, "Image"))
-    img_arr %>%
-        EBImage::normalize() %>%
-        EBImage::display(method="raster")
-}
 
 
 # String manipulation

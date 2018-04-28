@@ -11,8 +11,8 @@ data(test_df, package="cxrTargetDiff")
 data(dx_df, package="cxrTargetDiff")
 
 # fsio
-kDIR_USR_INPT <- "/www/app_data_cxrTargetDiff/usr_inpt/target_difficulty_trial"  # Directory with user input records
-kDIR_LARGE_IMGS <- "/www/app_data_cxrTargetDiff/large_jpgs/"
+kDIR_USR_INPT <- "/www/app_data/app_data_cxrTargetDiff/usr_inpt/target_difficulty_trial"  # Directory with user input records
+kDIR_LARGE_IMGS <- "/www/app_data/app_data_cxrTargetDiff/large_jpgs/"
 
 # Dir for non-user input user session data; event logger with timestamps
 kDIR_USR_LOG <- file.path(kDIR_USR_INPT, "log")
@@ -46,3 +46,4 @@ if (any(large_img_ids %ni% test_df$img_id)) {
     large_img_ids <- intersect(large_img_ids, test_df$img_id)
 }
 kAVAIL_IMG_IDS <- test_df$img_id
+

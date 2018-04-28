@@ -24,7 +24,6 @@ runCAD <- function() {
         stop("Could not find example directory. Try re-installing `candi`.", call.=FALSE)
     }
 
-
     shiny::runApp(appDir, display.mode = "normal")
 }
 
@@ -41,8 +40,7 @@ runExample <- function(example) {
             "'")
 
     # if an invalid example is given, throw an error
-    if (missing(example) || !nzchar(example) ||
-        !example %in% validExamples) {
+    if (missing(example) || !nzchar(example) || !example %in% validExamples) {
         stop(
             'Please run `runExample()` with a valid example app as an argument.\n',
             validExamplesMsg,

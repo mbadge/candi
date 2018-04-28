@@ -1,32 +1,3 @@
-#' Load radiographs into EBImage Images
-#'
-#' Wrapper for \code{\link[EBImage]{readImage}}
-#'
-#' @param img_id chr(1)
-#' @param img_dir chr(1)
-#'
-#' @return \code{\link[EBImage]{Image}}
-#'
-#' @importFrom EBImage "readImage"
-#' @export
-#' @examples
-#' \dontrun{
-#'   img <- load_radiograph(img_id="iu_101_2", img_dir="/www/app_data_cxrTargetDiff/large_jpgs")
-#'   EBImage::display(img)
-#' }
-load_radiograph <- function(img_id, img_dir) {
-    # precondition
-    stopifnot(dir.exists(img_dir))
-
-    fp <- file.path(img_dir, paste0(img_id, ".jpg"))
-    stopifnot(file.exists(fp))
-
-    img <- EBImage::readImage(fp)
-    return(img)
-}
-
-
-
 ## ---- RAD ----
 
 #' Create a download handler for one of the annotation types in \code{kANNOTATION_TYPES}

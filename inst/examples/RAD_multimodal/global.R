@@ -9,8 +9,8 @@ data(test_df, package="cxrTargetDiff")
 data(dx_df, package="cxrTargetDiff")
 
 # fsio
-kDIR_USR_INPT <- "/www/app_data_cxrTargetDiff/usr_inpt/"  # Directory with user input records
-kDIR_LARGE_IMGS <- "/www/app_data_cxrTargetDiff/large_jpgs/"
+kDIR_USR_INPT <- "/www/app_data/app_data_cxrTargetDiff/usr_inpt/"  # Directory with user input records
+kDIR_LARGE_IMGS <- "/www/app_data/app_data_cxrTargetDiff/large_jpgs/"
 
 # medical record components
 kEMR_DEMOGRAPHICS <- c("age", "sex", "view", "cassette_orientation")
@@ -52,3 +52,4 @@ df_filter_trans <- function(df, img_id) {
         dplyr::select(-img_id) %>%
         AnalysisToolkit::t2idf()
 }
+

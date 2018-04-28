@@ -14,7 +14,7 @@ library("forcats")
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
 # fs i/o
-kDIR_APP_DATA <- '/www/app_data_candi/CANDI_CAD'
+kDIR_APP_DATA <- '/www/app_data/app_data_candi/CANDI_CAD'
 kDIR_SMALL_IMGS <- file.path(kDIR_APP_DATA, 'images')  # 299 x 299 normalized jpgs
 kDIR_BBOX_IMGS <- file.path(kDIR_APP_DATA, 'bbox')  # Images annotated with bbox localization
 kDIR_USR_INPT <- file.path(kDIR_APP_DATA, 'usr_inpt')
