@@ -9,7 +9,7 @@ load_usr_input(user, dir = candiOpt(usr_input_dir))
 \arguments{
 \item{user}{chr(1) user to filter user_name column by}
 
-\item{usr_input_dir}{chr(1)}
+\item{dir}{chr(1)}
 }
 \value{
 data.frame

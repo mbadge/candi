@@ -31,7 +31,7 @@ save_usr_input <- function(x, dir = candiOpt(usr_input_dir)) {
 #' By default, data is loaded form a directory indicated by a
 #'
 #' @param user chr(1) user to filter user_name column by
-#' @param usr_input_dir chr(1)
+#' @param dir chr(1)
 #'
 #' @return data.frame
 #' @export
@@ -42,12 +42,12 @@ save_usr_input <- function(x, dir = candiOpt(usr_input_dir)) {
 #' }
 load_usr_input <- function(user, dir = candiOpt(usr_input_dir)) {
     # precondition
-    stopifnot(dir.exists(usr_inpt_dir))
+    stopifnot(dir.exists(dir))
 
-    record_fps <- list.files(usr_inpt_dir, pattern = "*.csv$", full.names = TRUE)
+    record_fps <- list.files(dir, pattern = "*.csv$", full.names = TRUE)
 
     if (length(record_fps) == 0) {
-        warning("No user input files found in ", usr_inpt_dir)
+        warning("No user input files found in ", dir)
         return(NULL)
     }
 
