@@ -19,5 +19,6 @@ CANDI User Impression Interface Module Server Function
 \code{\link{impressionInput}}
 
 Other shiny_module: \code{\link{impressionInput}},
+  \code{\link{radiographOutput}},
   \code{\link{similarImgUi}}, \code{\link{similarImg}}
 }

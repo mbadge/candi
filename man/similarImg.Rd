@@ -25,5 +25,6 @@ CANDI PC-based Similar Image Search Shiny Module Server
 \code{\link{similarImgUi}}
 
 Other shiny_module: \code{\link{impressionInput}},
-  \code{\link{impression}}, \code{\link{similarImgUi}}
+  \code{\link{impression}}, \code{\link{radiographOutput}},
+  \code{\link{similarImgUi}}
 }

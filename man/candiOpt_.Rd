@@ -18,7 +18,7 @@ candiOpt(opt_substr, ...)
 set option or ...
 }
 \description{
-getHipOpt uses NSE to save typing, use getHipOpt_ for SE
+candiOpt uses NSE to save typing, use candiOpt_ for SE
 }
 \details{
 Package option schema:

@@ -35,5 +35,6 @@ shinyApp(
 \code{\link{similarImg}}
 
 Other shiny_module: \code{\link{impressionInput}},
-  \code{\link{impression}}, \code{\link{similarImg}}
+  \code{\link{impression}}, \code{\link{radiographOutput}},
+  \code{\link{similarImg}}
 }

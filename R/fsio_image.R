@@ -7,7 +7,7 @@
 #'
 #' @return \code{\link[EBImage]{Image}} with 3 axes
 #'
-#' @name radiograph
+#' @name load_radiograph
 #' @importFrom EBImage "readImage"
 #' @export
 #' @examples
@@ -22,7 +22,7 @@ load_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
 }
 
 
-#' @rdname radiograph
+#' @rdname load_radiograph
 #' @export
 #' @examples
 #' display_radiograph("iu_1_1")
