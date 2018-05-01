@@ -13,6 +13,8 @@ radiograph(input, output, session, imgIdIn)
 \arguments{
 \item{id}{chr(1) namespace for the module, decided by the caller at the time the module is used}
 
+\item{input, output, session}{shiny server io}
+
 \item{imgIdIn}{reactive evaluating to a chr(1) with the file stem of the desired image}
 }
 \value{
@@ -23,9 +25,10 @@ Wraps \code{\link[EBImage]{displayOutput}} in UI fxn
 and \code{\link{display_radiograph}} in server fxn
 }
 \examples{
-radiographOutput(id = "img_out")
 if (interactive()) {
 library(shiny)
+
+imgs_avail = candiOpt(large_img_dir) \%>\% list.files() \%>\% fp_stem()
 
 shinyApp(
 ui = fluidPage(

@@ -7,7 +7,6 @@
 #'
 #' @return \code{\link[EBImage]{Image}} with 3 axes
 #'
-#' @name load_radiograph
 #' @importFrom EBImage "readImage"
 #' @export
 #' @examples
@@ -44,7 +43,6 @@ display_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
 #' @export
 #' @import purrr
 #'
-#' @name case
 #' @examples
 #' load_case("1") %>% EBImage::display(.)
 #' load_case(1) %>% EBImage::display(.)
@@ -68,7 +66,7 @@ load_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
         EBImage::combine()
 }
 
-#' @rdname case
+#' @rdname load_case
 #' @export
 #' @examples
 #' display_case("3")
