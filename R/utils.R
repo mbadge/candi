@@ -14,6 +14,7 @@ Viz.Image <- function(img_arr) {
 }
 
 
+#' @export
 #' @examples
 #' imgs_avail = candiOpt(large_img_dir) %>% list.files() %>% fp_stem()
 #' imgIds2Cases(imgs_avail)

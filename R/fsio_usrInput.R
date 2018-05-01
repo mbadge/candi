@@ -51,7 +51,6 @@ load_usr_input <- function(user, dir = candiOpt(usr_input_dir)) {
         return(NULL)
     }
 
-    all_records <- purrr::map_dfr(record_fps, ~suppressMessages(readr::read_csv(.x)))
+    all_records <- purrr::map_dfr(record_fps, ~suppressMessages(readr::read_csv(.x, col_types = 'ccccicccc')))  # coerce ints to chars for rbind to succeed
     all_records[all_records$user_name == user, ]
 }
-
