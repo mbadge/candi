@@ -25,12 +25,16 @@
 #' server = function(input, output, session) {
 #'     output$selectedImgTxt <- renderPrint(input$imgIdIn)
 #'     callModule(radiograph, "show_rad", imgIdIn = reactive(input$imgIdIn))
-#' })}
+#' })
+#' }
 radiographOutput <- function(id) {
     ns <- NS(id)
 
-    div(id = ns("imgOut"), align = "center",
-        EBImage::displayOutput(ns("mainImage")))
+    tagList(
+        checkboxInput(ns("invertImgIn"), "Invert Image?", value=FALSE),
+        div(id = ns("imgOut"), align = "center",
+            EBImage::displayOutput(ns("mainImage")))
+    )
 }
 
 
@@ -40,10 +44,14 @@ radiographOutput <- function(id) {
 #' @rdname radiographOutput
 radiograph <- function(input, output, session, imgIdIn) {
     output$mainImage <- EBImage::renderDisplay({
-        candi::display_radiograph(imgIdIn())
+        req(imgIdIn())
+        img <- candi::load_radiograph(imgIdIn())
+        if (input$invertImgIn) {
+            img %<>% cxrTargetDiff::image_invert()
+        }
+        EBImage::display(img)
     })
 }
-
 
 
 #' Interactive display of radiographs associated with a requested case
@@ -68,14 +76,15 @@ radiograph <- function(input, output, session, imgIdIn) {
 #'         selectInput("caseIdIn", "Case Id:", choices = cases_avail),
 #'         verbatimTextOutput("selectedCaseTxt"),
 #'         caseOutput("show_case"),
-#'         caseOutput("show_case2", height = "1000px")
+#'         caseOutput("show_case2", height = "1000px", width = "80%")
 #'     ),
 #'     server = function(input, output, session) {
 #'         output$selectedCaseTxt <- renderPrint(input$caseIdIn)
 #'         callModule(case, "show_case", caseIdIn = reactive(input$caseIdIn))
 #'         callModule(case, "show_case2", caseIdIn = reactive(input$caseIdIn))
 #'     }
-#' )}
+#' )
+#' }
 caseOutput <- function(id, ...) {
     ns <- NS(id)
 
@@ -92,6 +101,7 @@ caseOutput <- function(id, ...) {
 case <- function(input, output, session, caseIdIn)
 {
     output$mainImage <- EBImage::renderDisplay({
+        req(caseIdIn())
         candi::display_case(case_id = caseIdIn())
     })
 }

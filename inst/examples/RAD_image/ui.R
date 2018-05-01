@@ -2,7 +2,7 @@ fluidPage(
     shinyjs::useShinyjs(),
     theme = shinythemes::shinytheme("darkly"),
     div(id="title", align="center",
-        titlePanel("CXR Training Interpretation Trial", windowTitle="Benchmarking Trial")),
+        titlePanel("CXR Training Interpretation Trial", windowTitle="RAD_image")),
 
     # 2 horizontal sections -- the radiograph will be the only thing on the second section so
     # the page can adapt to the large variation in full radiograph sizes.
@@ -12,9 +12,6 @@ fluidPage(
             # User name / progress / submit
             textInput("userNameIn", "User Name:", value = "Marcus"),
             uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
-            hr(),
-            # Control the main iamge
-            checkboxInput("invertImgIn", "Invert Image?", value=FALSE),
             hr(),
 
             # Submit
@@ -40,8 +37,5 @@ fluidPage(
         )
     ), hr(),
 
-    # Main Radiograph ----
-    div(id = "imgOut", align="center",
-        EBImage::displayOutput("mainImage")
-    )
+    radiographOutput("main_image")
 )

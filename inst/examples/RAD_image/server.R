@@ -15,14 +15,7 @@ function(input, output, session) {
     })
 
     # Main image
-    output$mainImage <- EBImage::renderDisplay({
-        req(input$imgIdIn)
-        img <- candi::load_radiograph(img_id = input$imgIdIn, img_dir = kDIR_LARGE_IMGS)
-        if (input$invertImgIn) {
-            img %<>% cxrTargetDiff::image_invert()
-        }
-        EBImage::display(img, method="browser")
-    })
+    callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
 
     # UI
     output$imgIdUi <- renderUI({
@@ -74,5 +67,4 @@ function(input, output, session) {
         input$userNameIn
         n_complete()
     })
-
 }

@@ -39,7 +39,8 @@ ui = fluidPage(
 server = function(input, output, session) {
     output$selectedImgTxt <- renderPrint(input$imgIdIn)
     callModule(radiograph, "show_rad", imgIdIn = reactive(input$imgIdIn))
-})}
+})
+}
 }
 \seealso{
 Other shiny_module: \code{\link{impressionInput}},

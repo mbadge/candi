@@ -18,7 +18,7 @@
                   'HerniaHiatal', 'Nodule', 'PulmonaryAtelectasis',
                   'Pneumonia', 'PulmonaryEdema', 'Consolidation',
                   'CathetersIndwelling', 'TechnicalQualityOfImageUnsatisfactory',
-                  'LungHypoinflation', 'LungHyperdistention')
+                  'LungHypoinflation', 'LungHyperdistention') %>% purrr::set_names(., str_case_title(.))
 
     # NSE FXN
     #' @examples

@@ -14,7 +14,7 @@
 #' load_radiograph("iu_1_1") %>% EBImage::display(.)
 load_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
     fp <- file.path(img_dir, paste0(img_id, ".jpg"))
-    stopifnot(file.exists(fp))
+    if (!file.exists(fp)) stop("No file found at ", fp)
 
     img <- EBImage::readImage(fp)
     return(img)

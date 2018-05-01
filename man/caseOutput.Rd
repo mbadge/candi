@@ -36,12 +36,13 @@ shinyApp(
         selectInput("caseIdIn", "Case Id:", choices = cases_avail),
         verbatimTextOutput("selectedCaseTxt"),
         caseOutput("show_case"),
-        caseOutput("show_case2", height = "1000px")
+        caseOutput("show_case2", height = "1000px", width = "80\%")
     ),
     server = function(input, output, session) {
         output$selectedCaseTxt <- renderPrint(input$caseIdIn)
         callModule(case, "show_case", caseIdIn = reactive(input$caseIdIn))
         callModule(case, "show_case2", caseIdIn = reactive(input$caseIdIn))
     }
-)}
+)
+}
 }
