@@ -8,17 +8,24 @@ source("patientMedicalRecord.R")
 data(test_df, package="cxrTargetDiff")
 
 # fsio
-kDIR_USR_INPT <- "/www/app_data/app_data_cxrTargetDiff/usr_inpt/"  # Directory with user input records
-kDIR_LARGE_IMGS <- "/www/app_data/app_data_cxrTargetDiff/large_jpgs/"
+kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
+
+AppDir <- function(...) {
+    fp <- file.path(candiOpt(app_data_dir), "rad_multimodal", ...)
+    stopifnot(dir.exists(fp))
+    fp
+}
+
+kDIR_USR_INPT <- AppDir("usr_input")
+kDIR_LOG <- AppDir("log")
+
 
 # medical record components
 kEMR_DEMOGRAPHICS <- c("age", "sex", "view", "cassette_orientation")
 kEMR_NOTE <- c("findings")
 
 # Check Flags ----
-stopifnot(dir.exists(kDIR_USR_INPT),
-          dir.exists(kDIR_LARGE_IMGS),
-          all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(test_df))),
+stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(test_df))),
           all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(test_df))))
 
 # Main ----
@@ -37,8 +44,8 @@ if (any(test_df$img_id %ni% (large_img_ids))) {
 # ...and vice versa
 if (any(large_img_ids %ni% test_df$img_id)) {
     warning("There are images with no associated test_df record")
-    large_img_ids <- intersect(large_img_ids, test_df$img_id)
 }
+
 kAVAIL_IMG_IDS <- test_df$img_id
 
 
