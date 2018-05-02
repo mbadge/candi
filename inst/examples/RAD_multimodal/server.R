@@ -1,11 +1,7 @@
 function(input, output, session) {
     # Invoke Modules ----
     callModule(patientMedicalRecord, "displayEMR",
-               imgIdIn = reactive(input$imgIdIn),
-               test_df = test_df,
-               demographics_cols = kEMR_DEMOGRAPHICS,
-               dx_cols = kDXS_CHR,
-               note_col = kEMR_NOTE)
+               idIn = reactive(input$imgIdIn))
 
     # User Input / Conductors ----
     # Reactive elements bound to lower camel case names
