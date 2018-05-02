@@ -1,7 +1,6 @@
 # Evaluate the distribution of cases by date
 data(cases, package="candi")
 
-
 kTARGETS <- candiOpt(dxs_chr)
 stopifnot(all(kTARGETS %in% names(cases)))
 
@@ -69,6 +68,8 @@ cases %>%
     summarise_at(.vars = kTARGETS, .funs = mean) %>%
     gather(key = "dx", value = "prev", -test_prtn) %>%
     {
-        ggplot(., aes(x=test_prtn, y=prev, col=dx, fill=dx)) + geom_point()
+        ggplot(., aes(x=test_prtn, y=prev, group = dx, col=dx, fill=dx)) +
+            geom_point() +
+            geom_line()
     }
 

@@ -1,0 +1,43 @@
+---
+title: "Data Statistics"
+author: "Marcus Badgeley"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+# Objective
+Characterize the baseline cross-sectional study population
+
+```{r config, include=F}
+library(knitr); library(pander); library(tibble); library(caret)
+devtools::load_all()
+
+knitr::opts_chunk$set(comment="",
+                      fig.show='hold', fig.align="center", fig.height=8, fig.width=8,
+                      message=FALSE,
+                      warning=FALSE, cache=TRUE, tidy=TRUE, rownames.print=FALSE)
+
+ggplot2::theme_set(vizR::theme_())
+
+set.seed(123)
+```
+
+
+```{r params_rmd, }
+data(package = "candi")$results %>% kable()
+data(cases, package = "candi")
+data("radiographs", package = "candi")
+
+str(cases)
+cases
+str(radiographs)
+radiographs
+```
+
+
+
+
