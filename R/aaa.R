@@ -6,12 +6,19 @@
 # candi.option_one
 .onLoad <- function(libname, pkgname) {
     # FSIO ----
+    PkgDir <- function(...) {
+        fp <- file.path('/www/app_data/candi', ...)
+        if (!file.exists(fp)) {warning("Pkg Directory doesn't exist: ", fp)}
+        fp
+    }
+
     # Apps can share image repos to consolidate bulky data
-    SMALL_IMG_DIR <- '/www/app_data/candi/small_jpgs/'  # imageNet size 299x299
-    LARGE_IMG_DIR <- '/www/app_data/candi/large_jpgs/'  # original resolution
+    SMALL_IMG_DIR <- PkgDir('small_jpgs')  # imageNet size 299x299
+    LARGE_IMG_DIR <- PkgDir('large_jpgs')  # original resolution
+    BBOX_IMG_DIR <- PkgDir('bbox')  # Pre-annotated images for CAD
 
     # parent directory for segregating app-specific data collections (eg, user input)
-    APP_DATA_DIR <- '/www/app_data/candi/apps'
+    APP_DATA_DIR <- PkgDir('apps')
     # Each app has a subdir under the general candi app_data_dir, with
     # downstream targets fully defined in the app's global.R
 
@@ -36,6 +43,7 @@
     packageStartupMessage("Setting CANDI Analysis Global Variables:\n\n",
                           Show(SMALL_IMG_DIR),
                           Show(LARGE_IMG_DIR),
+                          Show(BBOX_IMG_DIR),
                           Show(APP_DATA_DIR),
                           Show(ANNOTATION_TYPES),
                           Show(DXS_CHR),
@@ -45,6 +53,7 @@
     opt_candi <- list(
         candi.small_img_dir = SMALL_IMG_DIR,
         candi.large_img_dir = LARGE_IMG_DIR,
+        candi.bbox_img_dir = BBOX_IMG_DIR,
         candi.app_data_dir = APP_DATA_DIR,
         candi.annotation_types = ANNOTATION_TYPES,
         candi.dxs_chr = DXS_CHR
