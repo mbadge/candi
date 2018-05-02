@@ -6,7 +6,6 @@ source("patientMedicalRecord.R")
 # Flags -----------------------
 # pkg data
 data(test_df, package="cxrTargetDiff")
-data(dx_df, package="cxrTargetDiff")
 
 # fsio
 kDIR_USR_INPT <- "/www/app_data/app_data_cxrTargetDiff/usr_inpt/"  # Directory with user input records
@@ -23,10 +22,7 @@ stopifnot(dir.exists(kDIR_USR_INPT),
           all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(test_df))))
 
 # Main ----
-# use diagnoses from pkg data dx_df for user impression ui
-kDXS_CHR <- dx_df$targets
-kDXS_CHR %<>% purrr::set_names(., MyUtils::str_case_title(.))
-rm(dx_df)
+kDXS_CHR <- candiOpt(dxs_chr)
 
 # Check data.table and image file overlap
 large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg", full.names=TRUE) %>% MyUtils::fp_stem()

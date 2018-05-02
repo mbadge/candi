@@ -14,14 +14,18 @@ library("forcats")
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 
 # fs i/o
-kDIR_APP_DATA <- '/www/app_data/app_data_candi/CANDI_CAD'
-kDIR_SMALL_IMGS <- file.path(kDIR_APP_DATA, 'images')  # 299 x 299 normalized jpgs
-kDIR_BBOX_IMGS <- file.path(kDIR_APP_DATA, 'bbox')  # Images annotated with bbox localization
-kDIR_USR_INPT <- file.path(kDIR_APP_DATA, 'usr_inpt')
+kDIR_SMALL_IMGS <- candiOpt(small_img_dir)  # 299 x 299 normalized jpgs
+kDIR_BBOX_IMGS <- candiOpt(bbox_img_dir)  # Images annotated with bbox localization
 
-# Check Flags ----
-inpt_dirs <- c(kDIR_APP_DATA, kDIR_SMALL_IMGS, kDIR_BBOX_IMGS, kDIR_USR_INPT)
-stopifnot(all(map_lgl(inpt_dirs, dir.exists)))
+AppDir <- function(...) {
+    fp <- file.path(candiOpt(app_data_dir), "candi_cad", ...)
+    stopifnot(dir.exists(fp))
+    fp
+}
+kDIR_USR_INPT <- AppDir("usr_input")
+kDIR_LOG <- AppDir("log")
+
+
 
 # load info tables
 data("hist_imgs_df", package="candi")
@@ -50,7 +54,6 @@ if (any(small_img_ids %ni% test_imgs_df$img_id)) {
     small_img_ids <- intersect(small_img_ids, test_imgs_df$img_id)
 }
 kAVAIL_IMG_IDS <- test_imgs_df$img_id
-
 
 
 
