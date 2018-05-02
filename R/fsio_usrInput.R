@@ -1,6 +1,6 @@
 #' Save a data frame with user input to csv
 #'
-#' The filename is computed as the md5 hash of the data.frame
+#' A column is added with save time and the file is named by md5 hash.
 #'
 #' @param x data.frame to save
 #' @param dir chr(1)
@@ -11,10 +11,11 @@
 #' @examples
 #' save_fp <- save_usr_input(mtcars, dir = tempdir())  # Save to tmp
 #' read_csv(save_fp)
-#' save_fp <- save_usr_input(mtcars); print(save_fp)  # save to usr_input_dir
+#' save_fp <- save_usr_input(mtcars, candiOpt(app_data_dir)); print(save_fp)  # save to usr_input_dir
 #' read_csv(save_fp); file.remove(save_fp)            # and remove
-save_usr_input <- function(x, dir = candiOpt(usr_input_dir)) {
-    stopifnot(is.data.frame(x))
+save_usr_input <- function(x, dir) {
+    # Preconditions
+    stopifnot(is.data.frame(x), dir.exists(dir))
 
     x$timestamp <- MyUtils::date_time_stamp()
     x <- dplyr::select(x, timestamp, dplyr::everything())
@@ -40,7 +41,7 @@ save_usr_input <- function(x, dir = candiOpt(usr_input_dir)) {
 #' \dontrun{
 #'   load_usr_input("Marcus")
 #' }
-load_usr_input <- function(user, dir = candiOpt(usr_input_dir)) {
+load_usr_input <- function(user, dir) {
     # precondition
     stopifnot(dir.exists(dir))
 
@@ -51,6 +52,7 @@ load_usr_input <- function(user, dir = candiOpt(usr_input_dir)) {
         return(NULL)
     }
 
-    all_records <- purrr::map_dfr(record_fps, ~suppressMessages(readr::read_csv(.x, col_types = 'ccccicccc')))  # coerce ints to chars for rbind to succeed
+    all_records <- purrr::map_dfr(record_fps,
+            ~suppressMessages(readr::read_csv(.x, col_types = 'ccccicccc')))  # coerce ints to chars for rbind to succeed
     all_records[all_records$user_name == user, ]
 }

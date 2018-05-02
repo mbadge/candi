@@ -6,10 +6,14 @@
 # candi.option_one
 .onLoad <- function(libname, pkgname) {
     # FSIO ----
+    # Apps can share image repos to consolidate bulky data
     SMALL_IMG_DIR <- '/www/app_data/candi/small_jpgs/'  # imageNet size 299x299
     LARGE_IMG_DIR <- '/www/app_data/candi/large_jpgs/'  # original resolution
 
-    USR_INPUT_DIR <- '/www/app_data/candi/usr_input/'  # Parent for all data on users
+    # parent directory for segregating app-specific data collections (eg, user input)
+    APP_DATA_DIR <- '/www/app_data/candi/apps'
+    # Each app has a subdir under the general candi app_data_dir, with
+    # downstream targets fully defined in the app's global.R
 
     # FLAGS ----
     # User input types (each will get it's own subfolder with USR_INPT_DIR)
@@ -32,7 +36,7 @@
     packageStartupMessage("Setting CANDI Analysis Global Variables:\n\n",
                           Show(SMALL_IMG_DIR),
                           Show(LARGE_IMG_DIR),
-                          Show(USR_INPUT_DIR),
+                          Show(APP_DATA_DIR),
                           Show(ANNOTATION_TYPES),
                           Show(DXS_CHR),
                           "\ncall candiOpt(<snake_case_opt>) to fetch; e.g. `candiOpt(annotation_types)`")
@@ -41,7 +45,7 @@
     opt_candi <- list(
         candi.small_img_dir = SMALL_IMG_DIR,
         candi.large_img_dir = LARGE_IMG_DIR,
-        candi.usr_input_dir = USR_INPUT_DIR,
+        candi.app_data_dir = APP_DATA_DIR,
         candi.annotation_types = ANNOTATION_TYPES,
         candi.dxs_chr = DXS_CHR
     )
@@ -73,6 +77,16 @@ candiOpt_ <- function(opt_substr, ...) {
     # Precondition
     stopifnot(is.character(opt_substr), length(opt_substr) == 1)
 
+    candi_opts <- str_subset(names(options()), "^candi")
+    # if opt_substr empty or invalid, show user all available
+    if (missing(opt_substr) || str_c("candi.", opt_substr) %ni% candi_opts) {
+        avail = paste0("CANDI pkg options:\n",
+                      paste(candi_opts, collapse="\n"))
+        stop("Please supply a valid option to candiOpt()...\n", avail, call. = FALSE)
+        return(invisible())
+    }
+
+
     getOption(paste("candi", opt_substr, sep = "."), ...)
 }
 
@@ -81,12 +95,7 @@ candiOpt_ <- function(opt_substr, ...) {
 #' @examples
 #' candiOpt()
 #' candiOpt(annotation_types)
+#' candiOpt(foobar)
 candiOpt <- function(opt_substr, ...) {
-    if (missing(opt_substr)) {
-        avail = paste0("CANDI pkg options:\n",
-                      paste(str_subset(names(options()), "candi"), collapse="\n"))
-        cat(avail)
-        return(invisible())
-    }
     candiOpt_(deparse(substitute(opt_substr)))
 }
