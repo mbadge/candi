@@ -29,4 +29,5 @@ eg: hips.option_one
 candiOpt_("annotation_types")
 candiOpt()
 candiOpt(annotation_types)
+candiOpt(foobar)
 }

@@ -4,7 +4,7 @@
 \alias{load_usr_input}
 \title{Load input app data from a user}
 \usage{
-load_usr_input(user, dir = candiOpt(usr_input_dir))
+load_usr_input(user, dir)
 }
 \arguments{
 \item{user}{chr(1) user to filter user_name column by}

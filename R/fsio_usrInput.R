@@ -56,3 +56,36 @@ load_usr_input <- function(user, dir) {
             ~suppressMessages(readr::read_csv(.x, col_types = 'ccccicccc')))  # coerce ints to chars for rbind to succeed
     all_records[all_records$user_name == user, ]
 }
+
+
+
+#' Save a timestamped record when a user triggers an event.
+#'
+#' @param usr_chr chr(1) username
+#' @param event_chr chr(1) event name
+#' @param dir chr(1)
+#' @param img_id optional chr(1)
+#'
+#' @return target file path, but called for saving side effect
+#' @export
+#'
+#' @examples
+#' save_fp <- log_usr_event("marcus", "submitBtn", dir = candiOpt(app_data_dir))
+#' read_csv(save_fp); file.remove(save_fp)            # and remove
+log_usr_event <- function(usr_chr, event_chr, dir, img_id=NA_character_) {
+    # Preconditions ----
+    stopifnot(is.character(usr_chr), is.character(event_chr),
+              dir.exists(dir))
+
+    df <- data.frame(
+        user_name = usr_chr,
+        timestamp = MyUtils::date_time_stamp(),
+        event = event_chr,
+        img_id = img_id
+    )
+
+    fn <- stringr::str_c(digest::digest(df, algo="md5"), ".csv")
+    readr::write_csv(df, path = file.path(dir, fn))
+
+    file.path(dir, fn)
+}

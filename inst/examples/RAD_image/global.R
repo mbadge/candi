@@ -11,17 +11,22 @@ options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctr
 data(test_df, package="cxrTargetDiff")  # EHR data for test app test cases
 
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
-kDIR_USR_INPT <- candiOpt(usr_input_dir)
-kDIR_USR_LOG <- file.path(kDIR_USR_INPT, "log")  # Dir for non-user input user session data - timestamped event logger
-# Usr_Inpt is referenced by the application logic, whereas log files should only be used in downstream analysis
+
+AppDir <- function(...) {
+    fp <- file.path(candiOpt(app_data_dir), "rad_image", ...)
+    stopifnot(dir.exists(fp))
+    fp
+}
+kDIR_USR_INPT <- AppDir("usr_input")
+kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event logger
+# Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
+# log files should only be used in downstream analysis
 
 # FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
 
 # Preconditions ----
-stopifnot(dir.exists(kDIR_USR_INPT),
-          dir.exists(kDIR_LARGE_IMGS),
-          dir.exists(kDIR_USR_LOG))
+stopifnot(dir.exists(kDIR_LARGE_IMGS))
 stopifnot(all(kDXS_CHR %in% names(test_df)))
 
 

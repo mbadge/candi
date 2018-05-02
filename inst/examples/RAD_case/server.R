@@ -29,7 +29,7 @@ function(input, output, session) {
         # Get remaining portion of queue
         todo_input_ids <- usr_queue[usr_queue %ni% complete_input_ids]
 
-        selectInput("imgIdIn", "Image Id:", choices = todo_input_ids)
+        selectInput("imgIdIn", "Case Id:", choices = todo_input_ids)
     })
     outputOptions(output, "imgIdUi", suspendWhenHidden = FALSE)
 
@@ -37,12 +37,12 @@ function(input, output, session) {
     #observeEvent(input$submitBtn, {
     n_complete <- eventReactive(input$submitBtn, {
         candi::save_usr_input(usrInptDf(), dir = kDIR_USR_INPT)
-        cxrTargetDiff::log_usr_event(input$userNameIn, "submitBtn", dir = kDIR_USR_LOG, img_id = input$imgIdIn)
+        cxrTargetDiff::log_usr_event(input$userNameIn, "submitBtn", dir = kDIR_LOG, img_id = input$imgIdIn)
 
         # Tee up next radiograph
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%
             magrittr::use_series("img_id")
-        todo_input_ids <- setdiff(kAVAIL_IMG_IDS %>% imgIds2Cases(), complete_input_ids %>% imgIds2Cases())
+        todo_input_ids <- setdiff(kAVAIL_IMG_IDS %>% imgIds2Cases(), complete_input_ids)
 
         next_imgId <- todo_input_ids[[1]]
         cat(next_imgId)
@@ -61,7 +61,7 @@ function(input, output, session) {
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%
             magrittr::use_series("img_id")
         # This runs before a file is saved, so I hacked a +1 to the count (still starts at 0, but doesn't lag)
-        glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS) %>% imgIds2Cases()} radiographs")
+        glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS %>% imgIds2Cases())} radiographs")
     })
 
     output$progressTxt <- renderText({

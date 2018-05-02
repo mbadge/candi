@@ -37,7 +37,7 @@ function(input, output, session) {
     #observeEvent(input$submitBtn, {
     n_complete <- eventReactive(input$submitBtn, {
         candi::save_usr_input(usrInptDf(), dir = kDIR_USR_INPT)
-        cxrTargetDiff::log_usr_event(input$userNameIn, "submitBtn", dir = kDIR_USR_LOG, img_id = input$imgIdIn)
+        cxrTargetDiff::log_usr_event(input$userNameIn, "submitBtn", dir = kDIR_LOG, img_id = input$imgIdIn)
 
         # Tee up next radiograph
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%

@@ -4,7 +4,7 @@
 \alias{save_usr_input}
 \title{Save a data frame with user input to csv}
 \usage{
-save_usr_input(x, dir = candiOpt(usr_input_dir))
+save_usr_input(x, dir)
 }
 \arguments{
 \item{x}{data.frame to save}
@@ -15,11 +15,11 @@ save_usr_input(x, dir = candiOpt(usr_input_dir))
 called for side effect; but returns target fp for reference
 }
 \description{
-The filename is computed as the md5 hash of the data.frame
+A column is added with save time and the file is named by md5 hash.
 }
 \examples{
 save_fp <- save_usr_input(mtcars, dir = tempdir())  # Save to tmp
 read_csv(save_fp)
-save_fp <- save_usr_input(mtcars); print(save_fp)  # save to usr_input_dir
+save_fp <- save_usr_input(mtcars, candiOpt(app_data_dir)); print(save_fp)  # save to usr_input_dir
 read_csv(save_fp); file.remove(save_fp)            # and remove
 }

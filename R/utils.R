@@ -14,6 +14,8 @@ Viz.Image <- function(img_arr) {
 }
 
 
+#' Convert a vector of image IDs to corresponding unique case IDs.
+#'
 #' @export
 #' @examples
 #' imgs_avail = candiOpt(large_img_dir) %>% list.files() %>% fp_stem()
