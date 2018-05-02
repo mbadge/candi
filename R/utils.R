@@ -14,20 +14,6 @@ Viz.Image <- function(img_arr) {
 }
 
 
-#' Convert a vector of image IDs to corresponding unique case IDs.
-#'
-#' @export
-#' @examples
-#' imgs_avail = candiOpt(large_img_dir) %>% list.files() %>% fp_stem()
-#' imgIds2Cases(imgs_avail)
-imgIds2Cases <- function(img_ids) {
-    img_ids %>%
-        str_split(pattern = "_") %>%
-        map_chr(2) %>% unique() %>% as.integer()
-}
-
-
-
 #' @export
 date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
 #' @export
