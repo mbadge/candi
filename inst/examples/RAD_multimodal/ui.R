@@ -41,8 +41,5 @@ fluidPage(
         )
     ), hr(),
 
-    # Main Radiograph ----
-    div(id = "imgOut", align="center",
-        EBImage::displayOutput("mainImage")
-    )
+    radiographOutput("main_image")
 )
