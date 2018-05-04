@@ -4,16 +4,25 @@
 \alias{similarImg}
 \title{CANDI PC-based Similar Image Search Shiny Module Server}
 \usage{
-similarImg(input, output, session, testImgId, img_dir, dx_chr)
+similarImg(input, output, session, testImgId, test_imgs_df, hist_imgs_df,
+  dxs_chr = candi::candiOpt(dxs_chr),
+  img_dir = candi::candiOpt(large_img_dir))
 }
 \arguments{
-\item{input, output, session}{shiny module server-client mgmt}
+\item{input}{shiny session input}
+
+\item{output}{shiny session output}
+
+\item{session}{shiny session id}
 
 \item{testImgId}{reactive expression that returns chr(1) img_id of current test image}
 
-\item{img_dir}{chr(1)}
+\item{test_imgs_df}{radiograph-major data.frame with at least img_id and PCs}
 
-\item{dx_chr}{chr(n) diagnoses to incldue}
+\item{hist_imgs_df}{radiograph-major data.frame with at least img_id and PCs,
+and also other cols to map to scatter plot aesthetics}
+
+\item{img_dir}{chr(1)}
 }
 \value{
 data.frame similarImgsDf

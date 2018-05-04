@@ -8,19 +8,31 @@
 #' @export
 #' @examples
 #' if (interactive()) {
+#'
 #' library(shiny)
+#'
+#' kN_HIST_IMGS <- 100
+#' test_imgs <- candi::radiographs %>%
+#'     filter(img_id %in% candi::test_imgs) %>%
+#'     with_sep(left_join, cases, by="case")
+#' hist_imgs <- radiographs %>%
+#'     filter(img_id %ni% candi::test_imgs) %>%
+#'     sample_n(kN_HIST_IMGS) %>%
+#'     with_sep(left_join, candi::cases, by="case")
 #'
 #' shinyApp(
 #'     ui = fluidPage(
+#'         selectInput("imgIdIn", "Image Id:", choices = test_imgs$img_id),
 #'         similarImgUi("similarImg")
 #'     ),
-#'     server = function(input, output) {
+#'     server = function(input, output, session) {
 #'         callModule(similarImg, "similarImg",
-#'                    testImgId = "iu_1_1",
-#'                    img_dir = candiOpt(large_img_dir),
-#'                    dx_chr = candiOpt(dxs_chr))
+#'                    testImgId = reactive(input$imgIdIn),
+#'                    test_imgs_df = test_imgs,
+#'                    hist_imgs_df = hist_imgs)
 #'     }
-#' )}
+#' )
+#' }
 similarImgUi <- function(id) {
     ns <- NS(id)
 
@@ -52,9 +64,6 @@ similarImgUi <- function(id) {
                        tableOutput(ns("hoverYTbl")),  # Diagnosis Tbl
                        textOutput(ns("hoverNoteText"))  # Free Text Note
                 )
-            ),
-            fluidRow(
-                dataTableOutput(ns("brushedPointsTable"))
             )
         )
     )
@@ -63,23 +72,31 @@ similarImgUi <- function(id) {
 
 #' CANDI PC-based Similar Image Search Shiny Module Server
 #'
-#' @param input,output,session shiny module server-client mgmt
 #' @param testImgId reactive expression that returns chr(1) img_id of current test image
 #' @param img_dir chr(1)
-#' @param dx_chr chr(n) diagnoses to incldue
+#' @param input shiny session input
+#' @param output shiny session output
+#' @param session shiny session id
+#' @param test_imgs_df radiograph-major data.frame with at least img_id and PCs
+#' @param hist_imgs_df radiograph-major data.frame with at least img_id and PCs,
+#'  and also other cols to map to scatter plot aesthetics
 #'
 #' @return data.frame similarImgsDf
 #'
 #' @family shiny_module
 #' @seealso \code{\link{similarImgUi}}
 #' @export
-similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
+similarImg <- function(input, output, session,
+                       testImgId,
+                       test_imgs_df,
+                       hist_imgs_df,
+                       dxs_chr = candi::candiOpt(dxs_chr),
+                       img_dir = candi::candiOpt(large_img_dir))
+{
     ggplot2::theme_set(theme_dark())
-    data("test_imgs_df", package="candi")
-    data("hist_imgs_df", package="candi")
 
     testImgPcDf <- reactive({
-        test_img_pc_df <-test_imgs_df %>%
+        test_img_pc_df <- test_imgs_df %>%
             filter(img_id == testImgId()) %>%
             select(starts_with("PC"))
         test_img_pc_df
@@ -98,6 +115,7 @@ similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
 
         similar_images_df <- inner_join(dist_df, hist_imgs_df, by="img_id") %>%
             arrange(relative_difference)
+        similar_images_df
     })
 
     # Similar Image Search ---------------
@@ -125,15 +143,6 @@ similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
                   axis.text=element_blank(), axis.title = element_blank())
     })
 
-    # Table of pca selected point region; or most similar points
-    output$brushedPointsTable <- renderDataTable({
-        brush_rows <- brushedPoints(hist_imgs_df, input$plot_brush, input$x, input$y)
-        brush_imgs <- brush_rows$img_id
-        df <- similarImgsDf()
-        if (nrow(brush_rows) > 0) {df <- filter(df, img_id %in% brush_imgs)}
-        df
-    })
-
     # Hovered Image Record -------------
     # show image use is hovering over, or default to the most similar img
     hoverImgId <- reactive({
@@ -148,7 +157,7 @@ similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
     output$hoverYTbl <- renderTable({
         similarImgsDf() %>%
             filter(img_id == hoverImgId()) %>%
-            select(one_of(str_case_title(dx_chr))) %>%
+            select(one_of(dxs_chr)) %>%
             gather(key=diagnosis, value=appreciated) %>%
             arrange(desc(appreciated))
     })
@@ -184,11 +193,6 @@ similarImg <- function(input, output, session, testImgId, img_dir, dx_chr) {
             set_names(., str_case_title(.))
         selectInput(ns("facetColIn"), "Split columns by:", c(None='.', facetable_cols))
     })
-
-    # Event handler ----------------------
-    # Toggle similar image Ui
-    shinyjs::onclick("toggleBrowseSimilar",
-                     shinyjs::toggle("browseSimilarUi", anim=TRUE))
 
     return(similarImgsDf)
 }

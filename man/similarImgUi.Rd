@@ -17,19 +17,31 @@ Shiny module for PC based similar historical image lookup
 }
 \examples{
 if (interactive()) {
+
 library(shiny)
+
+kN_HIST_IMGS <- 100
+test_imgs <- candi::radiographs \%>\%
+    filter(img_id \%in\% candi::test_imgs) \%>\%
+    with_sep(left_join, cases, by="case")
+hist_imgs <- radiographs \%>\%
+    filter(img_id \%ni\% candi::test_imgs) \%>\%
+    sample_n(kN_HIST_IMGS) \%>\%
+    with_sep(left_join, candi::cases, by="case")
 
 shinyApp(
     ui = fluidPage(
+        selectInput("imgIdIn", "Image Id:", choices = test_imgs$img_id),
         similarImgUi("similarImg")
     ),
-    server = function(input, output) {
+    server = function(input, output, session) {
         callModule(similarImg, "similarImg",
-                   testImgId = "iu_1_1",
-                   img_dir = candiOpt(large_img_dir),
-                   dx_chr = candiOpt(dxs_chr))
+                   testImgId = reactive(input$imgIdIn),
+                   test_imgs_df = test_imgs,
+                   hist_imgs_df = hist_imgs)
     }
-)}
+)
+}
 }
 \seealso{
 \code{\link{similarImg}}
