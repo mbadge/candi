@@ -46,3 +46,9 @@ if (any(large_img_ids %ni% test_df$img_id)) {
 }
 
 kAVAIL_IMG_IDS <- test_df$img_id
+
+df_filter_trans <- function(df, img_id) {
+    df[df$img_id == img_id, ] %>%
+        dplyr::select(-img_id) %>%
+        AnalysisToolkit::t2idf()
+}
