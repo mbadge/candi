@@ -53,7 +53,7 @@ load_usr_input <- function(user, dir) {
     }
 
     all_records <- purrr::map_dfr(record_fps,
-            ~suppressMessages(readr::read_csv(.x, col_types = 'ccccicccc')))  # coerce ints to chars for rbind to succeed
+            ~suppressMessages(readr::read_csv(.x)))
     all_records[all_records$user_name == user, ]
 }
 

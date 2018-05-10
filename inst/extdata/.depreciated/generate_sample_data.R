@@ -11,7 +11,7 @@ PC_df <- rerun(.n=10, runif(n=length(img_ids))) %>%
     set_names(str_c("PC", 1:10, sep="_")) %>%
     as.data.frame()
 cnn_inference_df <- bind_cols(pY_df, PC_df) %>%
-    add_column(img_id = img_ids, .before=1)
+    tibble::add_column(img_id = img_ids, .before=1)
 write_csv(cnn_inference_df, path = "www/cnn_inference.csv")
 
 

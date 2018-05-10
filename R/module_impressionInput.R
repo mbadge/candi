@@ -103,13 +103,13 @@ impression <- function(input, output, session,
         )
 
         if (include_demographics) {
-            impression_df %<>% add_column(age = input$ageIn)
-            impression_df %<>% add_column(sex = input$sexIn)
+            impression_df %<>% tibble::add_column(age = input$ageIn)
+            impression_df %<>% tibble::add_column(sex = input$sexIn)
         }
 
         if (include_technical) {
-            impression_df %<>% add_column(view = input$viewIn)
-            impression_df %<>% add_column(cassette = input$cassetteIn)
+            impression_df %<>% tibble::add_column(view = input$viewIn)
+            impression_df %<>% tibble::add_column(cassette = input$cassetteIn)
         }
 
         impression_df

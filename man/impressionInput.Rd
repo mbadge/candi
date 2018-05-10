@@ -42,7 +42,6 @@ shinyApp(
         usrImpressionDf <- callModule(impression, "impression",
                             include_demographics = include_demographics,
                             include_technical = include_technical)
-        )
         output$usrImpressionTable <- renderTable(usrImpressionDf())
     }
 )}
