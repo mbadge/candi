@@ -27,13 +27,14 @@
 #'     callModule(radiograph, "show_rad", imgIdIn = reactive(input$imgIdIn))
 #' })
 #' }
-radiographOutput <- function(id) {
-    ns <- NS(id)
+radiographOutput <- function(id, height = "1000px", width = "80%") {
+    ns <- shiny::NS(id)
 
-    tagList(
-        checkboxInput(ns("invertImgIn"), "Invert Image?", value=FALSE),
-        div(id = ns("imgOut"), align = "center",
-            EBImage::displayOutput(ns("mainImage")))
+    shiny::tagList(
+        shiny::checkboxInput(ns("invertImgIn"), "Invert Image?", value=FALSE),
+        shiny::div(id = ns("imgOut"), align = "center",
+            EBImage::displayOutput(ns("mainImage"),
+                                   height = height, width = width))
     )
 }
 
@@ -85,11 +86,12 @@ radiograph <- function(input, output, session, imgIdIn) {
 #'     }
 #' )
 #' }
-caseOutput <- function(id, ...) {
-    ns <- NS(id)
+caseOutput <- function(id, height = "1000px", width = "80%") {
+    ns <- shiny::NS(id)
 
-    div(id = ns("caseOut"), align = "center",
-                EBImage::displayOutput(ns("mainImage"), ...))
+    shiny::div(id = ns("caseOut"), align = "center",
+                EBImage::displayOutput(ns("mainImage"),
+                                       height = height, width = width))
 }
 
 

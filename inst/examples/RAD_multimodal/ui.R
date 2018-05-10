@@ -13,9 +13,6 @@ fluidPage(
             textInput("userNameIn", "User Name:", value = "Marcus"),
             uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
             hr(),
-            # Control the main iamge
-            checkboxInput("invertImgIn", "Invert Image?", value=FALSE),
-            hr(),
 
             # Submit
             textInput("txtIn", "Comments", placeholder = "optionally submit comment"),

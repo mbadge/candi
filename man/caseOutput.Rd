@@ -5,18 +5,18 @@
 \alias{case}
 \title{Interactive display of radiographs associated with a requested case}
 \usage{
-caseOutput(id, ...)
+caseOutput(id, height = "1000px", width = "80\%")
 
 case(input, output, session, caseIdIn)
 }
 \arguments{
 \item{id}{chr(1) namespace for the module, decided by the caller at the time the module is used}
 
-\item{...}{passed to \code{\link[EBImage]{renderDisplay}}}
-
 \item{input, output, session}{shiny server io}
 
 \item{caseIdIn}{reactive expression that returns chr(1) case id to display}
+
+\item{...}{passed to \code{\link[EBImage]{renderDisplay}}}
 }
 \value{
 shiny module with interactive browsing of case imgs

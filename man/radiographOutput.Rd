@@ -6,7 +6,7 @@
 \alias{radiograph}
 \title{Radiograph display modules for shiny apps}
 \usage{
-radiographOutput(id)
+radiographOutput(id, height = "1000px", width = "80\%")
 
 radiograph(input, output, session, imgIdIn)
 }
