@@ -1,5 +1,4 @@
-# This file contains utility functions to help manage the queue of test
-# radiographs in cxrTargetDiff shiny apps
+# This file contains utility functions to help manage a queue of radiographs/cases
 
 
 #' Convert a username into a coded integer ID using sha256 digests trimmed to 4 bytes

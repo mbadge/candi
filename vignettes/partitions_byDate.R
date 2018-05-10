@@ -1,8 +1,8 @@
 # Evaluate the distribution of cases by date
 data(cases, package="candi")
-data(dx_df, package="cxrTargetDiff")
 
-kTARGETS <- dx_df$targets
+
+kTARGETS <- candiOpt(dxs_chr)
 stopifnot(all(kTARGETS %in% names(cases)))
 
 cases %<>%

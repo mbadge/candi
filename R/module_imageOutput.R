@@ -48,7 +48,7 @@ radiograph <- function(input, output, session, imgIdIn) {
         req(imgIdIn())
         img <- candi::load_radiograph(imgIdIn())
         if (input$invertImgIn) {
-            img %<>% cxrTargetDiff::image_invert()
+            img %<>% image_invert()
         }
         EBImage::display(img)
     })
@@ -106,4 +106,19 @@ case <- function(input, output, session, caseIdIn)
         req(caseIdIn())
         candi::display_case(case_id = caseIdIn())
     })
+}
+
+
+
+
+#' Invert the color of an image.
+#'
+#' @param Img an \code{\link[EBImage]{Image}}
+#'
+#' @return an \code{\link[EBImage]{Image}}
+#' @export
+image_invert <- function(Img) {
+    aa <- Img %>% as.array()
+    inv_aa <- 1- aa
+    EBImage::as.Image(inv_aa)
 }
