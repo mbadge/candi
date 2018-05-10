@@ -44,6 +44,7 @@ patientMedicalRecordOutput <- function(id, section_label="Patient Medical Record
 
 
 #' @rdname patientMedicalRecordOutput
+#' @export
 patientMedicalRecord <- function(input, output, session,
                                  idIn) {
     output$demographicsTbl <- renderTable({
