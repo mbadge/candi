@@ -34,9 +34,9 @@ function(input, output, session) {
 
             # save annotated user input
             submit_data_df <- usrImpressionDf() %>%
-                add_column(is_cad_available = is_cad_available, .before=1) %>%
-                add_column(img_id = input$imgIdIn, .before=1) %>%
-                add_column(user_name = input$user_name, .before=1)
+                tibble::add_column(is_cad_available = is_cad_available, .before=1) %>%
+                tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
+                tibble::add_column(user_name = input$user_name, .before=1)
             save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
         }
 
