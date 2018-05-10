@@ -4,7 +4,8 @@
 \alias{impressionInput}
 \title{Impression User Interface Module}
 \usage{
-impressionInput(id, dx_chr)
+impressionInput(id, dx_chr, include_demographics = FALSE,
+  include_technical = FALSE)
 }
 \arguments{
 \item{id}{chr(1) namespace for the module, decided by the caller at the time the module is used}
@@ -19,18 +20,29 @@ Create a collection of ui inputs for a user to indicate binary classification of
 each dx in \code{dx_chr} along with a free text note.
 }
 \examples{
-impressionInput(id="imp", dx="Cardiomegaly")
 if (interactive()) {
 library(shiny)
 
+include_demographics <- TRUE
+include_technical <- TRUE
+
 shinyApp(
-    ui = fluidPage(
-        impressionInput("impression", dx_chr = candiOpt(dxs_chr)),
-        shiny::tags$strong("User Impression:"),
-        tableOutput("usrImpressionTable")
-    ),
+    ui = fluidPage(fluidRow(
+        column(6,
+            impressionInput("impression", dx_chr = candiOpt(dxs_chr),
+                            include_demographics = include_demographics,
+                            include_technical = include_technical)
+        ),
+        column(6,
+            shiny::tags$strong("User Impression:"),
+            tableOutput("usrImpressionTable")
+        )
+    )),
     server = function(input, output) {
-        usrImpressionDf <- callModule(impression, "impression")
+        usrImpressionDf <- callModule(impression, "impression",
+                            include_demographics = include_demographics,
+                            include_technical = include_technical)
+        )
         output$usrImpressionTable <- renderTable(usrImpressionDf())
     }
 )}

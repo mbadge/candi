@@ -39,7 +39,7 @@ save_usr_input <- function(x, dir) {
 #'
 #' @examples
 #' \dontrun{
-#'   load_usr_input("Marcus")
+#'   load_usr_input("Marcus", dir = file.path(candiOpt(app_data_dir), "rad_image", "usr_input"))
 #' }
 load_usr_input <- function(user, dir) {
     # precondition

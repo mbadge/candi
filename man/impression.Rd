@@ -4,7 +4,8 @@
 \alias{impression}
 \title{CANDI User Impression Interface Module Server Function}
 \usage{
-impression(input, output, session)
+impression(input, output, session, include_demographics = FALSE,
+  include_technical = FALSE)
 }
 \arguments{
 \item{input, output, session}{shiny module server-client mgmt}
