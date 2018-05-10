@@ -1,18 +1,9 @@
 function(input, output, session) {
     # User Input / Conductors ----
     # Reactive elements bound to lower camel case names
-    usrInptDf <- reactive({
-        data.frame(
-            user_name = input$userNameIn,
-            img_id = input$imgIdIn,
-            dxs = input$dxChkbxIn %>% paste(collapse = ","),
-            age = input$ageIn,
-            sex = input$sexIn,
-            view = input$viewIn,
-            cassette = input$cassetteIn,
-            note = input$txtIn
-        )
-    })
+    usrImpressionDf <- callModule(impression, "usrImpression",
+                                  include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                  include_technical = kINCLUDE_TECHNICAL)
 
     # Main image
     callModule(case, "main_image", caseIdIn = reactive(input$imgIdIn))
@@ -36,7 +27,11 @@ function(input, output, session) {
     # Save impression form everytime user clicks submit
     #observeEvent(input$submitBtn, {
     n_complete <- eventReactive(input$submitBtn, {
-        candi::save_usr_input(usrInptDf(), dir = kDIR_USR_INPT)
+        # Record user data
+        submit_data_df <- usrImpressionDf() %>%
+            tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
+            tibble::add_column(user_name = input$userNameIn, .before=1)
+        save_usr_input(submit_data_df, dir = kDIR_USR_INPT)
         cxrTargetDiff::log_usr_event(input$userNameIn, "submitBtn", dir = kDIR_LOG, img_id = input$imgIdIn)
 
         # Tee up next radiograph
@@ -50,12 +45,12 @@ function(input, output, session) {
         updateSelectInput(session = session, inputId = "imgIdIn", selected = next_imgId)
 
         # Clear user entry forms
-        updateCheckboxGroupInput(session, "dxChkbxIn", selected = character(0))
-        updateSliderInput(session, "ageIn", value = 50)
-        updateRadioButtons(session, "sexIn", selected = character(0))
-        updateRadioButtons(session, "viewIn", selected = character(0))
-        updateRadioButtons(session, "cassetteIn", selected = character(0))
-        updateTextInput(session, "txtIn", value=character(0))
+        updateCheckboxGroupInput(session, inputId = NS(namespace = "usrImpression", id = "dxChkbxIn"), selected = character(0))
+        updateSliderInput(session, inputId = NS(namespace = "usrImpression", id = "ageIn"), value = 50)
+        updateRadioButtons(session, NS("usrImpression", "sexIn"), selected = character(0))
+        updateRadioButtons(session, NS("usrImpression", "viewIn"), selected = character(0))
+        updateRadioButtons(session, NS("usrImpression", "cassetteIn"), selected = character(0))
+        updateTextAreaInput(session, NS("usrImpression", "noteTxtIn"), value=character(0))
 
         # Return n complete images
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%

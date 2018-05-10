@@ -1,18 +1,7 @@
+# Reactive elements bound to lower camel case names
+
 function(input, output, session) {
-    # User Input / Conductors ----
-    # Reactive elements bound to lower camel case names
-    # usrInptDf <- reactive({
-    #     data.frame(
-    #         user_name = input$userNameIn,
-    #         img_id = input$imgIdIn,
-    #         dxs = input$dxChkbxIn %>% paste(collapse = ","),
-    #         age = input$ageIn,
-    #         sex = input$sexIn,
-    #         view = input$viewIn,
-    #         cassette = input$cassetteIn,
-    #         note = input$txtIn
-    #     )
-    # })
+    # User Input ----
     usrImpressionDf <- callModule(impression, "usrImpression",
                include_demographics = kINCLUDE_DEMOGRAPHICS,
                include_technical = kINCLUDE_TECHNICAL)
@@ -58,10 +47,10 @@ function(input, output, session) {
         # Clear user entry forms
         updateCheckboxGroupInput(session, inputId = NS(namespace = "usrImpression", id = "dxChkbxIn"), selected = character(0))
         updateSliderInput(session, inputId = NS(namespace = "usrImpression", id = "ageIn"), value = 50)
-        # updateRadioButtons(session, "sexIn", selected = character(0))
-        # updateRadioButtons(session, "viewIn", selected = character(0))
-        # updateRadioButtons(session, "cassetteIn", selected = character(0))
-        # updateTextInput(session, ns("txtIn", value=character(0))
+        updateRadioButtons(session, NS("usrImpression", "sexIn"), selected = character(0))
+        updateRadioButtons(session, NS("usrImpression", "viewIn"), selected = character(0))
+        updateRadioButtons(session, NS("usrImpression", "cassetteIn"), selected = character(0))
+        updateTextAreaInput(session, NS("usrImpression", "noteTxtIn"), value=character(0))
 
         # Return n complete images
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%

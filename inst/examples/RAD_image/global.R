@@ -24,8 +24,8 @@ kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event 
 
 # FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
-kINCLUDE_DEMOGRAPHICS <- FALSE
-kINCLUDE_TECHNICAL <- FALSE
+kINCLUDE_DEMOGRAPHICS <- TRUE
+kINCLUDE_TECHNICAL <- TRUE
 
 # Preconditions ----
 stopifnot(dir.exists(kDIR_LARGE_IMGS))

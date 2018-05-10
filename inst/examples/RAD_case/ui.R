@@ -15,7 +15,6 @@ fluidPage(
             hr(),
 
             # Submit
-            textInput("txtIn", "Comments", placeholder = "optionally submit comment"),
             actionButton("submitBtn", "Submit Impression"),
             hr(),
 
@@ -24,16 +23,11 @@ fluidPage(
         ),
 
         # User Impression ----
-        column(5, div(align="center", p(strong("User Impression"))),
-               checkboxGroupInput("dxChkbxIn", label="Diagnoses", choices=kDXS_CHR)
-        ),
-
-        # Patient Records ----
-        column(4,
-               sliderInput("ageIn", "Patient Age", min = 0, max=100, value=60),
-               radioButtons("sexIn", "Patient Sex", choices = c("female"="f", "male"="m"), inline = TRUE),
-               radioButtons("viewIn", "Radiograph View", choices = c("ap", "lateral", "pa"), inline=TRUE),
-               radioButtons("cassetteIn", "Cassette Orientation", choices = c("portrait", "landscape"), inline=TRUE)
+        column(9,
+            impressionInput(id = "usrImpression",
+                            dx_chr = candiOpt(dxs_chr),
+                            include_demographics = kINCLUDE_DEMOGRAPHICS,
+                            include_technical = kINCLUDE_TECHNICAL)
         )
     ), hr(),
 

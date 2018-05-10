@@ -1,24 +1,14 @@
+# Reactive elements bound to lower camel case names
+
 function(input, output, session) {
     # Invoke Modules ----
+    usrImpressionDf <- callModule(impression, "usrImpression",
+               include_demographics = kINCLUDE_DEMOGRAPHICS,
+               include_technical = kINCLUDE_TECHNICAL)
+
     callModule(patientMedicalRecord, "displayEMR",
                idIn = reactive(input$imgIdIn))
 
-    # User Input / Conductors ----
-    # Reactive elements bound to lower camel case names
-    usrInptDf <- reactive({
-        data.frame(
-            user_name = input$userNameIn,
-            img_id = input$imgIdIn,
-            dxs = input$dxChkbxIn %>% paste(collapse = ","),
-            age = input$ageIn,
-            sex = input$sexIn,
-            view = input$viewIn,
-            cassette = input$cassetteIn,
-            note = input$txtIn
-        )
-    })
-
-    # Main image
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
 
     # Progress Message
@@ -47,10 +37,13 @@ function(input, output, session) {
     outputOptions(output, "imgIdUi", suspendWhenHidden = FALSE)
 
 
-
     # Save impression form everytime user clicks submit
     observeEvent(input$submitBtn, {
-        candi::save_usr_input(usrInptDf(), dir = kDIR_USR_INPT)
+        # Record user data
+        submit_data_df <- usrImpressionDf() %>%
+            tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
+            tibble::add_column(user_name = input$userNameIn, .before=1)
+        save_usr_input(submit_data_df, dir = kDIR_USR_INPT)
 
         # Tee up next radiograph
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%
@@ -73,12 +66,12 @@ function(input, output, session) {
         # Clear radiobuttons if the input is missing
         if_na_clear <- function(x) ifelse(is.na(x), character(0), x)
 
-        updateCheckboxGroupInput(session, "dxChkbxIn", selected = dx_chr)
-        updateSliderInput(session, "ageIn", value = pt_df$age)
-        updateRadioButtons(session, "sexIn", selected = pt_df$sex)
-        updateRadioButtons(session, "viewIn", selected = if_na_clear(pt_df$view))
-        updateRadioButtons(session, "cassetteIn", selected = if_na_clear(pt_df$cassette_orientation))
-        # Reset
-        updateTextInput(session, "txtIn", value=character(0))
+        updateCheckboxGroupInput(session, NS("usrImpression", "dxChkbxIn"), 
+        	selected = dx_chr)
+        updateSliderInput(session, NS("usrImpression", "ageIn"), value = pt_df$age)
+        updateRadioButtons(session, NS("usrImpression", "sexIn"), selected = pt_df$sex)
+        updateRadioButtons(session, NS("usrImpression", "viewIn"), selected = if_na_clear(pt_df$view))
+        updateRadioButtons(session, NS("usrImpression", "cassetteIn"), selected = if_na_clear(pt_df$cassette_orientation))
+        updateTextAreaInput(session, NS("usrImpression", "noteTxtIn"), value=character(0))
     })
 }

@@ -12,6 +12,8 @@ library("forcats")
 
 # Flags -----------------------
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
+kINCLUDE_DEMOGRAPHICS <- FALSE
+kINCLUDE_TECHNICAL <- FALSE
 
 # fs i/o
 kDIR_SMALL_IMGS <- candiOpt(small_img_dir)  # 299 x 299 normalized jpgs
@@ -24,7 +26,6 @@ AppDir <- function(...) {
 }
 kDIR_USR_INPT <- AppDir("usr_input")
 kDIR_LOG <- AppDir("log")
-
 
 
 # load info tables

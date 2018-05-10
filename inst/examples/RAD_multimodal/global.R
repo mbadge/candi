@@ -29,6 +29,8 @@ stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(test_df))
 
 # Main ----
 kDXS_CHR <- candiOpt(dxs_chr)
+kINCLUDE_DEMOGRAPHICS <- TRUE
+kINCLUDE_TECHNICAL <- TRUE
 
 # Check data.table and image file overlap
 large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg", full.names=TRUE) %>% MyUtils::fp_stem()
