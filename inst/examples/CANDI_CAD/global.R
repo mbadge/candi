@@ -14,6 +14,7 @@ library("forcats")
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE
+kN_HIST_IMGS <- 100
 
 # fs i/o
 kDIR_SMALL_IMGS <- candiOpt(small_img_dir)  # 299 x 299 normalized jpgs
@@ -29,32 +30,30 @@ kDIR_LOG <- AppDir("log")
 
 
 # load info tables
-data("hist_imgs_df", package="candi")
-data("test_imgs_df", package="candi")
-
+data("radiographs", package="candi")
+data("cases", package="candi")
+data("test_imgs", package = "candi")
 
 # Non-reactive data crafting
-test_py_df <- test_imgs_df %>%
-    select(img_id, starts_with("pY_")) %>%
-    set_colnames(., value = colnames(.) %>% str_replace("pY_", ""))
+test_img_df <- radiographs %>%
+    filter(img_id %in% test_imgs) %>%
+    with_sep(left_join, cases, by="case")
+hist_img_df <- radiographs %>%
+    filter(img_id %ni% test_imgs) %>%
+    sample_n(kN_HIST_IMGS) %>%
+    with_sep(left_join, cases, by="case")
 
 
 # Check data.table and image file overlap
 small_img_ids <- list.files(kDIR_SMALL_IMGS, pattern="*.jpg$", full.names=TRUE) %>% MyUtils::fp_stem()
 
-# Check whether all test_df images are available
-# If not, warn and discard test_df records without an image...
-if (any(test_imgs_df$img_id %ni% (small_img_ids))) {
+# Check whether all images are available
+# If not, warn and discard records without an image...
+if (any(test_imgs %ni% (small_img_ids))) {
     warning("Not all images available")
-    test_imgs_df %<>%
-        dplyr::filter(img_id %in% (small_img_ids))
+    test_imgs %<>% intersect(small_img)
 }
-# ...and vice versa
-if (any(small_img_ids %ni% test_imgs_df$img_id)) {
-    warning("There are images with no associated test_df record")
-    small_img_ids <- intersect(small_img_ids, test_imgs_df$img_id)
-}
-kAVAIL_IMG_IDS <- test_imgs_df$img_id
+kAVAIL_IMG_IDS <- test_imgs
 
 
 

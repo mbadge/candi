@@ -14,7 +14,7 @@ fluidPage(
             uiOutput("imgIdUi"),  # shinyjs::hidden(uiOutput("imgIdUi"))
             hr(),
             # Submitting
-            div(align="center", 
+            div(align="center",
                 actionButton("submitBtn", "Begin Trial"),
                 textOutput("progressTxt")
         )),
@@ -32,7 +32,7 @@ fluidPage(
     hr(),
     textOutput("readerModeTxt"),
     hr(),
-    
+
     # ConvNet Assistance
     shinyjs::hidden(div(id = "cnnCadUi",
         fluidRow(
@@ -48,5 +48,6 @@ fluidPage(
         similarImgUi("similarImg")
     )),
 
+    hr(),
     traceOutput("trace")
 )

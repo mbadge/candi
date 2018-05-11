@@ -3,8 +3,8 @@ function(input, output, session) {
     usrImpressionDf <- callModule(impression, "impression")
     callModule(similarImg, "similarImg",
         testImgId = reactive(input$imgIdIn),
-        img_dir = kDIR_SMALL_IMGS,
-        dx_chr = kDXS_CHR)
+        test_imgs_df = test_img_df,
+        hist_imgs_df = hist_img_df)
 
     # Image Progression ----
     # Get user-specific ordered queue
@@ -48,9 +48,15 @@ function(input, output, session) {
             updateTextAreaInput(session=session, inputId = NS("impression", id="noteTxtIn"), value="Clinical Impression")
 
             # Find next case in queue AFTER saving prior impression
-            complete_input_ids <- candi::load_usr_input(input$user_name, kDIR_USR_INPT) %>%
-                filter(is_cad_available == TRUE) %>%
-                magrittr::use_series("img_id")
+            usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
+
+            if (is.null(usr_input_df)) {
+                complete_input_ids <- character(0)
+            } else {
+                complete_input_ids <- usr_input_df %>%
+                    filter(is_cad_available == TRUE) %>%
+                    magrittr::use_series("img_id")
+            }
 
             # Get remaining portion of queue
             todo_input_ids <- usrQueue()[usrQueue() %ni% complete_input_ids]
@@ -77,10 +83,16 @@ function(input, output, session) {
     # Progress Message
     output$progressTxt <- renderText({
         readerMode()
-        complete_input_ids <- candi::load_usr_input(input$user_name, kDIR_USR_INPT) %>%
-            filter(is_cad_available == TRUE) %>%
-            magrittr::use_series("img_id")
-        glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS)} radiographs")
+        usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
+
+        if (is.null(usr_input_df)) {
+            return(glue::glue("Completed 0 of {length(kAVAIL_IMG_IDS)} radiographs"))
+        } else {
+            complete_input_ids <- usr_input_df %>%
+                filter(is_cad_available == TRUE) %>%
+                magrittr::use_series("img_id")
+            return(glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS)} radiographs"))
+        }
     })
 
     # Randomized Reader Mode Banner
@@ -108,7 +120,8 @@ function(input, output, session) {
 
     # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
-        test_py_df %>%
+        test_img_df %>%
+            select(img_id, starts_with("pY")) %>%
             df_filter_trans(img_id = input$imgIdIn) %>%
             set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
