@@ -5,6 +5,9 @@
 # [pkg name] DOT [snake_case_option_name]
 # candi.option_one
 .onLoad <- function(libname, pkgname) {
+
+    options("EBImage.display" = "browser")  # Show images in browser mode, even if I'm not using R interactively.
+
     # FSIO ----
     PkgDir <- function(...) {
         fp <- file.path('/www/app_data/candi', ...)
