@@ -50,7 +50,7 @@ radiograph <- function(input, output, session, imgIdIn) {
         if (input$invertImgIn) {
             img %<>% image_invert()
         }
-        EBImage::display(img)
+        EBImage::display(img, method = "browser")
     })
 }
 
