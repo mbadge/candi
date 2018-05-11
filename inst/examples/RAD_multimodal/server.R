@@ -39,11 +39,13 @@ function(input, output, session) {
 
     # Save impression form everytime user clicks submit
     observeEvent(input$submitBtn, {
+        cat("saving data...")
         # Record user data
         submit_data_df <- usrImpressionDf() %>%
             tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
             tibble::add_column(user_name = input$userNameIn, .before=1)
         save_usr_input(submit_data_df, dir = kDIR_USR_INPT)
+        cat("data saved")
 
         # Tee up next radiograph
         complete_input_ids <- candi::load_usr_input(input$userNameIn, kDIR_USR_INPT) %>%
@@ -52,26 +54,25 @@ function(input, output, session) {
 
         next_imgId <- todo_input_ids[[1]]
 
+        cat('prefilling values')
         updateSelectInput(session = session, inputId = "imgIdIn", selected = next_imgId)
 
         # Prefill values
-        dx_chr <- test_df[c("img_id", kDXS_CHR)] %>%
-            df_filter_trans(., img_id = next_imgId) %>%
+        dx_chr <- cases[c("case", kDXS_CHR)] %>%
+            df_filter_trans(., case = imgIds2Cases(next_imgId)) %>%
             dplyr::filter(value) %>%
             magrittr::use_series("column")
 
-        pt_df <- test_df[c("img_id", kEMR_DEMOGRAPHICS)] %>%
-            dplyr::filter(img_id == next_imgId)
+        pt_df <- cases[c("case", kEMR_DEMOGRAPHICS)] %>%
+            dplyr::filter(case == imgIds2Cases(next_imgId))
 
         # Clear radiobuttons if the input is missing
         if_na_clear <- function(x) ifelse(is.na(x), character(0), x)
 
-        updateCheckboxGroupInput(session, NS("usrImpression", "dxChkbxIn"), 
+        updateCheckboxGroupInput(session, NS("usrImpression", "dxChkbxIn"),
         	selected = dx_chr)
         updateSliderInput(session, NS("usrImpression", "ageIn"), value = pt_df$age)
         updateRadioButtons(session, NS("usrImpression", "sexIn"), selected = pt_df$sex)
-        updateRadioButtons(session, NS("usrImpression", "viewIn"), selected = if_na_clear(pt_df$view))
-        updateRadioButtons(session, NS("usrImpression", "cassetteIn"), selected = if_na_clear(pt_df$cassette_orientation))
         updateTextAreaInput(session, NS("usrImpression", "noteTxtIn"), value=character(0))
     })
 }

@@ -8,7 +8,7 @@ options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctr
 
 # FSIO ----
 # pkg data
-data(test_df, package="cxrTargetDiff")  # EHR data for test app test cases
+data(test_imgs, package = "candi")
 
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
@@ -30,7 +30,6 @@ kINCLUDE_TECHNICAL <- FALSE
 
 # Preconditions ----
 stopifnot(dir.exists(kDIR_LARGE_IMGS))
-stopifnot(all(kDXS_CHR %in% names(test_df)))
 
 
 # Main ----
@@ -39,13 +38,8 @@ large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg") %>% MyUtils::fp_
 
 # Check whether all test_df images are available
 # If not, warn and discard test_df records without an image...
-if (any(test_df$img_id %ni% (large_img_ids))) {
+if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
-    test_df %<>%
-        dplyr::filter(img_id %in% (large_img_ids))
+    test_imgs <- intersect(large_img_ids, test_imgs)
 }
-# ...and vice versa
-if (any(large_img_ids %ni% test_df$img_id)) {
-    warning("There are excess images with no associated test_df record")
-}
-kAVAIL_IMG_IDS <- intersect(large_img_ids, test_df$img_id)
+kAVAIL_IMG_IDS <- test_imgs

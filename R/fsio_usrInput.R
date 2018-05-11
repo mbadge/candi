@@ -78,10 +78,10 @@ log_usr_event <- function(usr_chr, event_chr, dir, img_id=NA_character_) {
               dir.exists(dir))
 
     df <- data.frame(
-        user_name = usr_chr,
         timestamp = MyUtils::date_time_stamp(),
-        event = event_chr,
-        img_id = img_id
+        user_name = usr_chr,
+        img_id = img_id,
+        event = event_chr
     )
 
     fn <- stringr::str_c(digest::digest(df, algo="md5"), ".csv")

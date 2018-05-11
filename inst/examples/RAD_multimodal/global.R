@@ -3,8 +3,13 @@ library(magrittr)
 library(candi)
 
 # Flags -----------------------
+kINCLUDE_DEMOGRAPHICS <- TRUE
+kINCLUDE_TECHNICAL <- TRUE
+
+
 # pkg data
-data(test_df, package="cxrTargetDiff")
+data(test_imgs, package = "candi")
+data(cases, package = "candi")
 
 # fsio
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
@@ -18,39 +23,31 @@ AppDir <- function(...) {
 kDIR_USR_INPT <- AppDir("usr_input")
 kDIR_LOG <- AppDir("log")
 
-
 # medical record components
-kEMR_DEMOGRAPHICS <- c("age", "sex", "view", "cassette_orientation")
+kDXS_CHR <- candiOpt(dxs_chr)
+kEMR_DEMOGRAPHICS <- c("age", "sex")
 kEMR_NOTE <- c("findings")
 
-# Check Flags ----
-stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(test_df))),
-          all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(test_df))))
 
-# Main ----
-kDXS_CHR <- candiOpt(dxs_chr)
-kINCLUDE_DEMOGRAPHICS <- TRUE
-kINCLUDE_TECHNICAL <- TRUE
+# Check Flags ----
+stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(cases))),
+          all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(cases))))
+
 
 # Check data.table and image file overlap
 large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg", full.names=TRUE) %>% MyUtils::fp_stem()
 
-# Check whether all test_df images are available
-# If not, warn and discard test_df records without an image...
-if (any(test_df$img_id %ni% (large_img_ids))) {
+# Check whether all test images are available
+# If not, warn and discard records without an image...
+if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
-    test_df %<>%
-        dplyr::filter(img_id %in% (large_img_ids))
+    test_imgs <- intersect(large_img_ids, test_imgs)
 }
-# ...and vice versa
-if (any(large_img_ids %ni% test_df$img_id)) {
-    warning("There are images with no associated test_df record")
-}
+kAVAIL_IMG_IDS <- test_imgs
+cases %<>% filter(case %in% imgIds2Cases(test_imgs))
 
-kAVAIL_IMG_IDS <- test_df$img_id
-
-df_filter_trans <- function(df, img_id) {
-    df[df$img_id == img_id, ] %>%
-        dplyr::select(-img_id) %>%
+df_filter_trans <- function(df, case) {
+    df[df$case == case, ] %>%
+        dplyr::select(-case) %>%
         AnalysisToolkit::t2idf()
 }
