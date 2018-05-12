@@ -21,16 +21,6 @@ load_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
 }
 
 
-#' @rdname load_radiograph
-#' @export
-#' @examples
-#' display_radiograph("iu_1_1")
-display_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir)) {
-    load_radiograph(img_id = img_id, img_dir = img_dir) %>%
-        EBImage::display()
-}
-
-
 #' Load radiographs from dataset-case into an EBImage stack
 #'
 #' All images named <dataset>_<case_id>_* in img_dir are loaded.
@@ -65,13 +55,3 @@ load_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
     purrr::map(case_imgs, EBImage::resize, w=min_dims[1], h=min_dims[2]) %>%
         EBImage::combine()
 }
-
-#' @rdname load_case
-#' @export
-#' @examples
-#' display_case("3")
-display_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
-    load_case(dataset=dataset, case_id=case_id, img_dir=img_dir) %>%
-        EBImage::display()
-}
-

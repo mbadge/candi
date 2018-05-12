@@ -1,3 +1,24 @@
+#' @rdname load_radiograph
+#' @export
+#' @examples
+#' display_radiograph("iu_1_1")
+#' display_radiograph("iu_1_1", method = "browser")
+display_radiograph <- function(img_id, img_dir = candiOpt(large_img_dir), ...) {
+    load_radiograph(img_id = img_id, img_dir = img_dir) %>%
+        EBImage::display(...)
+}
+
+
+
+#' @rdname load_case
+#' @export
+#' @examples
+#' display_case("3")
+display_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir), ...) {
+    load_case(dataset=dataset, case_id=case_id, img_dir=img_dir) %>%
+        EBImage::display(...)
+}
+
 #' Radiograph display modules for shiny apps
 #'
 #' Wraps \code{\link[EBImage]{displayOutput}} in UI fxn
@@ -104,7 +125,7 @@ case <- function(input, output, session, caseIdIn)
 {
     output$mainImage <- EBImage::renderDisplay({
         req(caseIdIn())
-        candi::display_case(case_id = caseIdIn())
+        candi::display_case(case_id = caseIdIn(), method = "browser")
     })
 }
 
