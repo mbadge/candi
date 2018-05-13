@@ -15,6 +15,7 @@ library(shiny)
 
 shinyApp(
     ui = fluidPage(
+        shinyjs::useShinyjs(),
         textInput("user_name", "Radiologist Name:", value = "Marcus"),
         traceOutput("trace")
     ),
