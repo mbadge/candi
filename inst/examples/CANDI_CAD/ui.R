@@ -20,8 +20,8 @@ fluidPage(
         )),
         # Test Radiograph
         column(6, shinyjs::hidden(div(id="mainImageUi", align="center",
-                      imageOutput("mainImage", width = 299, height=299))
-        )),
+                            radiographOutput("main_image")
+        ))),
         # User Impression
         column(3,
              shinyjs::hidden(div(id="impressionPanel",

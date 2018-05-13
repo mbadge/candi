@@ -104,12 +104,8 @@ function(input, output, session) {
 
 
     # Serve outputs --------------------------------
-    # Test Radiograph
-    output$mainImage <- renderImage({
-        req(input$imgIdIn)
-        src_fp <- file.path(kDIR_SMALL_IMGS, str_c(input$imgIdIn, ".jpg"))
-        return(list(src = src_fp, filetype="image/jpeg", alt="Main Radiograph"))
-    }, deleteFile = FALSE)
+    # Main image
+    callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
 
     # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization
