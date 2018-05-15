@@ -28,6 +28,18 @@
 #'         callModule(patientMedicalRecord, "emr", idIn = reactive(input$idIn))
 #'     }
 #' )}
+#'
+#'
+#' if (interactive()) {
+#' shinyApp(
+#'   ui = fluidPage(
+#'       selectInput("idIn", "Img ID", choices = radiographs$img_id),
+#'       patientMedicalRecordOutput("emr")
+#'   ),
+#'   server = function(input, output, session) {
+#'       callModule(patientMedicalRecord, "emr", idIn = reactive(NULL))
+#'   }
+#' )}
 patientMedicalRecordOutput <- function(id, section_label="Patient Medical Record") {
     ns <- NS(id)
 
@@ -48,12 +60,14 @@ patientMedicalRecordOutput <- function(id, section_label="Patient Medical Record
 patientMedicalRecord <- function(input, output, session,
                                  idIn) {
     output$demographicsTbl <- renderTable({
+        req(idIn())
         candi::cases[candi::cases$case == imgIds2Cases(idIn()), ] %>%
             dplyr::select(one_of(c("age", "sex", "day"))) %>%
             AnalysisToolkit::t2idf()
     }, colnames = FALSE)
 
     output$dxTbl <- renderTable({
+        req(idIn())  # In case input id is unavailable, don't display any values
         candi::cases[candi::cases$case == imgIds2Cases(idIn()), ] %>%
             dplyr::select(one_of(candiOpt(dxs_chr))) %>%
             AnalysisToolkit::t2idf() %>%

@@ -43,4 +43,16 @@ shinyApp(
         callModule(patientMedicalRecord, "emr", idIn = reactive(input$idIn))
     }
 )}
+
+
+if (interactive()) {
+shinyApp(
+  ui = fluidPage(
+      selectInput("idIn", "Img ID", choices = radiographs$img_id),
+      patientMedicalRecordOutput("emr")
+  ),
+  server = function(input, output, session) {
+      callModule(patientMedicalRecord, "emr", idIn = reactive(NULL))
+  }
+)}
 }
