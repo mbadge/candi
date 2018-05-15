@@ -10,6 +10,10 @@ library("ggplot2")
 library("forcats")
 
 
+# Env
+options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctrl-F3
+
+
 # Flags -----------------------
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 kINCLUDE_DEMOGRAPHICS <- FALSE

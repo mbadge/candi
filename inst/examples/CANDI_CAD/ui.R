@@ -2,7 +2,7 @@ fluidPage(
     shinyjs::useShinyjs(),
     theme = shinythemes::shinytheme("darkly"),
     div(id="title", align="center",
-        titlePanel("CANDI for Computer Assisted Diagnosis", windowTitle="CANDI CAD")),
+        titlePanel("CAD Evaluation Trial", windowTitle="CANDI CAD")),
 
     # 2 horizontal sections
     # top: userInfo | mainRadiograph | userImpression

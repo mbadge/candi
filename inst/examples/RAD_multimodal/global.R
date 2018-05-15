@@ -2,6 +2,10 @@ library(MyUtils)
 library(magrittr)
 library(candi)
 
+# Env
+options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctrl-F3
+
+
 # Flags -----------------------
 kINCLUDE_DEMOGRAPHICS <- TRUE
 kINCLUDE_TECHNICAL <- TRUE
