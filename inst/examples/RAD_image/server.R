@@ -1,10 +1,8 @@
-# Reactive elements bound to lower camel case names
-
 function(input, output, session) {
-    # User Input ----
+    # Invoke Modules ----
     usrImpressionDf <- callModule(impression, "usrImpression",
-               include_demographics = kINCLUDE_DEMOGRAPHICS,
-               include_technical = kINCLUDE_TECHNICAL)
+                                  include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                  include_technical = kINCLUDE_TECHNICAL)
 
     # Main image
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
@@ -24,6 +22,7 @@ function(input, output, session) {
         selectInput("imgIdIn", "Image Id:", choices = todo_input_ids)
     })
     outputOptions(output, "imgIdUi", suspendWhenHidden = FALSE)
+
 
     # Save impression form everytime user clicks submit
     #observeEvent(input$submitBtn, {

@@ -1,10 +1,17 @@
 function(input, output, session) {
     # Invoke modules ----
+    # Input form
     usrImpressionDf <- callModule(impression, "impression")
+
+    # Main image
+    callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
+
+    # CAD similar image search
     callModule(similarImg, "similarImg",
         testImgId = reactive(input$imgIdIn),
         test_imgs_df = test_img_df,
         hist_imgs_df = hist_img_df)
+
 
     # Image Progression ----
     # Get user-specific ordered queue
@@ -104,8 +111,6 @@ function(input, output, session) {
 
 
     # Serve outputs --------------------------------
-    # Main image
-    callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
 
     # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization

@@ -1,10 +1,8 @@
-# Reactive elements bound to lower camel case names
-
 function(input, output, session) {
     # Invoke Modules ----
     usrImpressionDf <- callModule(impression, "usrImpression",
-               include_demographics = kINCLUDE_DEMOGRAPHICS,
-               include_technical = kINCLUDE_TECHNICAL)
+                                  include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                  include_technical = kINCLUDE_TECHNICAL)
 
     callModule(patientMedicalRecord, "displayEMR",
                idIn = reactive(input$imgIdIn))
@@ -54,9 +52,9 @@ function(input, output, session) {
 
         next_imgId <- todo_input_ids[[1]]
 
-        cat('prefilling values')
         updateSelectInput(session = session, inputId = "imgIdIn", selected = next_imgId)
 
+        cat('prefilling values')
         # Prefill values
         dx_chr <- cases[c("case", kDXS_CHR)] %>%
             df_filter_trans(., case = imgIds2Cases(next_imgId)) %>%

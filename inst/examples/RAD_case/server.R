@@ -1,6 +1,5 @@
 function(input, output, session) {
-    # User Input / Conductors ----
-    # Reactive elements bound to lower camel case names
+    # User Input ----
     usrImpressionDf <- callModule(impression, "usrImpression",
                                   include_demographics = kINCLUDE_DEMOGRAPHICS,
                                   include_technical = kINCLUDE_TECHNICAL)
@@ -40,7 +39,6 @@ function(input, output, session) {
         todo_input_ids <- setdiff(kAVAIL_IMG_IDS %>% imgIds2Cases(), complete_input_ids)
 
         next_imgId <- todo_input_ids[[1]]
-        cat(next_imgId)
 
         updateSelectInput(session = session, inputId = "imgIdIn", selected = next_imgId)
 
