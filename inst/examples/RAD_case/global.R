@@ -22,7 +22,6 @@ kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event 
 # Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
 # log files should only be used in downstream analysis
 
-
 # FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
 kINCLUDE_DEMOGRAPHICS <- FALSE
@@ -36,8 +35,8 @@ stopifnot(dir.exists(kDIR_LARGE_IMGS))
 # Check data.table and image file overlap
 large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg") %>% MyUtils::fp_stem()
 
-# Check whether all test_df images are available
-# If not, warn and discard test_df records without an image...
+# Confirm all test images are available
+# If not, warn and remove records without an image...
 if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
     test_imgs <- intersect(large_img_ids, test_imgs)

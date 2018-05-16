@@ -15,7 +15,7 @@ fluidPage(
             hr(),
             # Submitting
             div(align="center",
-                actionButton("submitBtn", "Begin Trial"),
+                actionButton("submit_btn", "Begin Trial"),
                 textOutput("progressTxt")
         )),
         # Test Radiograph

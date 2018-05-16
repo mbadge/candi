@@ -24,12 +24,12 @@ function(input, output, session) {
     outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)
 
     # Reactive Event Handlers --------------------------------------------------
-    readerMode <- eventReactive(input$submitBtn, {
+    readerMode <- eventReactive(input$submit_btn, {
         # Either initialize or save answer
-        if (input$submitBtn == 1) {
+        if (input$submit_btn == 1) {
             # Since we're timing user responses, gate the initiation of the app
             # Initially show nothing but name and begin button, then reveal impression and submit
-            updateActionButton(session, "submitBtn", label = "Submit Impression")
+            updateActionButton(session, "submit_btn", label = "Submit Impression")
             shinyjs::disable("user_name")
             shinyjs::show("mainImageUi")
             shinyjs::show("impressionPanel")

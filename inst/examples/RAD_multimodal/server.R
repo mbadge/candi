@@ -84,6 +84,7 @@ function(input, output, session) {
             updateTextAreaInput(session, NS("user_impression", "noteTxtIn"), value=character(0))
     })
 
+
     # ---- Outputs ----
     # Image UI based on completed image records.
     output$imgIdUi <- renderUI({
