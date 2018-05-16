@@ -32,7 +32,8 @@ fluidPage(
         column(5,
                patientMedicalRecordOutput(id = "display_emr")
         )
-    ), hr(),
+    ),
+    hr(),
 
     radiographOutput("main_image")
 )

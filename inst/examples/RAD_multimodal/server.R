@@ -54,6 +54,7 @@ function(input, output, session) {
                 tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
                 tibble::add_column(user_name = input$user_name, .before=1)
             save_usr_input(submit_data_df, dir = kDIR_USR_INPT)
+            log_usr_event(input$user_name, "submit_btn", dir = kDIR_LOG, img_id = input$imgIdIn)
             cat("data saved")
         },
         priority = 10  # Execute before remainingQueue and all others so they act on the next img
@@ -82,7 +83,8 @@ function(input, output, session) {
             updateSliderInput(session, NS("user_impression", "ageIn"), value = pt_df$age)
             updateRadioButtons(session, NS("user_impression", "sexIn"), selected = pt_df$sex)
             updateTextAreaInput(session, NS("user_impression", "noteTxtIn"), value=character(0))
-    })
+        }
+    )
 
 
     # ---- Outputs ----

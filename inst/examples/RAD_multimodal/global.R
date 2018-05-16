@@ -29,11 +29,13 @@ kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event 
 # Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
 # log files should only be used in downstream analysis
 
-# medical record components
+# FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
 kEMR_DEMOGRAPHICS <- c("age", "sex")
 kEMR_NOTE <- c("findings")
 
+# Preconditions ----
+stopifnot(dir.exists(kDIR_LARGE_IMGS))
 
 # Check Flags ----
 stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(cases))),
