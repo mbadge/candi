@@ -1,5 +1,5 @@
 library(MyUtils)
-library(candi)
+suppressPackageStartupMessages(library(candi))
 library(magrittr)
 
 # Env
