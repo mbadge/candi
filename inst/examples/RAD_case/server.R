@@ -6,6 +6,8 @@ function(input, output, session) {
                                   include_technical = kINCLUDE_TECHNICAL)
 
     # Output
+    callModule(patientMedicalRecord, "display_emr",
+               idIn = reactive(input$imgIdIn))
     callModule(case, "main_image", caseIdIn = reactive(input$imgIdIn))
 
 

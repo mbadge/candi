@@ -1,6 +1,6 @@
 library(MyUtils)
-library(magrittr)
 library(candi)
+library(magrittr)
 
 # Env
 options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctrl-F3
@@ -25,7 +25,9 @@ AppDir <- function(...) {
 }
 
 kDIR_USR_INPT <- AppDir("usr_input")
-kDIR_LOG <- AppDir("log")
+kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event logger
+# Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
+# log files should only be used in downstream analysis
 
 # medical record components
 kDXS_CHR <- candiOpt(dxs_chr)
@@ -37,12 +39,12 @@ kEMR_NOTE <- c("findings")
 stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(cases))),
           all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(cases))))
 
-
+# Main ----
 # Check data.table and image file overlap
-large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg", full.names=TRUE) %>% MyUtils::fp_stem()
+large_img_ids <- list.files(kDIR_LARGE_IMGS, pattern = "*.jpg") %>% MyUtils::fp_stem()
 
-# Check whether all test images are available
-# If not, warn and discard records without an image...
+# Confirm all test images are available
+# If not, warn and remove records without an image...
 if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
     test_imgs <- intersect(large_img_ids, test_imgs)

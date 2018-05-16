@@ -6,10 +6,15 @@ library(magrittr)
 options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctrl-F3
 
 
-# FSIO ----
+# Flags -----------------------
+kINCLUDE_DEMOGRAPHICS <- TRUE
+kINCLUDE_TECHNICAL <- TRUE
+
+
 # pkg data
 data(test_imgs, package = "candi")
 
+# fsio
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
 AppDir <- function(...) {
@@ -17,6 +22,7 @@ AppDir <- function(...) {
     stopifnot(dir.exists(fp))
     fp
 }
+
 kDIR_USR_INPT <- AppDir("usr_input")
 kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event logger
 # Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
@@ -24,8 +30,6 @@ kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event 
 
 # FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
-kINCLUDE_DEMOGRAPHICS <- FALSE
-kINCLUDE_TECHNICAL <- FALSE
 
 # Preconditions ----
 stopifnot(dir.exists(kDIR_LARGE_IMGS))

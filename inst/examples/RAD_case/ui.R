@@ -8,27 +8,32 @@ fluidPage(
     # the page can adapt to the large variation in full radiograph sizes.
     fluidRow(
         column(3,
-            div(align="center", p(strong("User Controls"))),
-            # User name / progress / submit
-            textInput("user_name", "User Name:", value = "Marcus"),
-            uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
-            hr(),
+               div(align="center", p(strong("User Controls"))),
+               # User name / progress / submit
+               textInput("user_name", "User Name:", value = "Marcus"),
+               uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
+               hr(),
 
-            # Submit
-            actionButton("submit_btn", "Submit Impression"),
-            hr(),
-
-            # Progress
-            textOutput("progressTxt")
+               # Submitting
+               actionButton(inputId = "submit_btn", label = "Begin Annotating"),
+               textOutput("progressText")
         ),
 
-        column(9,
-            impressionInput(id = "user_impression",
-                            dx_chr = candiOpt(dxs_chr),
-                            include_demographics = kINCLUDE_DEMOGRAPHICS,
-                            include_technical = kINCLUDE_TECHNICAL)
+        # User Impression ----
+        # Wrap in hidden div so I can reveal only after user begins
+        column(4, shinyjs::hidden(div(id = "user_impression_panel", align = "center",
+                                      impressionInput(id = "user_impression",
+                                                      dx_chr = candiOpt(dxs_chr),
+                                                      include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                                      include_technical = kINCLUDE_TECHNICAL)
+        ))),
+
+        # Patient Records ----
+        column(5,
+               patientMedicalRecordOutput(id = "display_emr")
         )
-    ), hr(),
+    ),
+    hr(),
 
     caseOutput("main_image")
 )
