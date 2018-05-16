@@ -2,6 +2,7 @@
 
 export("%ni%")
 export(Viz.Image)
+export(WindowTitle)
 export(candiOpt)
 export(candiOpt_)
 export(case)

@@ -111,3 +111,9 @@ candiOpt_ <- function(opt_substr, ...) {
 candiOpt <- function(opt_substr, ...) {
     candiOpt_(deparse(substitute(opt_substr)))
 }
+
+
+#' @export
+#' @examples
+#' WindowTitle()
+WindowTitle <- compose(basename, getwd)

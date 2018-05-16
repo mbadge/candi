@@ -2,7 +2,7 @@ fluidPage(
     shinyjs::useShinyjs(),
     theme = shinythemes::shinytheme("darkly"),
     div(id="title", align="center",
-        titlePanel("Annotate Testing Data", windowTitle="RAD_multimodal")),
+        titlePanel("Annotate Testing Data", windowTitle=WindowTitle())),
 
     # 2 horizontal sections -- the radiograph will be the only thing on the second section so
     # the page can adapt to the large variation in full radiograph sizes.
