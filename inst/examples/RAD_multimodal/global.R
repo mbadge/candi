@@ -45,8 +45,9 @@ if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
     test_imgs <- intersect(large_img_ids, test_imgs)
 }
-kAVAIL_TEST_IDS <- imgIds2Cases( test_imgs )  # Operate by case
-cases %<>% filter(case %in% kAVAIL_TEST_IDS)
+#kAVAIL_TEST_IDS <- imgIds2Cases( test_imgs )  # Operate by case
+kAVAIL_TEST_IDS <- test_imgs
+cases %<>% filter(case %in% imgIds2Cases(kAVAIL_TEST_IDS))
 
 df_filter_trans <- function(df, case) {
     df[df$case == case, ] %>%

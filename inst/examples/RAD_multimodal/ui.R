@@ -29,9 +29,7 @@ fluidPage(
         ))),
 
         # Patient Records ----
-        column(5,
-               patientMedicalRecordOutput(id = "display_emr")
-        )
+        column(5)
     ),
     hr(),
 

@@ -6,8 +6,6 @@ function(input, output, session) {
                                   include_technical = kINCLUDE_TECHNICAL)
 
     # Output
-    callModule(patientMedicalRecord, "display_emr",
-               idIn = reactive(input$imgIdIn))
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
 
 
@@ -24,6 +22,7 @@ function(input, output, session) {
             usr_queue <- candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS)
             # Get remaining portion of queue
             todo_input_ids <- usr_queue[usr_queue %ni% complete_input_ids]
+            todo_input_ids
         }
     )
 
@@ -72,17 +71,8 @@ function(input, output, session) {
                 dplyr::filter(value) %>%
                 magrittr::use_series("column")
 
-            pt_df <- cases[c("case", kEMR_DEMOGRAPHICS)] %>%
-                dplyr::filter(case == imgIds2Cases(next_imgId))
-
-            # Clear radiobuttons if the input is missing
-            if_na_clear <- function(x) ifelse(is.na(x), character(0), x)
-
             updateCheckboxGroupInput(session, NS("user_impression", "dxChkbxIn"),
             	selected = dx_chr)
-            updateSliderInput(session, NS("user_impression", "ageIn"), value = pt_df$age)
-            updateRadioButtons(session, NS("user_impression", "sexIn"), selected = pt_df$sex)
-            updateTextAreaInput(session, NS("user_impression", "noteTxtIn"), value=character(0))
         }
     )
 
