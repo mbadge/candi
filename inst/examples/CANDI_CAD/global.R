@@ -57,7 +57,7 @@ if (any(test_imgs %ni% (small_img_ids))) {
     warning("Not all images available")
     test_imgs %<>% intersect(small_img)
 }
-kAVAIL_IMG_IDS <- test_imgs
+kAVAIL_TEST_IDS <- test_imgs  # CAD operates by Image
 
 
 

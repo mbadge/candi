@@ -15,7 +15,7 @@ function(input, output, session) {
 
     # Image Progression ----
     # Get user-specific ordered queue
-    usrQueue <- reactive(candi::randomize_user_queue(input$user_name, kAVAIL_IMG_IDS))
+    usrQueue <- reactive(candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS))
 
     # UI
     output$imgIdUi <- renderUI({
@@ -93,12 +93,12 @@ function(input, output, session) {
         usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
 
         if (is.null(usr_input_df)) {
-            return(glue::glue("Completed 0 of {length(kAVAIL_IMG_IDS)} radiographs"))
+            return(glue::glue("Completed 0 of {length(kAVAIL_TEST_IDS)} radiographs"))
         } else {
             complete_input_ids <- usr_input_df %>%
                 filter(is_cad_available == TRUE) %>%
                 magrittr::use_series("img_id")
-            return(glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_IMG_IDS)} radiographs"))
+            return(glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_TEST_IDS)} radiographs"))
         }
     })
 

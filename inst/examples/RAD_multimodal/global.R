@@ -6,7 +6,8 @@ library(magrittr)
 options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctrl-F3
 
 
-# Flags -----------------------
+# FLAGS ----
+kDXS_CHR <- candiOpt(dxs_chr)
 kINCLUDE_DEMOGRAPHICS <- TRUE
 kINCLUDE_TECHNICAL <- TRUE
 
@@ -15,7 +16,7 @@ kINCLUDE_TECHNICAL <- TRUE
 data(test_imgs, package = "candi")
 data(cases, package = "candi")
 
-# fsio
+
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
 AppDataDir <- function(...) {
@@ -33,14 +34,6 @@ kDIR_LOG <- AppDataDir("log")    # Dir for non-user input user session data - ev
 # log files should only be used in downstream analysis
 
 
-# FLAGS ----
-kDXS_CHR <- candiOpt(dxs_chr)
-kEMR_DEMOGRAPHICS <- c("age", "sex")
-kEMR_NOTE <- c("findings")
-
-# Check Flags ----
-stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(cases))),
-          all(purrr::map_lgl(kEMR_NOTE, `%in%`, table=colnames(cases))))
 
 # Main ----
 # Check data.table and image file overlap
@@ -52,8 +45,8 @@ if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
     test_imgs <- intersect(large_img_ids, test_imgs)
 }
-kAVAIL_IMG_IDS <- test_imgs
-cases %<>% filter(case %in% imgIds2Cases(test_imgs))
+kAVAIL_TEST_IDS <- imgIds2Cases( test_imgs )  # Operate by case
+cases %<>% filter(case %in% kAVAIL_TEST_IDS)
 
 df_filter_trans <- function(df, case) {
     df[df$case == case, ] %>%

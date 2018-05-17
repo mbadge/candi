@@ -11,9 +11,12 @@ kDXS_CHR <- candiOpt(dxs_chr)
 kINCLUDE_DEMOGRAPHICS <- TRUE
 kINCLUDE_TECHNICAL <- TRUE
 
-# FSIO ----
+
 # pkg data
 data(test_imgs, package = "candi")
+data(cases, package = "candi")
+
+
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
 AppDataDir <- function(...) {
@@ -42,4 +45,13 @@ if (any(test_imgs %ni% (large_img_ids))) {
     warning("Not all images available")
     test_imgs <- intersect(large_img_ids, test_imgs)
 }
-kAVAIL_IMG_IDS <- test_imgs
+
+kAVAIL_TEST_IDS <- imgIds2Cases(test_imgs)  # TEST BY CASE
+cases %<>% filter(case %in% kAVAIL_TEST_IDS)  # Filter cases to only test cases
+
+
+df_filter_trans <- function(df, case) {
+    df[df$case == case, ] %>%
+        dplyr::select(-case) %>%
+        AnalysisToolkit::t2idf()
+}

@@ -21,7 +21,7 @@ function(input, output, session) {
             complete_input_ids <- candi::load_usr_input(input$user_name, kDIR_USR_INPT) %>%
                 magrittr::use_series("img_id")
             # Get user-specific ordered queue
-            usr_queue <- candi::randomize_user_queue(input$user_name, kAVAIL_IMG_IDS)
+            usr_queue <- candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS)
             # Get remaining portion of queue
             todo_input_ids <- usr_queue[usr_queue %ni% complete_input_ids]
         }
@@ -97,7 +97,7 @@ function(input, output, session) {
 
     # Progress Message
     output$progressText <- renderText({
-        n_total <- length(kAVAIL_IMG_IDS)
+        n_total <- length(kAVAIL_TEST_IDS)
         n_complete <- n_total - length(remainingQueue())
         glue::glue("Completed {n_complete} of {n_total} radiographs")
     })
