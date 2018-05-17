@@ -113,11 +113,15 @@ candiOpt <- function(opt_substr, ...) {
 }
 
 
+#' Application title based on app directory
+#'
 #' @export
 #' @examples
 #' WindowTitle()
 WindowTitle <- compose(basename, getwd)
 
+#' Schema-based application data directory
+#'
 #' @export
 #' @examples
 #' AppDataDir()

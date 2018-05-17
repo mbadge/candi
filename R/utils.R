@@ -47,7 +47,7 @@ Not <- function(f1){
 #' @return pieces list with same length as x_chr, whose i-th element contains a
 #' character vector of split products of x_chr[i]
 #'
-#' @import purrr stringr assertive.strings
+#' @import purrr stringr
 #' @importFrom rebus "%R%" capture one_or_more
 #' @export
 split_pieces <- function(x_chr, split_pat = character()) {
@@ -66,7 +66,7 @@ split_pieces <- function(x_chr, split_pat = character()) {
         str_split(pattern=split_pat)
 
     # Remove empty strings pieces
-    pieces <- lapply(pieces, FUN = discard, .p=is_empty_character)
+    pieces <- lapply(pieces, FUN = discard, .p=assertive.strings::is_empty_character)
 
     names(pieces) <- nms
     pieces

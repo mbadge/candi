@@ -7,7 +7,6 @@
 #'
 #' @return \code{\link[EBImage]{Image}} with 3 axes
 #'
-#' @importFrom EBImage "readImage"
 #' @export
 #' @examples
 #' load_radiograph("iu_1_1")
@@ -43,7 +42,7 @@ load_case <- function(case_id, dataset="iu", img_dir=candiOpt(large_img_dir)) {
 
     case_img_ids <- list.files(img_dir,
                                pattern = str_c("^", dataset, "_", case_id, "_")) %>%
-        MyUtils::fp_stem(.)
+        fp_stem(.)
 
     case_imgs <- purrr::map(case_img_ids, load_radiograph, img_dir = img_dir)
 

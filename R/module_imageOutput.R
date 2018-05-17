@@ -1,3 +1,10 @@
+# From standard R session (not shiny), use display_radiograph and display_case
+# to load and display images from candi image directories.
+# Within apps, use the modules
+# * radiographOutput, radiograph
+# * caseOutput, case
+
+
 #' @rdname load_radiograph
 #' @export
 #' @examples
