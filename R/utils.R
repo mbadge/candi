@@ -105,14 +105,16 @@ str_case_title <- function(x_chr) {
     x_title
 }
 
-#' @importFrom rebus one_or_more
+#' @importFrom rebus one_or_more "%R%"
 #' @export
 fp_stem <- function(x_chr) {
     stopifnot(is.character(x_chr))
 
     bn <- basename(x_chr)
     stem <- str_replace(bn,
-                        pattern=DOT %R% one_or_more(ALNUM) %R% END,
+                        pattern= rebus::DOT %R%
+                            one_or_more(rebus::ALNUM) %R%
+                            rebus::END,
                         replacement="")
     stem
 }
