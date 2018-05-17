@@ -8,8 +8,8 @@ options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctr
 
 # FLAGS ----
 kDXS_CHR <- candiOpt(dxs_chr)
-kINCLUDE_DEMOGRAPHICS <- TRUE
-kINCLUDE_TECHNICAL <- TRUE
+kINCLUDE_DEMOGRAPHICS <- FALSE
+kINCLUDE_TECHNICAL <- FALSE
 
 
 # pkg data
