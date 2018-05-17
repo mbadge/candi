@@ -18,14 +18,8 @@ data(cases, package = "candi")
 # fsio
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
-AppDir <- function(...) {
-    fp <- file.path(candiOpt(app_data_dir), "rad_multimodal", ...)
-    stopifnot(dir.exists(fp))
-    fp
-}
-
-kDIR_USR_INPT <- AppDir("usr_input")
-kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event logger
+kDIR_USR_INPT <- AppDataDir("usr_input")
+kDIR_LOG <- AppDataDir("log")    # Dir for non-user input user session data - event logger
 # Usr_Inpt is referenced by the application logic to decide the remaining work queue for a user
 # log files should only be used in downstream analysis
 
@@ -33,9 +27,6 @@ kDIR_LOG <- AppDir("log")    # Dir for non-user input user session data - event 
 kDXS_CHR <- candiOpt(dxs_chr)
 kEMR_DEMOGRAPHICS <- c("age", "sex")
 kEMR_NOTE <- c("findings")
-
-# Preconditions ----
-stopifnot(dir.exists(kDIR_LARGE_IMGS))
 
 # Check Flags ----
 stopifnot(all(purrr::map_lgl(kEMR_DEMOGRAPHICS, `%in%`, table=colnames(cases))),

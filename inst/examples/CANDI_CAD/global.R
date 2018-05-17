@@ -26,7 +26,7 @@ kDIR_BBOX_IMGS <- candiOpt(bbox_img_dir)  # Images annotated with bbox localizat
 
 AppDir <- function(...) {
     fp <- file.path(candiOpt(app_data_dir), "candi_cad", ...)
-    stopifnot(dir.exists(fp))
+    if(!dir.exists(fp)) stop("No directory found at: ", fp)
     fp
 }
 kDIR_USR_INPT <- AppDir("usr_input")

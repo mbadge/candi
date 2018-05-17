@@ -117,3 +117,15 @@ candiOpt <- function(opt_substr, ...) {
 #' @examples
 #' WindowTitle()
 WindowTitle <- compose(basename, getwd)
+
+#' @export
+#' @examples
+#' AppDataDir()
+AppDataDir <- function(...) {
+    fp <- file.path(
+        candiOpt(app_data_dir),
+        compose(str_case_snake, basename, getwd)(),
+        ...)
+    if (!dir.exists(fp)) stop("No directory found at: ", fp)
+    fp
+}

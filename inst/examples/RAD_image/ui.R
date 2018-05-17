@@ -14,12 +14,9 @@ fluidPage(
             uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
             hr(),
 
-            # Submit
-            actionButton("submit_btn", "Submit Impression"),
-            hr(),
-
-            # Progress
-            textOutput("progressTxt")
+            # Submitting
+            actionButton(inputId = "submit_btn", label = "Begin Annotating"),
+            textOutput("progressText")
         ),
 
         column(9,
@@ -28,7 +25,8 @@ fluidPage(
                             include_demographics = kINCLUDE_DEMOGRAPHICS,
                             include_technical = kINCLUDE_TECHNICAL)
         )
-    ), hr(),
+    ),
+    hr(),
 
     radiographOutput("main_image")
 )

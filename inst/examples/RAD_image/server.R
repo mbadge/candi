@@ -1,5 +1,6 @@
 function(input, output, session) {
-    # Invoke Modules ----
+    # ---- Modules ----
+    # Input
     usrImpressionDf <- callModule(impression, "user_impression",
                                   include_demographics = kINCLUDE_DEMOGRAPHICS,
                                   include_technical = kINCLUDE_TECHNICAL)
