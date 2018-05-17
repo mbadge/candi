@@ -18,7 +18,6 @@ data(cases, package = "candi")
 # fsio
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 
-
 AppDataDir <- function(...) {
     fp <- file.path(
         candiOpt(app_data_dir),
