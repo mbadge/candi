@@ -45,7 +45,7 @@ hpiOutput <- function(id) {
 hpiModule <- function(input, output, session, idIn) {
     caseId <- reactive( {
         req(idIn())
-        imgIds2Cases(idIn())
+        id_2Case(idIn())
     })
 
     output$hpiTxt <- renderText({
@@ -76,7 +76,7 @@ histImpOutput <- function(id) {
 histImpModule <- function(input, output, session, idIn) {
     caseId <- reactive({
         req(idIn())
-        imgIds2Cases(idIn())
+        id_2Case(idIn())
     })
 
     output$findingsTxt <- renderText({

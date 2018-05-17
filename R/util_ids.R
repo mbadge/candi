@@ -3,22 +3,22 @@
 #' @param x_chr character vector to test for id format
 #'
 #' @examples
-#' isImgId("iu_1_1")
-#' isImgId("iu")
-#' isImgId(1)
-#' isImgId(c("iu_1_1", "iu_4_4"))
-isImgId <- function(x_chr) {
+#' id_isImg("iu_1_1")
+#' id_isImg("iu")
+#' id_isImg(1)
+#' id_isImg(c("iu_1_1", "iu_4_4"))
+id_isImg <- function(x_chr) {
     str_detect(x_chr, pattern = "^[[:alpha:]]+_[0-9]+_[0-9]+$")
 }
 
-#' @rdname isImgId
+#' @rdname id_isImg
 #' @examples
-#' isCaseId("iu_1_1")
-#' isCaseId("iu")
-#' isCaseId(1)
-#' isCaseId("1")
-#' isCaseId(c("1", "5", "5000"))
-isCaseId <- function(x_chr) {
+#' id_isCase("iu_1_1")
+#' id_isCase("iu")
+#' id_isCase(1)
+#' id_isCase("1")
+#' id_isCase(c("1", "5", "5000"))
+id_isCase <- function(x_chr) {
     str_detect(x_chr, pattern = "^[0-9]+$")
 }
 
@@ -31,13 +31,13 @@ isCaseId <- function(x_chr) {
 #' @export
 #' @examples
 #' imgs_avail = candiOpt(large_img_dir) %>% list.files() %>% fp_stem()
-#' imgIds2Cases(imgs_avail)
-#' imgIds2Cases("iu_1_1")
-#' imgIds2Cases(1)
-#' imgIds2Cases("foobar")
-imgIds2Cases <- function(img_ids) {
-    if (compose(`!`, all, isImgId)(img_ids)) {
-        if (compose(all, isCaseId)(img_ids)) {
+#' id_2Case(imgs_avail)
+#' id_2Case("iu_1_1")
+#' id_2Case(1)
+#' id_2Case("foobar")
+id_2Case <- function(img_ids) {
+    if (compose(`!`, all, id_isImg)(img_ids)) {
+        if (compose(all, id_isCase)(img_ids)) {
             message('input is already case-identifier')
             return(img_ids)
         } else {

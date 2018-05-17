@@ -46,7 +46,7 @@ if (any(test_imgs %ni% (large_img_ids))) {
     test_imgs <- intersect(large_img_ids, test_imgs)
 }
 
-kAVAIL_TEST_IDS <- imgIds2Cases(test_imgs)  # TEST BY CASE
+kAVAIL_TEST_IDS <- id_2Case(test_imgs)  # TEST BY CASE
 cases %<>% filter(case %in% kAVAIL_TEST_IDS)  # Filter cases to only test cases
 
 

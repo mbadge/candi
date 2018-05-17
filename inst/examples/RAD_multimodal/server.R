@@ -67,7 +67,7 @@ function(input, output, session) {
             next_imgId <- remainingQueue()[1L]
 
             dx_chr <- cases[c("case", kDXS_CHR)] %>%
-                df_filter_trans(., case = imgIds2Cases(next_imgId)) %>%
+                df_filter_trans(., case = id_2Case(next_imgId)) %>%
                 dplyr::filter(value) %>%
                 magrittr::use_series("column")
 
