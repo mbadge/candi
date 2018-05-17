@@ -1,83 +1,94 @@
-#' EMR display module for shiny apps
+#' Scalar data display modules for shiny apps
 #'
 #' @param id chr(1) namespace for the module, decided by the caller at the time the module is used
-#' @param section_label chr(1) text to print at the top of the ui section
+#' @param input,output,session standard args to shiny server routine
+#' @param idIn reactive that returns a chr(1) case or image identifier to fetch data for
 #'
 #' @return \code{\link[shiny]{tagList}} of emr ui components
+#'
+#' @name emrModule
+#'
+#' @import shiny
 #' @export
+#'
 #' @examples
 #' if (interactive()) {
+#' library(shiny)
+#'
 #' shinyApp(
 #'     ui = fluidPage(
-#'         selectInput("idIn", "Case ID", choices = cases$case),
-#'         patientMedicalRecordOutput("emr")
+#'         selectInput("idIn", "Case ID:", choices = radiographs$img_id),
+#'         hpiOutput("hpi")
 #'     ),
 #'     server = function(input, output, session) {
-#'         callModule(patientMedicalRecord, "emr", idIn = reactive(input$idIn))
+#'         callModule(hpiModule, "hpi", idIn = reactive(input$idIn))
 #'     }
-#' )}
+#' )
 #'
-#'
-#' if (interactive()) {
 #' shinyApp(
 #'     ui = fluidPage(
-#'         selectInput("idIn", "Img ID", choices = radiographs$img_id),
-#'         patientMedicalRecordOutput("emr")
+#'         selectInput("idIn", "Case ID:", choices = radiographs$img_id),
+#'         histImpOutput("histImp")
 #'     ),
 #'     server = function(input, output, session) {
-#'         callModule(patientMedicalRecord, "emr", idIn = reactive(input$idIn))
+#'         callModule(histImpModule, "histImp", idIn = reactive(input$idIn))
 #'     }
-#' )}
-#'
-#'
-#' if (interactive()) {
-#' shinyApp(
-#'   ui = fluidPage(
-#'       selectInput("idIn", "Img ID", choices = radiographs$img_id),
-#'       patientMedicalRecordOutput("emr")
-#'   ),
-#'   server = function(input, output, session) {
-#'       callModule(patientMedicalRecord, "emr", idIn = reactive(NULL))
-#'   }
-#' )}
-patientMedicalRecordOutput <- function(id, section_label="Patient Medical Record") {
+#' )
+#' }
+hpiOutput <- function(id) {
     ns <- NS(id)
-
-    tagList(
-        div(align="center", p(strong(section_label))),
-        tableOutput(ns("demographicsTbl")),
-        hr(),
-        div(align="center", p(strong("Historical Impression"))),
-        tableOutput(ns("dxTbl")),
-        textOutput(ns("noteTxt"))
-    )
+    textOutput(ns("hpiTxt"))
 }
 
-
-
-#' @rdname patientMedicalRecordOutput
 #' @export
-patientMedicalRecord <- function(input, output, session,
-                                 idIn) {
-    output$demographicsTbl <- renderTable({
+#' @rdname emrModule
+hpiModule <- function(input, output, session, idIn) {
+    caseId <- reactive( {
         req(idIn())
-        candi::cases[candi::cases$case == imgIds2Cases(idIn()), ] %>%
-            dplyr::select(one_of(c("age", "sex", "day"))) %>%
-            AnalysisToolkit::t2idf()
-    }, colnames = FALSE)
+        imgIds2Cases(idIn())
+    })
 
-    output$dxTbl <- renderTable({
-        req(idIn())  # In case input id is unavailable, don't display any values
-        candi::cases[candi::cases$case == imgIds2Cases(idIn()), ] %>%
-            dplyr::select(one_of(candiOpt(dxs_chr))) %>%
-            AnalysisToolkit::t2idf() %>%
-            mutate(column = map_chr(column, str_case_title))
-    }, colnames = FALSE)
-
-    output$noteTxt <- renderText({
-        candi::cases[candi::cases$case == imgIds2Cases(idIn()), ] %>%
-            use_series(indication)
+    output$hpiTxt <- renderText({
+        narrative_str <- candi::cases[candi::cases$case == caseId(), "hpi"] %>% as.character()
+        narrative_str
     })
 }
 
+
+#' @export
+#' @rdname emrModule
+histImpOutput <- function(id) {
+    ns <- NS(id)
+
+    tagList(
+        div(align="center",
+            p(strong( "Documented Case Findings:" )),
+            textOutput(ns("findingsTxt")),
+            hr(),
+            p(strong( "Curators Interpretation of Findings:" )),
+            tableOutput(ns("dxTbl"))
+        )
+    )
+}
+
+#' @export
+#' @rdname emrModule
+histImpModule <- function(input, output, session, idIn) {
+    caseId <- reactive({
+        req(idIn())
+        imgIds2Cases(idIn())
+    })
+
+    output$findingsTxt <- renderText({
+        narrative_str <- candi::cases[candi::cases$case == caseId(), "findings"] %>% as.character()
+        narrative_str
+    })
+
+    output$dxTbl <- renderTable({
+        candi::cases[candi::cases$case == caseId(), ] %>%
+            dplyr::select(dplyr::one_of( candiOpt(dxs_chr) )) %>%
+            AnalysisToolkit::t2idf() %>%
+            dplyr::mutate(column = map_chr(column, str_case_title))
+    })
+}
 
