@@ -36,6 +36,7 @@ function(input, output, session) {
             updateActionButton(session, "submit_btn", label = "Submit Annotation")
             shinyjs::disable("user_name")
             shinyjs::show("user_impression_panel")
+            log_usr_event(input$user_name, "start_btn", dir = kDIR_LOG)
         },
         priority = -1,
         once = TRUE  # Destroy this component after one intended execution
