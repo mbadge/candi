@@ -32,12 +32,57 @@ data(package = "candi")$results %>% kable()
 data(cases, package = "candi")
 data("radiographs", package = "candi")
 
-str(cases)
 cases
-str(radiographs)
 radiographs
 ```
 
 
+```{r missing_tbls, fig.height=3}
+DF.assess_missingness(cases, title = "Data missing from cases")
+DF.assess_missingness(radiographs, title = "Data missing from radiographs")
+```
+
+```{r cases_tbls}
+grp <- character(0)
+covar_sum <- cases %>% 
+    group_by_(.dots = grp) %>% 
+    summarise(case_n = n_distinct(case),
+              age_mean = mean_(age),
+              age_sd = sd_(age))
+prev_sum <- cases %>% 
+    group_by_(.dots = grp) %>% 
+    summarise_at(.vars = vars(one_of(candiOpt(dxs_chr))), mean_)
+bind_cols(covar_sum, prev_sum)
+```
 
 
+```{r radiograph_tbls}
+radiographs$case <- radiographs$img_id %>% 
+    str_split(pattern = "_") %>% 
+    map_chr(2) %>% as.integer()
+rads <- left_join(radiographs, cases, by="case")
+
+rads %>%
+    select(view, one_of(candiOpt(dxs_chr))) %>%
+    gather(key = "indication", value = "is_dx", -view) %>%
+    filter(is_dx) %>%
+    group_by(view, indication) %>%
+    summarise(n = n()) %>%
+    as.df %>% 
+    complete(nesting(view, indication)) %>% 
+    spread(view, n) %>% 
+    kable(caption = "Number of positive radiographs for each finding by view")
+
+rads %>%
+    filter(img_id %in% candi::test_imgs) %>% 
+    select(view, one_of(candiOpt(dxs_chr))) %>%
+    gather(key = "indication", value = "is_dx", -view) %>%
+    filter(is_dx) %>%
+    group_by(view, indication) %>%
+    summarise(n = n()) %>%
+    as.df %>% 
+    complete(nesting(view, indication)) %>% 
+    spread(view, n) %>% 
+    kable(caption = "Number of positive TEST radiographs for each finding by view")
+
+```
