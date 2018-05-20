@@ -4,7 +4,7 @@
 \alias{id_2Case}
 \title{Convert a vector of image IDs to corresponding unique case IDs.}
 \usage{
-id_2Case(img_ids)
+id_2Case(img_ids, unique = TRUE)
 }
 \arguments{
 \item{img_ids}{x_chr of image ids to convert to case ids}
@@ -18,6 +18,7 @@ Convert a vector of image IDs to corresponding unique case IDs.
 \examples{
 imgs_avail = candiOpt(large_img_dir) \%>\% list.files() \%>\% fp_stem()
 id_2Case(imgs_avail)
+id_2Case(imgs_avail, unique=FALSE)
 id_2Case("iu_1_1")
 id_2Case(1)
 id_2Case("foobar")

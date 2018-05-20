@@ -32,10 +32,11 @@ id_isCase <- function(x_chr) {
 #' @examples
 #' imgs_avail = candiOpt(large_img_dir) %>% list.files() %>% fp_stem()
 #' id_2Case(imgs_avail)
+#' id_2Case(imgs_avail, unique=FALSE)
 #' id_2Case("iu_1_1")
 #' id_2Case(1)
 #' id_2Case("foobar")
-id_2Case <- function(img_ids) {
+id_2Case <- function(img_ids, unique = TRUE) {
     if (compose(`!`, all, id_isImg)(img_ids)) {
         if (compose(all, id_isCase)(img_ids)) {
             message('input is already case-identifier')
@@ -45,9 +46,13 @@ id_2Case <- function(img_ids) {
         }
     }
 
-    img_ids %>%
+    case_ids <- img_ids %>%
         str_split(pattern = "_") %>%
-        map_chr(2) %>% unique() %>% as.integer()
+        map_chr(2) %>% as.integer()
+
+    if (unique) case_ids <- unique(case_ids)
+
+    case_ids
 }
 
 
