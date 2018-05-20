@@ -66,10 +66,6 @@ function(input, output, session) {
         handlerExpr = {
             # Clear user entry forms
             updateCheckboxGroupInput(session, inputId = NS(namespace = "user_impression", id = "dxChkbxIn"), selected = character(0))
-            updateSliderInput(session, inputId = NS(namespace = "user_impression", id = "ageIn"), value = 50)
-            updateRadioButtons(session, NS("user_impression", "sexIn"), selected = character(0))
-            updateRadioButtons(session, NS("user_impression", "viewIn"), selected = character(0))
-            updateRadioButtons(session, NS("user_impression", "cassetteIn"), selected = character(0))
             updateTextAreaInput(session, NS("user_impression", "noteTxtIn"), value=character(0))
         }
     )
