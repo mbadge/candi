@@ -5,7 +5,7 @@
 \alias{candi}
 \alias{candi-package}
 \alias{candi-package}
-\title{candii}
+\title{candi}
 \description{
 Demonstrate shiny candi radiograph dashboard implementations.
 }
