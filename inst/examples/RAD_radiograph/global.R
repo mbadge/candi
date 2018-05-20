@@ -57,10 +57,18 @@ df_filter_trans <- function(df, case) {
 
 
 # i/o helper fxns
+#! IMPURE FXNS: use of global variables
 save_annotation <- function(data, ann_type) {
     stopifnot(ann_type %in% kANN_TYPES)
     resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% stringr::str_c(".csv")
     write.csv(x=data, file=file.path(kDIR_USR_INPT, ann_type, resp_fn), row.names=FALSE)
+}
+
+save_segmentation <- function(data, dx) {
+    stopifnot(dx %in% kDXS_CHR)
+    df <- data %>%
+        tibble::add_column(Pathology=dx)
+    save_annotation(df, "Segmentation")
 }
 
 load_annotation <- function(ann_type) {
