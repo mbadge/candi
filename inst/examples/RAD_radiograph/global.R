@@ -59,7 +59,7 @@ df_filter_trans <- function(df, case) {
 # i/o helper fxns
 save_annotation <- function(data, ann_type) {
     stopifnot(ann_type %in% kANN_TYPES)
-    resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% str_c(".csv")
+    resp_fn <- format(Sys.time(), "%m.%d_%H.%M.%S") %>% stringr::str_c(".csv")
     write.csv(x=data, file=file.path(kDIR_USR_INPT, ann_type, resp_fn), row.names=FALSE)
 }
 

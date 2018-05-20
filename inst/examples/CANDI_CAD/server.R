@@ -115,7 +115,7 @@ function(input, output, session) {
     # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
-        src_fp <- file.path(kDIR_BBOX_IMGS, str_c(input$imgIdIn, ".jpg"))
+        src_fp <- file.path(kDIR_BBOX_IMGS, stringr::str_c(input$imgIdIn, ".jpg"))
         return(list(src = src_fp, filetype="image/jpeg", alt="Bbox Radiograph"))
     }, deleteFile = FALSE)
 
