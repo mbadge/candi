@@ -1,7 +1,7 @@
 function(input, output, session) {
     # Invoke modules -----------------------------------------
     # Input form
-    usrImpressionDf <- callModule(impression, "impression")
+    usrImpressionDf <- callModule(impression, "user_impression")
 
     # Main image
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
@@ -26,8 +26,8 @@ function(input, output, session) {
             # Initially show nothing but name and begin button, then reveal impression and submit
             updateActionButton(session, "submit_btn", label = "Submit Impression")
             shinyjs::disable("user_name")
-            shinyjs::show("mainImageUi")
-            shinyjs::show("impressionPanel")
+            shinyjs::show("main_img_panel")
+            shinyjs::show("user_impression_panel")
             log_usr_event(input$user_name, "start btn", dir = kDIR_LOG)
 
             is_cad_available <- TRUE  # Coerce cad flag to TRUE to get a new case loaded
@@ -87,6 +87,7 @@ function(input, output, session) {
     # Serve outputs --------------------------------
     # image selection UI
     output$imgIdUi <- renderUI({
+        if (input$submit_btn == 0) return (NULL)  # Handle startup edge case
         selectInput("imgIdIn", "Image Id:", choices = usrQueue())
     })
     outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)

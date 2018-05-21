@@ -4,36 +4,43 @@ fluidPage(
     div(id="title", align="center",
         titlePanel("CAD Evaluation Trial", windowTitle=WindowTitle())),
 
-    # 2 horizontal sections
-    # top: userInfo | mainRadiograph | userImpression
-    # bottom: CNN toolkit
+    # Id row: user name In / progress Out / test img/case In
     fluidRow(
-        column(3,
-            # User Info
-            textInput("user_name", "Radiologist Name:", value = "Marcus"),
-            uiOutput("imgIdUi"),  # shinyjs::hidden(uiOutput("imgIdUi"))
-            hr(),
-            # Submitting
-            div(align="center",
-                actionButton("submit_btn", "Begin Trial"),
-                textOutput("progressTxt")
-        )),
-        # Test Radiograph
-        column(6, shinyjs::hidden(div(id="mainImageUi", align="center",
-                            radiographOutput("main_image")
-        ))),
-        # User Impression
-        column(3,
-             shinyjs::hidden(div(id="impressionPanel",
-                 impressionInput("impression", dx_chr=kDXS_CHR)))  # Shiny module
+        column(4, div(textInput("user_name", "User Name:", value = "Marcus"), align = "center")),
+        column(4, div(textOutput("progressText"), align = "center")),
+        column(4, div(uiOutput("imgIdUi"), align = "center"))  #shinyjs::hidden(uiOutput("imgIdUi")),
+    ),
+    hr(),
+    div(textOutput("readerModeTxt"), align = "center"),
+    hr(),
+
+    # Image and Impression row:
+    # hpi / user impression / hist impression / submit / main image
+    fluidRow(
+        # User Impression ----
+        # Wrap in hidden div so I can reveal only after user begins
+        column(4,
+               shinyjs::hidden(div(id = "user_impression_panel", align = "center",
+                                   hpiOutput(id = "hpi_output"),
+                                   hr(),
+                                   fluidRow(
+                                      impressionInput(id = "user_impression",
+                                                      dx_chr = candiOpt(dxs_chr),
+                                                      include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                                      include_technical = kINCLUDE_TECHNICAL)
+                                   )
+               )),
+               div(actionButton(inputId = "submit_btn", label = "Begin Trial"),
+                   align = "center")
+        ),
+        column(8,
+               shinyjs::hidden(div(id = "main_img_panel", align = "center",
+                                   radiographOutput("main_image", height = "500px")))
         )
     ),
-
-    hr(),
-    textOutput("readerModeTxt"),
     hr(),
 
-    # ConvNet Assistance
+    # CNN toolkit
     shinyjs::hidden(div(id = "cnnCadUi",
         fluidRow(
             column(3,
