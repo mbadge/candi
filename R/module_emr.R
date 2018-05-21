@@ -17,7 +17,7 @@
 #'
 #' shinyApp(
 #'     ui = fluidPage(
-#'         selectInput("idIn", "Case ID:", choices = radiographs$img_id),
+#'         selectInput("idIn", "Case ID:", choices = candi::radiographs$img_id),
 #'         hpiOutput("hpi")
 #'     ),
 #'     server = function(input, output, session) {
