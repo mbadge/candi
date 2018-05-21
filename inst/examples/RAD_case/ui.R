@@ -4,34 +4,36 @@ fluidPage(
     div(id="title", align="center",
         titlePanel("Annotate Cases", windowTitle=WindowTitle())),
 
-    # 2 horizontal sections -- the radiograph will be the only thing on the second section so
-    # the page can adapt to the large variation in full radiograph sizes.
+    # Id row: user name In / progress Out / test img/case In
     fluidRow(
-        column(3,
-            div(align="center", p(strong("User Controls"))),
-            # User name / progress / submit
-            textInput("user_name", "User Name:", value = "Marcus"),
-            uiOutput("imgIdUi"),  #shinyjs::hidden(uiOutput("imgIdUi")),
-            hr(),
-
-            # Submitting
-            actionButton(inputId = "submit_btn", label = "Begin Annotating"),
-            textOutput("progressText")
-        ),
-
-        # User Impression ----
-        # Wrap in hidden div so I can reveal only after user begins
-        column(4, shinyjs::hidden(div(id = "user_impression_panel", align = "center",
-            impressionInput(id = "user_impression",
-                            dx_chr = candiOpt(dxs_chr),
-                            include_demographics = kINCLUDE_DEMOGRAPHICS,
-                            include_technical = kINCLUDE_TECHNICAL)
-        ))),
-
-        # Patient Records ----
-        column(5)
+        column(4, div(textInput("user_name", "User Name:", value = "Marcus"), align = "center")),
+        column(4, div(textOutput("progressText"), align = "center")),
+        column(4, div(uiOutput("imgIdUi"), align = "center"))  #shinyjs::hidden(uiOutput("imgIdUi")),
     ),
     hr(),
 
-    caseOutput("main_image")
+    # Image and Impression row:
+    # hpi / user impression / hist impression / submit / main image
+    fluidRow(
+        # User Impression ----
+        # Wrap in hidden div so I can reveal only after user begins
+        column(4,
+            shinyjs::hidden(div(id = "user_impression_panel", align = "center",
+                hpiOutput(id = "hpi_output"),
+                hr(),
+                fluidRow(
+                    column(6,
+                           impressionInput(id = "user_impression",
+                                           dx_chr = candiOpt(dxs_chr),
+                                           include_demographics = kINCLUDE_DEMOGRAPHICS,
+                                           include_technical = kINCLUDE_TECHNICAL)),
+                    column(6,
+                           histImpOutput(id = "historical_impression"))
+                )
+            )),
+            div(actionButton(inputId = "submit_btn", label = "Begin Annotating"),
+                align = "center")
+        ),
+        column(8, caseOutput("main_image"))
+    )
 )

@@ -47,7 +47,7 @@ impressionInput <- function(id, dx_chr,
     ns <- NS(id)
 
     tagList(
-        div(align="center", h3("User Impression")),
+        #div(align="center", h3("User Impression")),  # Label at top level
         p(strong("Is there radiographic evidence for a diagnosis?")),
 
         # Diagnosis_lglndx ----------

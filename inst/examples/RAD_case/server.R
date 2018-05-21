@@ -7,7 +7,8 @@ function(input, output, session) {
 
     # Output
     callModule(case, "main_image", caseIdIn = reactive(input$imgIdIn))
-
+    callModule(hpiModule, "hpi_output", idIn = reactive(input$imgIdIn))
+    callModule(histImpModule, "historical_impression", idIn = reactive(input$imgIdIn))
 
     # ---- Conductors ----
     # Create x_chr of remaining test image ids
@@ -28,13 +29,14 @@ function(input, output, session) {
 
 
     # ---- Observers ----
-    # Inialize App
     observeEvent(
         eventExpr = input$submit_btn,
-        label = "startup_obsEvnt",
+        label = "Initialize App",
         handlerExpr = {
-            updateActionButton(session, "submit_btn", label = "Submit Annotation")
             shinyjs::disable("user_name")
+            updateSelectInput(session, "user_name", label = character(0))
+            updateActionButton(session, "submit_btn", label = "Submit Annotation")
+
             shinyjs::show("user_impression_panel")
             log_usr_event(input$user_name, "start_btn", dir = kDIR_LOG)
         },
@@ -42,14 +44,11 @@ function(input, output, session) {
         once = TRUE  # Destroy this component after one intended execution
     )
 
-    # Save impression form
     observeEvent(
         eventExpr = input$submit_btn,
         label = "Save User Data",
         handlerExpr = {
             req(input$imgIdIn)
-
-            # Record user data
             submit_data_df <- usrImpressionDf() %>%
                 tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
                 tibble::add_column(user_name = input$user_name, .before=1)
@@ -60,10 +59,9 @@ function(input, output, session) {
         priority = 10  # Execute before remainingQueue and all others so they act on the next img
     )
 
-    # Reset impression values
     observeEvent(
         eventExpr = input$submit_btn,
-        label = "Prefill values on record for next case",
+        label = "Reset Entry Form",
         handlerExpr = {
             # Clear user entry forms
             updateCheckboxGroupInput(session, inputId = NS(namespace = "user_impression", id = "dxChkbxIn"), selected = character(0))
@@ -76,14 +74,19 @@ function(input, output, session) {
     # Image UI based on completed image records.
     output$imgIdUi <- renderUI({
         todo <- remainingQueue()
-        selectInput("imgIdIn", "Image Id:", choices = todo, selected = todo[1])
+        selectInput("imgIdIn", "Case Id:", choices = todo, selected = todo[1])
     })
     outputOptions(output, "imgIdUi", suspendWhenHidden = FALSE)
 
     # Progress Message
     output$progressText <- renderText({
         n_total <- length(kAVAIL_TEST_IDS)
-        n_complete <- n_total - length(remainingQueue())
-        glue::glue("Completed {n_complete} of {n_total} radiographs")
+
+        if (is.null(input$imgIdIn)) {  # Startup edge case
+            return(glue::glue("{n_total} radiographs available"))
+        } else {
+            n_complete <- n_total - length(remainingQueue())
+            return(glue::glue("Completed {n_complete} of {n_total} radiographs"))
+        }
     })
 }

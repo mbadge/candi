@@ -62,11 +62,11 @@ histImpOutput <- function(id) {
 
     tagList(
         div(align="center",
-            p(strong( "Documented Case Findings:" )),
-            textOutput(ns("findingsTxt")),
-            hr(),
             p(strong( "Curators Interpretation of Findings:" )),
-            tableOutput(ns("dxTbl"))
+            tableOutput(ns("dxTbl")),
+            hr(),
+            p(strong( "Documented Case Findings:" )),
+            textOutput(ns("findingsTxt"))
         )
     )
 }
@@ -89,6 +89,6 @@ histImpModule <- function(input, output, session, idIn) {
             dplyr::select(dplyr::one_of( candiOpt(dxs_chr) )) %>%
             AnalysisToolkit::t2idf() %>%
             dplyr::mutate(column = map_chr(column, str_case_title))
-    })
+    }, hover = TRUE, spacing = "xs", colnames = FALSE)
 }
 
