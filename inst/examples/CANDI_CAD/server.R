@@ -1,5 +1,5 @@
 function(input, output, session) {
-    # Invoke modules ----
+    # Invoke modules -----------------------------------------
     # Input form
     usrImpressionDf <- callModule(impression, "impression")
 
@@ -12,18 +12,13 @@ function(input, output, session) {
         test_imgs_df = test_img_df,
         hist_imgs_df = hist_img_df)
 
+    # Reactive conductors -------------------------------------
+    # Manage image progression and reader mode state used for multiple outputs
 
-    # Image Progression ----
-    # Get user-specific ordered queue
+    # User-specific ordered queue
     usrQueue <- reactive(candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS))
 
-    # UI
-    output$imgIdUi <- renderUI({
-        selectInput("imgIdIn", "Image Id:", choices = usrQueue())
-    })
-    outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)
-
-    # Reactive Event Handlers --------------------------------------------------
+    # CAD state progression and randomization
     readerMode <- eventReactive(input$submit_btn, {
         # Either initialize or save answer
         if (input$submit_btn == 1) {
@@ -33,6 +28,7 @@ function(input, output, session) {
             shinyjs::disable("user_name")
             shinyjs::show("mainImageUi")
             shinyjs::show("impressionPanel")
+            log_usr_event(input$user_name, "start btn", dir = kDIR_LOG)
 
             is_cad_available <- TRUE  # Coerce cad flag to TRUE to get a new case loaded
         } else {
@@ -45,6 +41,7 @@ function(input, output, session) {
                 tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
                 tibble::add_column(user_name = input$user_name, .before=1)
             save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
+            log_usr_event(input$user_name, "submit btn", dir = kDIR_LOG, img_id = input$imgIdIn)
         }
 
         # Load next interpretation (either new case or add cad)
@@ -86,6 +83,14 @@ function(input, output, session) {
         }
     })
 
+
+    # Serve outputs --------------------------------
+    # image selection UI
+    output$imgIdUi <- renderUI({
+        selectInput("imgIdIn", "Image Id:", choices = usrQueue())
+    })
+    outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)
+
     # Auxillary State Info for user ----
     # Progress Message
     output$progressTxt <- renderText({
@@ -108,9 +113,6 @@ function(input, output, session) {
                "second" = "Second Reader Mode: first, submit your unaided impression.  CNN utilities will then be provided and you can optionally modify answers.",
                "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
     })
-
-
-    # Serve outputs --------------------------------
 
     # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization
