@@ -166,7 +166,7 @@ similarImg <- function(input, output, session,
         EBImage::readImage(img_fp) %>% Viz.Image()
     })
 
-    callModule(histImpModule, "historical_impression", idIn = hoverImgId())
+    callModule(histImpModule, "historical_impression", idIn = reactive(hoverImgId()))
 
     # Reactive Ui Elements ---------------
     output$colorUi <- renderUI({
