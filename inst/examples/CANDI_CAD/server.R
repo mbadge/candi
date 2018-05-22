@@ -126,12 +126,14 @@ function(input, output, session) {
     # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
         req(input$imgIdIn)
-        test_img_df %>%
-            select(img_id, starts_with("pY")) %>%
+        pY_df <- test_img_df %>%
+            select(img_id, starts_with("pY"))
+        names(pY_df) <- str_replace(names(pY_df), "^pY_", "")
+        pY_df %>%
             df_filter_trans(img_id = input$imgIdIn) %>%
             set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
-    }, striped = TRUE, hover = TRUE, spacing = "xs")
+    }, hover = TRUE, spacing = "xs")
 
 
     #Trace -----------------------------------------

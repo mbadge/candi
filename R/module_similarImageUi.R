@@ -22,7 +22,7 @@
 #'
 #' shinyApp(
 #'     ui = fluidPage(
-#'         useShinyjs(),
+#'         shinyjs::useShinyjs(),
 #'         selectInput("imgIdIn", "Image Id:", choices = test_imgs$img_id),
 #'         similarImgUi("similarImg")
 #'     ),
