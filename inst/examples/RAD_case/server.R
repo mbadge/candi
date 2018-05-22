@@ -27,7 +27,6 @@ function(input, output, session) {
         }
     )
 
-
     # ---- Observers ----
     observeEvent(
         eventExpr = input$submit_btn,
@@ -36,7 +35,6 @@ function(input, output, session) {
             shinyjs::disable("user_name")
             updateSelectInput(session, "user_name", label = character(0))
             updateActionButton(session, "submit_btn", label = "Submit Annotation")
-
             shinyjs::show("user_impression_panel")
             log_usr_event(input$user_name, "start_btn", dir = kDIR_LOG)
         },
@@ -68,7 +66,6 @@ function(input, output, session) {
             updateTextAreaInput(session, NS("user_impression", "noteTxtIn"), value=character(0))
         }
     )
-
 
     # ---- Outputs ----
     # Image UI based on completed image records.

@@ -129,7 +129,7 @@ function(input, output, session) {
             df_filter_trans(img_id = input$imgIdIn) %>%
             set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
-    })
+    }, striped = TRUE, hover = TRUE, spacing = "xs")
 
 
     #Trace -----------------------------------------
