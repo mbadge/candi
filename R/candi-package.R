@@ -6,13 +6,15 @@
 #' @docType package
 "_PACKAGE"
 
-#' case-major data.frame with patient and diagnostic variables
+#' case-major data.frame with patient and diagnostic variables from IU dataset
+#'
+#' source: https://openi.nlm.nih.gov/faq.php
 #'
 #' @name cases
 #' @docType data
 "cases"
 
-#' radiograph-major data.frame with technical specs and CNN PCs and pYs
+#' radiograph-major data.frame with image acquisition specs and CNN PCs and pYs for IU dataset
 #'
 #' @name radiographs
 #' @docType data

@@ -18,7 +18,7 @@ options(shiny.reactlog=TRUE)  # allows reactivity inspection in browser with Ctr
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")  # Dx options to include in ui checkbox
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE
-kN_HIST_IMGS <- 100
+kN_HIST_IMGS <- 500
 
 # fs i/o
 kDIR_SMALL_IMGS <- candiOpt(small_img_dir)  # 299 x 299 normalized jpgs

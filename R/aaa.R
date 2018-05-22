@@ -3,7 +3,7 @@
 #
 # Package option schema:
 # [pkg name] DOT [snake_case_option_name]
-# candi.option_one
+# eg: candi.option_one
 .onLoad <- function(libname, pkgname) {
 
     options("EBImage.display" = "browser")  # Show images in browser mode, even if I'm not using R interactively.
@@ -16,11 +16,11 @@
     }
 
     # Apps can share image repos to consolidate bulky data
-    SMALL_IMG_DIR <- PkgDir('small_jpgs')  # imageNet size 299x299
-    LARGE_IMG_DIR <- PkgDir('large_jpgs')  # original resolution
-    BBOX_IMG_DIR <- PkgDir('bbox')  # Pre-annotated images for CAD
+    SMALL_IMG_DIR <- PkgDir('small_jpgs')  # imageNet size 299x299 images
+    LARGE_IMG_DIR <- PkgDir('large_jpgs')  # original resolution images
+    BBOX_IMG_DIR <- PkgDir('bbox')  # Images with CNN bounding box inference results for CAD
 
-    # parent directory for segregating app-specific data collections (eg, user input)
+    # parent directory for segregating app-specific data collections (eg, user input, log)
     APP_DATA_DIR <- PkgDir('apps')
     # Each app has a subdir under the general candi app_data_dir, with
     # downstream targets fully defined in the app's global.R

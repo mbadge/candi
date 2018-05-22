@@ -48,8 +48,8 @@ function(input, output, session) {
         if (is_cad_available) {
             cat("\nnext case")
             # Clear entry forms
-            updateCheckboxGroupInput(session=session, inputId = NS("impression", id="dxChkbxIn"), selected = character(0))
-            updateTextAreaInput(session=session, inputId = NS("impression", id="noteTxtIn"), value="Clinical Impression")
+            updateCheckboxGroupInput(session=session, inputId = NS("user_impression", id="dxChkbxIn"), selected = character(0))
+            updateTextAreaInput(session=session, inputId = NS("user_impression", id="noteTxtIn"), value="Clinical Impression")
 
             # Find next case in queue AFTER saving prior impression
             usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
@@ -94,7 +94,7 @@ function(input, output, session) {
 
     # Auxillary State Info for user ----
     # Progress Message
-    output$progressTxt <- renderText({
+    output$progressText <- renderText({
         readerMode()
         usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
 
@@ -109,7 +109,7 @@ function(input, output, session) {
     })
 
     # Randomized Reader Mode Banner
-    output$readerModeTxt <- renderText({
+    output$readerModeText <- renderText({
         switch(readerMode(),
                "second" = "Second Reader Mode: first, submit your unaided impression.  CNN utilities will then be provided and you can optionally modify answers.",
                "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
@@ -118,12 +118,14 @@ function(input, output, session) {
     # CNN Toolkit ----
     # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
+        req(input$imgIdIn)
         src_fp <- file.path(kDIR_BBOX_IMGS, stringr::str_c(input$imgIdIn, ".jpg"))
         return(list(src = src_fp, filetype="image/jpeg", alt="Bbox Radiograph"))
     }, deleteFile = FALSE)
 
     # CNN Classification pY Tbl
     output$cnnPyTbl <- renderTable({
+        req(input$imgIdIn)
         test_img_df %>%
             select(img_id, starts_with("pY")) %>%
             df_filter_trans(img_id = input$imgIdIn) %>%

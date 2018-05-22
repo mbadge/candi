@@ -91,4 +91,3 @@ histImpModule <- function(input, output, session, idIn) {
             dplyr::mutate(column = map_chr(column, str_case_title))
     }, hover = TRUE, spacing = "xs", colnames = FALSE)
 }
-

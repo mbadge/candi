@@ -57,7 +57,6 @@ id_2Case <- function(img_ids, unique = TRUE) {
 
 
 
-#! I use impure functions in this script so that I can configure the image ids right here!
 kIMG_ID_X_VARS <- c("dataset", "case", "image")
 kIMG_ID_S_CMPD <- c("img_id")
 
@@ -95,7 +94,6 @@ kIMG_ID_S_CMPD <- c("img_id")
 #' data(lut_img_id2original)
 #' sep_id(lut_img_id2original)
 #' sep_id(lut_img_id2original, remove=FALSE)
-#' sep_id(lut_img_id2original) %>% unite_id
 #' sep_id(bind_rows(lut_img_id2original, lut_img_id2original))  # Expect warning
 #' @name img_id
 NULL
@@ -167,13 +165,3 @@ with_sep <- function(df, f, ...) {
         f(., ...) %>%
         unite_id()
 }
-
-#' @export
-#' @rdname img_id
-with_united <- function(df, f, ...) {
-    df %>%
-        unite_id() %>%
-        f(., ...) %>%
-        sep_id()
-}
-

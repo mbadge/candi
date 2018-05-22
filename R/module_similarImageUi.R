@@ -22,6 +22,7 @@
 #'
 #' shinyApp(
 #'     ui = fluidPage(
+#'         useShinyjs(),
 #'         selectInput("imgIdIn", "Image Id:", choices = test_imgs$img_id),
 #'         similarImgUi("similarImg")
 #'     ),
@@ -61,8 +62,7 @@ similarImgUi <- function(id) {
                            imageOutput(ns("hoverImage"), width = 299, height=299))
                 ),
                 column(3,
-                       tableOutput(ns("hoverYTbl")),  # Diagnosis Tbl
-                       textOutput(ns("hoverNoteText"))  # Free Text Note
+                       histImpOutput(ns("historical_impression"))
                 )
             )
         )
@@ -95,6 +95,9 @@ similarImg <- function(input, output, session,
 {
     ggplot2::theme_set(theme_dark())
 
+    callModule(histImpModule, "historical_impression", idIn = hoverImgId)
+
+    # ---- Conductors ----
     testImgPcDf <- reactive({
         test_img_pc_df <- test_imgs_df %>%
             filter(img_id == testImgId()) %>%
@@ -118,29 +121,33 @@ similarImg <- function(input, output, session,
         similar_images_df
     })
 
+    # ---- Observers ----
+    shinyjs::onclick("toggleBrowseSimilar", shinyjs::toggle("browseSimilarUi"))
+
     # Similar Image Search ---------------
+    # Serve scatter plot to visually browse historical image records
     output$pcaPlot <- renderPlot({
         req(input$x, input$y, input$colorIn, input$facetRowIn, input$facetColIn)
 
-        hist_imgs_df %<>% map_if(is.factor, fct_explicit_na) %>% as.data.frame()
-        p <- ggplot(hist_imgs_df, aes_string(x=input$x, y=input$y))
+        hist_imgs_df %<>% map_if(is.factor, forcats::fct_explicit_na) %>% as.data.frame()
+        p <- ggplot2::ggplot(hist_imgs_df, ggplot2::aes_string(x=input$x, y=input$y))
 
         if (input$colorIn != 'None') {
             p <- p +
-                aes_string(color=input$colorIn)
+                ggplot2::aes_string(color=input$colorIn)
         }
         # Overlay current test image
-        p <- p + geom_point(data=testImgPcDf(), aes_string(x=input$x, y=input$y),
+        p <- p + ggplot2::geom_point(data=testImgPcDf(), ggplot2::aes_string(x=input$x, y=input$y),
                             inherit.aes=FALSE, color="blue", fill="blue",
                             alpha=0.5, size=8)
         # Plot historical points
-        p <- p + geom_point(alpha=0.5)
+        p <- p + ggplot2::geom_point(alpha=0.5)
 
         facets <- paste(input$facetRowIn, '~', input$facetColIn)
         if (facets != '. ~ .')
-            p <- p + facet_grid(facets)
-        p + theme(legend.position = "bottom",
-                  axis.text=element_blank(), axis.title = element_blank())
+            p <- p + ggplot2::facet_grid(facets)
+        p + ggplot2::theme(legend.position = "bottom",
+                  axis.text=ggplot2::element_blank(), axis.title = ggplot2::element_blank())
     })
 
     # Hovered Image Record -------------
@@ -150,21 +157,10 @@ similarImg <- function(input, output, session,
         if(nrow(hover_row) == 0) hover_row <- similarImgsDf()[1, ]
         hover_row$img_id
     })
+
     output$hoverImage <- renderPlot({
         img_fp <- file.path(img_dir, str_c(hoverImgId(), ".jpg"))
-        img <- EBImage::readImage(img_fp) %>% Viz.Image()
-    })
-    output$hoverYTbl <- renderTable({
-        similarImgsDf() %>%
-            filter(img_id == hoverImgId()) %>%
-            select(one_of(dxs_chr)) %>%
-            gather(key=diagnosis, value=appreciated) %>%
-            arrange(desc(appreciated))
-    })
-    output$hoverNoteText <- renderText({
-        hist_imgs_df %>%
-            filter(img_id == hoverImgId()) %>%
-            use_series(findings) %||% "radiology note missing"
+        EBImage::readImage(img_fp) %>% Viz.Image()
     })
 
     # Reactive Ui Elements ---------------

@@ -3,12 +3,12 @@
 \docType{data}
 \name{cases}
 \alias{cases}
-\title{case-major data.frame with patient and diagnostic variables}
+\title{case-major data.frame with patient and diagnostic variables from IU dataset}
 \format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3786 rows and 80 columns.}
 \usage{
 cases
 }
 \description{
-case-major data.frame with patient and diagnostic variables
+source: https://openi.nlm.nih.gov/faq.php
 }
 \keyword{datasets}

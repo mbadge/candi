@@ -3,12 +3,12 @@
 \docType{data}
 \name{radiographs}
 \alias{radiographs}
-\title{radiograph-major data.frame with technical specs and CNN PCs and pYs}
+\title{radiograph-major data.frame with image acquisition specs and CNN PCs and pYs for IU dataset}
 \format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 7309 rows and 22 columns.}
 \usage{
 radiographs
 }
 \description{
-radiograph-major data.frame with technical specs and CNN PCs and pYs
+radiograph-major data.frame with image acquisition specs and CNN PCs and pYs for IU dataset
 }
 \keyword{datasets}

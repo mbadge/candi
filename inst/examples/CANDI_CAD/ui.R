@@ -11,7 +11,7 @@ fluidPage(
         column(4, div(uiOutput("imgIdUi"), align = "center"))  #shinyjs::hidden(uiOutput("imgIdUi")),
     ),
     hr(),
-    div(textOutput("readerModeTxt"), align = "center"),
+    div(textOutput("readerModeText"), align = "center"),
     hr(),
 
     # Image and Impression row:
