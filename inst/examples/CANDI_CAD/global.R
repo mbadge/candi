@@ -39,11 +39,11 @@ data("cases", package="candi")
 data("test_imgs", package = "candi")
 
 # Non-reactive data crafting
-test_img_df <- radiographs %>%
-    filter(img_id %in% test_imgs) %>%
+test_img_df <- candi::radiographs %>%
+    filter(img_id %in% candi::test_imgs) %>%
     with_sep(left_join, cases, by="case")
-hist_img_df <- radiographs %>%
-    filter(img_id %ni% test_imgs) %>%
+hist_img_df <- candi::radiographs %>%
+    filter(img_id %ni% candi::test_imgs) %>%
     sample_n(kN_HIST_IMGS) %>%
     with_sep(left_join, cases, by="case")
 

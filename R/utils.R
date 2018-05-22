@@ -1,3 +1,55 @@
+#' Convert a matrix with rownames into a column indexed data.frame
+#'
+#' @param mtx matrix with rownames
+#'
+#' @return data.frame with column "id" containing mtx's rownames
+#' @export
+#'
+#' @examples
+#' as.matrix(mtcars) %>% mtx2idf()
+mtx2idf <- function(mtx, id_col = "id") {
+    stopifnot(is.matrix(mtx))
+    mtx %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(id_col)
+}
+
+
+#' Transpose a df to another indexed data.frame
+#'
+#' The base \code{\link[base]{t}} produces a matrix.
+#' This wrapper calls \code{\link[base]{t}} followed by
+#' \code{\link{mtx2idf}} to produce a data.frame instead
+#'
+#' @param df data.frame
+#' @param name chr(1) column name for original data.frame colnames
+#' @param value chr(1) colname for original row 1 values
+#'
+#' @return data.frame
+#' @export
+#'
+#' @examples
+#' summarise_if(mtcars, .p=is.numeric, .f=mean) %>% t2idf()
+#' summarise_if(mtcars, .p=is.numeric, .f=mean) %>% t2idf("variable", "mean")
+#' summarise_if(group_by(mtcars, cyl), .p=is.numeric, .f=mean) %>% t2idf("variable", "mean")
+t2idf <- function(df, name="column", value="value") {
+    if (nrow(df) > 1) {GrpColNms <- c(names(df)[[1]], df[[1]]); df[[1]] <- NULL}
+
+    out <- df %>%
+        t() %>%
+        mtx2idf()
+
+    # for transposing a summary table, use name and value colnames
+    if (ncol(out) == 2) {names(out) <- c(name, value)}
+    # for transposing a grouped summary table, use the first col as grouping colnames
+    if (ncol(out) > 2) {names(out) <- c(GrpColNms)}
+
+    out
+}
+
+
+
+
 #' Rasterize an EBImage Image object figure.
 #'
 #' @param img_arr an EMIage `Image` object
@@ -12,6 +64,7 @@ Viz.Image <- function(img_arr) {
         EBImage::normalize() %>%
         EBImage::display(method="raster")
 }
+
 
 
 #' @export

@@ -94,7 +94,7 @@ kIMG_ID_S_CMPD <- c("img_id")
 #' data(lut_img_id2original)
 #' sep_id(lut_img_id2original)
 #' sep_id(lut_img_id2original, remove=FALSE)
-#' sep_id(bind_rows(lut_img_id2original, lut_img_id2original))  # Expect warning
+#' try(sep_id(bind_rows(lut_img_id2original, lut_img_id2original)))  # Expect warning
 #' @name img_id
 NULL
 

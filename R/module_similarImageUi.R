@@ -95,10 +95,10 @@ similarImg <- function(input, output, session,
 {
     ggplot2::theme_set(theme_dark())
 
-    callModule(histImpModule, "historical_impression", idIn = hoverImgId)
 
     # ---- Conductors ----
     testImgPcDf <- reactive({
+        req(testImgId())
         test_img_pc_df <- test_imgs_df %>%
             filter(img_id == testImgId()) %>%
             select(starts_with("PC"))
@@ -106,9 +106,11 @@ similarImg <- function(input, output, session,
     })
 
     similarImgsDf <- reactive({
-        dist_df <- hist_imgs_df %>%
+        hist_pcs <- hist_imgs_df %>%
             select(img_id, starts_with("PC")) %>%
-            nest(-img_id, .key = "PCs") %>%
+            nest(-img_id, .key = "PCs")
+
+        dist_df <- hist_pcs %>%
             mutate(test_hist_dist = map_dbl(PCs,
                                             ~dist(rbind(.x, testImgPcDf()))
                                             )) %>% select(-PCs)
@@ -159,15 +161,18 @@ similarImg <- function(input, output, session,
     })
 
     output$hoverImage <- renderPlot({
-        img_fp <- file.path(img_dir, str_c(hoverImgId(), ".jpg"))
+        req(hoverImgId())
+        img_fp <- file.path(img_dir, stringr::str_c(hoverImgId(), ".jpg"))
         EBImage::readImage(img_fp) %>% Viz.Image()
     })
+
+    callModule(histImpModule, "historical_impression", idIn = hoverImgId())
 
     # Reactive Ui Elements ---------------
     output$colorUi <- renderUI({
         ns <- session$ns
         colorable_cols <- hist_imgs_df %>%
-            `[`(setdiff(names(.), str_c("PC", 1:10))) %>%
+            `[`(setdiff(names(.), stringr::str_c("PC", 1:10))) %>%
             keep(.p=Not(is.character)) %>%
             names() %>%
             set_names(., str_case_title(.))

@@ -5,7 +5,6 @@
 \alias{sep_id}
 \alias{unite_id}
 \alias{with_sep}
-\alias{with_united}
 \title{Image Identifier Helper Transformations}
 \usage{
 sep_id(df, img_id_cmpd = kIMG_ID_S_CMPD, img_id_vars = kIMG_ID_X_VARS,
@@ -15,8 +14,6 @@ unite_id(df, img_id_cmpd = kIMG_ID_S_CMPD, img_id_vars = kIMG_ID_X_VARS,
   sep = "_", remove = TRUE)
 
 with_sep(df, f, ...)
-
-with_united(df, f, ...)
 }
 \arguments{
 \item{df}{data.frame with column 'img_id' or columns `img_vars`}
@@ -58,6 +55,5 @@ Convenience wrapper to directly operate on a joint id as if it were split
 data(lut_img_id2original)
 sep_id(lut_img_id2original)
 sep_id(lut_img_id2original, remove=FALSE)
-sep_id(lut_img_id2original) \%>\% unite_id
-sep_id(bind_rows(lut_img_id2original, lut_img_id2original))  # Expect warning
+try(sep_id(bind_rows(lut_img_id2original, lut_img_id2original)))  # Expect warning
 }

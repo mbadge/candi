@@ -44,8 +44,8 @@ hpiOutput <- function(id) {
 #' @rdname emrModule
 hpiModule <- function(input, output, session, idIn) {
     caseId <- reactive( {
-        req(idIn())
-        id_2Case(idIn())
+        #req(idIn)
+        id_2Case(idIn)
     })
 
     output$hpiTxt <- renderText({
@@ -75,8 +75,8 @@ histImpOutput <- function(id) {
 #' @rdname emrModule
 histImpModule <- function(input, output, session, idIn) {
     caseId <- reactive({
-        req(idIn())
-        id_2Case(idIn())
+        #req(idIn)
+        id_2Case(idIn)
     })
 
     output$findingsTxt <- renderText({
@@ -87,7 +87,7 @@ histImpModule <- function(input, output, session, idIn) {
     output$dxTbl <- renderTable({
         candi::cases[candi::cases$case == caseId(), ] %>%
             dplyr::select(dplyr::one_of( candiOpt(dxs_chr) )) %>%
-            AnalysisToolkit::t2idf() %>%
+            t2idf() %>%
             dplyr::mutate(column = map_chr(column, str_case_title))
     }, hover = TRUE, spacing = "xs", colnames = FALSE)
 }
