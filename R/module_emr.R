@@ -37,13 +37,17 @@
 #' }
 hpiOutput <- function(id) {
     ns <- NS(id)
-    textOutput(ns("hpiTxt"))
+
+    div(align = "center",
+        p(strong("History of Present Illness:"),
+        textOutput(ns("hpiTxt"))
+    ))
 }
 
 #' @export
 #' @rdname emrModule
 hpiModule <- function(input, output, session, idIn) {
-    caseId <- reactive( {
+    caseId <- reactive({
         req(idIn())
         id_2Case(idIn())
     })
