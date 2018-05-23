@@ -34,6 +34,10 @@ fluidPage(
             div(actionButton(inputId = "submit_btn", label = "Begin Annotating"),
                 align = "center")
         ),
-        column(8, caseOutput("main_image"))
+        column(8,
+            shinyjs::hidden(div(id = "image_panel",
+                shinycssloaders::withSpinner(caseOutput("main_image"))
+            ))
+        )
     )
 )

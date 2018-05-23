@@ -35,7 +35,8 @@ fluidPage(
         ),
         column(8,
                shinyjs::hidden(div(id = "main_img_panel", align = "center",
-                                   radiographOutput("main_image", height = "500px")))
+                    shinycssloaders::withSpinner(radiographOutput("main_image", height = "500px")))
+            )
         )
     ),
     hr(),
@@ -48,7 +49,7 @@ fluidPage(
             ),
             column(6,
                 div(id="bboxImageUi", align="center",
-                    imageOutput("bboxImage", width=299, height=299))
+                    shinycssloaders::withSpinner(imageOutput("bboxImage", width=299, height=299)))
             ),
             column(3, tableOutput("cnnPyTbl"))
         ),

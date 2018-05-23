@@ -36,6 +36,7 @@ function(input, output, session) {
             updateSelectInput(session, "user_name", label = character(0))
             updateActionButton(session, "submit_btn", label = "Submit Annotation")
             shinyjs::show("user_impression_panel")
+            shinyjs::show("image_panel")
             log_usr_event(input$user_name, "start_btn", dir = kDIR_LOG)
         },
         priority = -1,
