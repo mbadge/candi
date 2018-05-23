@@ -93,7 +93,7 @@ similarImg <- function(input, output, session,
                        dxs_chr = candi::candiOpt(dxs_chr),
                        img_dir = candi::candiOpt(large_img_dir))
 {
-    ggplot2::theme_set(ggtheme::theme_dark())
+    ggplot2::theme_set(theme_dark())
 
     # ---- Conductors ----
     testImgPcDf <- reactive({
