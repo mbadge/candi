@@ -14,8 +14,36 @@ function(input, output, session) {
     # ---- Conductors ----
     # Manage image progression and reader mode state used for multiple outputs
 
-    # User-specific ordered queue
-    usrQueue <- reactive(candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS))
+    # Queue management
+    usrQueue <- eventReactive(
+        eventExpr = input$submit_btn,
+        label = "User Queue Randomization",
+        valueExpr = {
+            candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS)
+        }
+    )
+
+    # Remaining test image ids
+    remainingQueue <- eventReactive(
+        eventExpr = input$submit_btn,
+        label = "Remaining Queue eventRxtive",
+        valueExpr = {
+            # Scape user input to see what images user has already reviewed
+            usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
+
+            if (is.null(usr_input_df)) {
+              complete_input_ids <- character(0)
+            } else {
+                complete_input_ids <- usr_input_df %>%
+                    filter(is_cad_available == TRUE) %>%
+                    magrittr::use_series("img_id")
+            }
+
+            # Get remaining portion of queue
+            todo_input_ids <- usrQueue()[usrQueue() %ni% complete_input_ids]
+            todo_input_ids
+        }
+    )
 
     # CAD state progression and randomization
     readerMode <- eventReactive(input$submit_btn, {
@@ -33,39 +61,17 @@ function(input, output, session) {
         } else {
             # Infer CAD state from clientData
             is_cad_available <- !session$clientData[["output_cnnPyTbl_hidden"]]
-
-            # save annotated user input
-            submit_data_df <- usrImpressionDf() %>%
-                tibble::add_column(is_cad_available = is_cad_available, .before=1) %>%
-                tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
-                tibble::add_column(user_name = input$user_name, .before=1)
-            save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
-            log_usr_event(input$user_name, "submit btn", dir = kDIR_LOG, img_id = input$imgIdIn)
         }
 
         # Load next interpretation (either new case or add cad)
         if (is_cad_available) {
-            cat("\nnext case")
+            cat("\nnext case\n")
             # Clear entry forms
             updateCheckboxGroupInput(session=session, inputId = NS("user_impression", id="dxChkbxIn"), selected = character(0))
             updateTextAreaInput(session=session, inputId = NS("user_impression", id="noteTxtIn"), value="Clinical Impression")
 
-            # Find next case in queue AFTER saving prior impression
-            usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
-
-            if (is.null(usr_input_df)) {
-                complete_input_ids <- character(0)
-            } else {
-                complete_input_ids <- usr_input_df %>%
-                    filter(is_cad_available == TRUE) %>%
-                    magrittr::use_series("img_id")
-            }
-
-            # Get remaining portion of queue
-            todo_input_ids <- usrQueue()[usrQueue() %ni% complete_input_ids]
-            updateSelectInput(session, "imgIdIn", selected = todo_input_ids[1])
-
             # Randomize reader mode
+            set.seed(as.integer(Sys.time()))  # https://stackoverflow.com/questions/32133816/r-shiny-not-randomizing
             reader_mode <- sample(x = c("concurrent", "second"), size = 1)
             cat(glue::glue("reader_mode: {reader_mode}"))
 
@@ -74,36 +80,55 @@ function(input, output, session) {
             } else {
                 shinyjs::hide("cnnCadUi", anim = TRUE)
             }
-            return(reader_mode)
-
         } else {  # if user did NOT have CAD available, they must have been doing second reader mode unaided
+            reader_mode = "second"
             shinyjs::show("cnnCadUi", anim=TRUE)
-            return("second")
         }
+        reader_mode
     })
+
+
+    # ---- Observers ----
+    observeEvent(
+        eventExpr = input$submit_btn,
+        label = "Save User Data",
+        handlerExpr = {
+            req(input$imgIdIn)
+            is_cad_available <- !session$clientData[["output_cnnPyTbl_hidden"]]  # Infer CAD state from clientData
+
+            submit_data_df <- usrImpressionDf() %>%
+                tibble::add_column(is_cad_available = is_cad_available, .before=1) %>%
+                tibble::add_column(img_id = input$imgIdIn, .before=1) %>%
+                tibble::add_column(user_name = input$user_name, .before=1)
+            save_usr_input(submit_data_df, dir=kDIR_USR_INPT)
+            log_usr_event(input$user_name, "submit btn", dir = kDIR_LOG, img_id = input$imgIdIn)
+
+            cat("data saved")
+        },
+        priority = 10  # Execute before remainingQueue and all others so they act on the next img
+    )
 
 
     # ---- Outputs ----
     # image selection UI
     output$imgIdUi <- renderUI({
-        if (input$submit_btn == 0) return (NULL)  # Handle startup edge case
-        selectInput("imgIdIn", "Image Id:", choices = usrQueue())
+        todo_input_ids <- remainingQueue()
+        cat("\n", todo_input_ids, "\n")
+
+        selectInput("imgIdIn", "Image Id:", choices = todo_input_ids, selected = todo_input_ids[1])
     })
     outputOptions(output, "imgIdUi", suspendWhenHidden=FALSE)
 
-    # Auxillary State Info for user ----
+    # State Info
     # Progress Message
     output$progressText <- renderText({
-        readerMode()
-        usr_input_df <- candi::load_usr_input(input$user_name, kDIR_USR_INPT)
+        n_total <- length(kAVAIL_TEST_IDS)
 
-        if (is.null(usr_input_df)) {
-            return(glue::glue("Completed 0 of {length(kAVAIL_TEST_IDS)} radiographs"))
+        if (is.null(input$imgIdIn)) {
+            return(glue::glue("{n_total} radiographs available"))
         } else {
-            complete_input_ids <- usr_input_df %>%
-                filter(is_cad_available == TRUE) %>%
-                magrittr::use_series("img_id")
-            return(glue::glue("Completed {length(complete_input_ids)} of {length(kAVAIL_TEST_IDS)} radiographs"))
+            n_complete <- n_total - length(remainingQueue())
+            return(glue::glue("Completed {n_complete} of {n_total} radiographs"))
         }
     })
 
