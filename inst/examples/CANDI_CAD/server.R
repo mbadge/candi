@@ -1,18 +1,17 @@
 function(input, output, session) {
-    # Invoke modules -----------------------------------------
-    # Input form
+    # ---- Modules ----
+    # Input
     usrImpressionDf <- callModule(impression, "user_impression")
 
-    # Main image
+    # Output
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
-
-    # CAD similar image search
     callModule(similarImg, "similarImg",
         testImgId = reactive(input$imgIdIn),
         test_imgs_df = test_img_df,
         hist_imgs_df = hist_img_df)
 
-    # Reactive conductors -------------------------------------
+
+    # ---- Conductors ----
     # Manage image progression and reader mode state used for multiple outputs
 
     # User-specific ordered queue
@@ -84,7 +83,7 @@ function(input, output, session) {
     })
 
 
-    # Serve outputs --------------------------------
+    # ---- Outputs ----
     # image selection UI
     output$imgIdUi <- renderUI({
         if (input$submit_btn == 0) return (NULL)  # Handle startup edge case
@@ -115,7 +114,7 @@ function(input, output, session) {
                "concurrent" = "Concurrent Reader Mode: feel free to use the CNN utilities below.")
     })
 
-    # CNN Toolkit ----
+    # CNN Toolkit
     # Test Radiograph with CNN BBox Localization
     output$bboxImage <- renderImage({
         req(input$imgIdIn)
@@ -136,7 +135,7 @@ function(input, output, session) {
     }, hover = TRUE, spacing = "xs")
 
 
-    #Trace -----------------------------------------
+    # ---- Trace ----
     callModule(trace, "trace",
                user_nameIn = reactive(input$user_name),
                usrImpressionDf = reactive(usrImpressionDf()),
