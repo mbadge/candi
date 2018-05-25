@@ -1,15 +1,14 @@
 library("candi")
-
 library("readr")
-
 library("EBImage")
 library("googlesheets")
 
 
 # ui config
-kID_FIELDS <- c("user_name", "img_id") %>% set_names(., .)
+kID_FIELDS <- c("user_name", "img_id") %>% purrr::set_names(., .)
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
-kANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
+kINCLUDE_DEMOGRAPHICS <- FALSE
+kINCLUDE_TECHNICAL <- FALSE
 
 # FLAGS --------------------------------
 kSHEET_NAME <- "OpenI IU CXR Public Annotations"
@@ -20,12 +19,16 @@ gs <- gs_title(kSHEET_NAME)
 gsURL <- "https://docs.google.com/spreadsheets/d/1J3pDL8h2cv-zHEQobkXBOvtbyU8FSAsmOl9JzTnekFA"
 
 
-save_annotation <- function(data, sheet) {
-    stopifnot(sheet %in% c("Classification", "Segmentation", "ClinicalNote"))
-    gs_add_row(gs, sheet, input=data)
+save_annotation <- function(data, ann_type, gS=gs) {
+    stopifnot(ann_type %in% candiOpt(annotation_types))
+    gs_add_row(gs, ws = ann_type, input=data)
 }
 
+load_annotation <- partial(load_gs_annotation, gSpreadSheet = gs)
 
 # load input metadata
-iu_db_lut <- read_csv("www/iu_cxr_db.csv") %>%
-    deframe()   # OpenI image2url named character vector
+data("lut_img_id2original", package = "candi")
+iu_db_lut <- lut_img_id2original %>%
+    with_sep(filter, case == 2) %>%
+    select(img_id, url) %>%
+    tibble::deframe()  # OpenI image2url named character vector
