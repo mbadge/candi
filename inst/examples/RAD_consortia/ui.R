@@ -2,7 +2,7 @@ fluidPage(
     shinyjs::useShinyjs(),
     theme = shinythemes::shinytheme("darkly"),
     div(id="title", align="center",
-        titlePanel("CANDI Consortia Radiograph Annotation Dashboard", windowTitle="CANDI RAD")),
+        titlePanel("Annotate Your Radiographs", windowTitle=WindowTitle())),
 
     sidebarLayout(
     	# User Controls --------------------

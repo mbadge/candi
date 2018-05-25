@@ -42,10 +42,9 @@ function(input, output, session) {
     output$coordinatesTable <- renderTable({bboxCoordinates()})
 
     # Downloads
-    load_gs <- partial(load_gs_annotation, gSpreadSheet = gs)
-    output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_gs)
-    output$downloadSegmentation <- handle_annotation_download(ann_type = "segmentation", f_load = load_gs)
-    output$downloadClinicalNote <- handle_annotation_download(ann_type = "clinical_note", f_load = load_gs)
+    output$downloadClassification <- handle_annotation_download(ann_type = "classification", f_load = load_annotation)
+    output$downloadSegmentation <- handle_annotation_download(ann_type = "segmentation", f_load = load_annotation)
+    output$downloadClinicalNote <- handle_annotation_download(ann_type = "clinical_note", f_load = load_annotation)
 
     output$downloadSampleImages <- downloadHandler(
         filename = "sample_images.tar.gz",
@@ -97,8 +96,11 @@ function(input, output, session) {
 
     # Reactive Observers -------------------------------------------------------
     # I/O buttons
-    observeEvent(input$submit_classification,
-        save_annotation(data=classificationDF(), ann_type="classification")
+    observeEvent(
+        eventExpr = input$submit_classification,
+        handlerExpr = {
+            save_annotation(data=classificationDF(), ann_type="classification")
+        }
     )
 
     save_segmentation <- function(path) {
@@ -107,9 +109,27 @@ function(input, output, session) {
             tibble::add_column(Pathology=path)
         save_annotation(df, "segmentation")
     }
-    observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
-    observeEvent(input$submit_emphysema, save_segmentation("emphysema"))
-    observeEvent(input$submit_effusion, save_segmentation("effusion"))
+    observeEvent(
+        eventExpr = input$submit_cardiomegaly,
+        handlerExpr = {
+            save_segmentation("cardiomegaly")
+            shinyjs::disable(id = "submit_cardiomegaly")
+        }
+    )
+    observeEvent(
+        eventExpr = input$submit_emphysema,
+        handlerExpr = {
+            save_segmentation("emphysema")
+            shinyjs::disable(id = "submit_emphysema")
+        }
+    )
+    observeEvent(
+        eventExpr = input$submit_effusion,
+        handlerExpr = {
+            save_segmentation("effusion")
+            shinyjs::disable(id = "submit_effusion")
+        }
+    )
 
     observeEvent(input$submit_note,
                  save_annotation(clinicalNoteDF(), "clinical_note"))
