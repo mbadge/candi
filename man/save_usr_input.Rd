@@ -4,7 +4,7 @@
 \alias{save_usr_input}
 \title{Save a data frame with user input to csv}
 \usage{
-save_usr_input(x, dir)
+save_usr_input(x, dir, subdir = "")
 }
 \arguments{
 \item{x}{data.frame to save}

@@ -13,8 +13,9 @@
 #' read_csv(save_fp)
 #' save_fp <- save_usr_input(mtcars, candiOpt(app_data_dir)); print(save_fp)  # save to usr_input_dir
 #' read_csv(save_fp); file.remove(save_fp)            # and remove
-save_usr_input <- function(x, dir) {
+save_usr_input <- function(x, dir, subdir="") {
     # Preconditions
+    dir <- file.path(dir, subdir)
     stopifnot(is.data.frame(x), dir.exists(dir))
 
     x$timestamp <- MyUtils::date_time_stamp()

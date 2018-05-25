@@ -68,7 +68,7 @@ function(input, output, session) {
         eventExpr = input$submit_classification,
         label = "Save Classificaiton Annotation",
         handlerExpr = {
-          save_annotation(classificationDF(), "Classification")
+          save_usr_input(classificationDF(), dir = kDIR_USR_INPT, subdir = "Classification")
           log_usr_event(input$user_name, "submit_classification", dir = kDIR_LOG, img_id = input$imgIdIn)
           shinyjs::disable(id = "submit_classification")
           shinyjs::enable(id = "submit_btn")
@@ -109,7 +109,7 @@ function(input, output, session) {
         input$submit_note,
         label = "Save Note",
         handlerExpr = {
-          save_annotation(clinicalNoteDF(), "ClinicalNote")
+          save_usr_input(clinicalNoteDF(), dir = kDIR_USR_INPT, subdir = "ClinicalNote")
           log_usr_event(input$user_name, "submit_note", dir = kDIR_LOG, img_id = input$imgIdIn)
           shinyjs::disable(id = "submit_note")
         }
