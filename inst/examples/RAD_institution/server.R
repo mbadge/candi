@@ -166,9 +166,9 @@ function(input, output, session) {
     output$annFp <- renderPrint(kDIR_USR_INPT %>% cat())
 
     # Downloads
-    output$downloadClassification <- handle_annotation_download("classification")
-    output$downloadSegmentation <- handle_annotation_download("segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
+    output$downloadClassification <- handle_annotation_download("classification", f_load = load_annotation)
+    output$downloadSegmentation <- handle_annotation_download("segmentation", f_load = load_annotation)
+    output$downloadClinicalNote <- handle_annotation_download("clinical_note", f_load = load_annotation)
 
     # Progress Message
     output$progressText <- renderText({

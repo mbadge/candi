@@ -55,7 +55,6 @@ df_filter_trans <- function(df, case) {
 }
 
 
-
 # i/o helper fxns
 #! IMPURE FXNS: use of global variables
 save_segmentation <- function(data, dx) {
@@ -65,18 +64,4 @@ save_segmentation <- function(data, dx) {
     save_usr_input(df, dir = kDIR_USR_INPT, subdir = "segmentation")
 }
 
-
-load_annotation <- function(ann_type) {
-    stopifnot(ann_type %in% kANN_TYPES)
-    fps <- list.files(file.path(kDIR_USR_INPT, ann_type), full.names = TRUE)
-    df <- map_dfr(fps, read.csv, stringsAsFactors=FALSE)
-    df
-}
-
-handle_annotation_download <- function(ann_type) {
-    downloadHandler(
-        filename = function() {glue::glue("{ann_type}_annotations.csv")},
-        content = function(file) {write.csv(load_annotation(ann_type), file, row.names=FALSE)},
-        contentType="text/csv"
-    )
-}
+load_annotation <- partial(load_csv_annotation, dir = kDIR_USR_INPT)
