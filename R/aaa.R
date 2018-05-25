@@ -27,7 +27,7 @@
 
     # FLAGS ----
     # User input types (each will get it's own subfolder with USR_INPT_DIR)
-    ANNOTATION_TYPES <- c("classificaiton", "segmentation", "clinical_note")
+    ANNOTATION_TYPES <- c("classification", "segmentation", "clinical_note")
     DXS_CHR <- c('Cardiomegaly', 'Emphysema', 'PleuralEffusion',
                   'HerniaHiatal', 'Nodule', 'PulmonaryAtelectasis',
                   'Pneumonia', 'PulmonaryEdema', 'Consolidation',

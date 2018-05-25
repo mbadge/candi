@@ -5,7 +5,7 @@ library(magrittr)
 
 # FLAGS ----
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion") %>% set_names(., str_case_title(.))  #candiOpt(dxs_chr)
-kANN_TYPES <- c("Classification", "Segmentation", "ClinicalNote")
+kANN_TYPES <- candiOpt(annotation_types)
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE
 
@@ -62,8 +62,9 @@ save_segmentation <- function(data, dx) {
     stopifnot(dx %in% kDXS_CHR)
     df <- data %>%
         tibble::add_column(Pathology=dx)
-    save_usr_input(df, dir = kDIR_USR_INPT, subdir = "Segmentation")
+    save_usr_input(df, dir = kDIR_USR_INPT, subdir = "segmentation")
 }
+
 
 load_annotation <- function(ann_type) {
     stopifnot(ann_type %in% kANN_TYPES)

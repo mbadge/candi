@@ -7,7 +7,7 @@ function(input, output, session) {
         valueExpr = {
             # Scape user input to see what images user has already reviewed
             complete_input_ids <- candi::load_usr_input(input$user_name,
-                                                        file.path(kDIR_USR_INPT, "Classification")) %>%
+                                                        file.path(kDIR_USR_INPT, "classification")) %>%
                 magrittr::use_series("img_id")
             # Get user-specific ordered queue
             usr_queue <- candi::randomize_user_queue(input$user_name, kAVAIL_TEST_IDS)
@@ -68,7 +68,7 @@ function(input, output, session) {
         eventExpr = input$submit_classification,
         label = "Save Classificaiton Annotation",
         handlerExpr = {
-          save_usr_input(classificationDF(), dir = kDIR_USR_INPT, subdir = "Classification")
+          save_usr_input(classificationDF(), dir = kDIR_USR_INPT, subdir = "classification")
           log_usr_event(input$user_name, "submit_classification", dir = kDIR_LOG, img_id = input$imgIdIn)
           shinyjs::disable(id = "submit_classification")
           shinyjs::enable(id = "submit_btn")
@@ -109,7 +109,7 @@ function(input, output, session) {
         input$submit_note,
         label = "Save Note",
         handlerExpr = {
-          save_usr_input(clinicalNoteDF(), dir = kDIR_USR_INPT, subdir = "ClinicalNote")
+          save_usr_input(clinicalNoteDF(), dir = kDIR_USR_INPT, subdir = "clinical_note")
           log_usr_event(input$user_name, "submit_note", dir = kDIR_LOG, img_id = input$imgIdIn)
           shinyjs::disable(id = "submit_note")
         }
@@ -166,9 +166,9 @@ function(input, output, session) {
     output$annFp <- renderPrint(kDIR_USR_INPT %>% cat())
 
     # Downloads
-    output$downloadClassification <- handle_annotation_download("Classification")
-    output$downloadSegmentation <- handle_annotation_download("Segmentation")
-    output$downloadClinicalNote <- handle_annotation_download("ClinicalNote")
+    output$downloadClassification <- handle_annotation_download("classification")
+    output$downloadSegmentation <- handle_annotation_download("segmentation")
+    output$downloadClinicalNote <- handle_annotation_download("clinical_note")
 
     # Progress Message
     output$progressText <- renderText({
