@@ -5,6 +5,7 @@ function(input, output, session) {
 
     # Output
     callModule(radiograph, "main_image", imgIdIn = reactive(input$imgIdIn))
+    callModule(hpiModule, "hpi_output", idIn = reactive(input$imgIdIn))
     callModule(similarImg, "similarImg",
         testImgId = reactive(input$imgIdIn),
         test_imgs_df = test_img_df,
