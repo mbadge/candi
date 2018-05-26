@@ -4,7 +4,7 @@ Version: 2.0
 Authors@R: person("Marcus", "Badgeley", email = "mabadgeley@gmail.com", role = c("aut", "cre"))
 Description: Computer-Assisted Diagnosis (CAD) has helped radiologists in clinical practice for decades, but deep learning has only been FDA approved to operate independently of clinicians.  To translate deep learning into radiology, the algorithms need more labelled data and we need to understand how the algorithms perform in terms of clinical endpoints.  We developed the Computer-Aided Note and Diagnosis Interface (CANDI) to enable accessible and collaborative radiograph annotation, and rapid but rigorous Computer-Aided Diagnosis clinical evaluation.  CANDI Radiograph Annotation Dashboard (RAD) collects diagnosis, pathology localization, and free text data, which we use to train deep learning models for classification, segmentation, and image captioning, respectively.  CANDI CAD provides these supervised models as well as unsupervised image similarity search to aid in radiograph interpretation. CANDI CAD randomizes display modes and collects usage data to thoroughly characterize how CAD technologies augment radiologists’ decision-making.
 Depends: R (>= 3.4.1), shiny, dplyr, purrr
-Imports: shinythemes, shinyjs, tibble, magrittr, stringr, rebus, glue, shinycssloaders
+Imports: shinythemes, shinyjs, lubridate, tibble, magrittr, stringr, rebus, glue, shinycssloaders
 Suggests: googlesheets
 License: CC BY 4.0
 Encoding: UTF-8

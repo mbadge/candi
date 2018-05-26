@@ -26,7 +26,7 @@ function(input, output, session) {
     # Reactive Conductors -----------------
     ids <- reactive({
         x <- map(kID_FIELDS, function(x) x=input[[x]])
-        x$timestamp <- Sys.time()
+        x$timestamp <- lubridate::now()
         x %<>% as.data.frame() %>% set_names(c("User Name", "Image ID", "Timestamp"))
     })
 

@@ -6,6 +6,8 @@
 #' @param dir chr(1)
 #'
 #' @return called for side effect; but returns target fp for reference
+#'
+#' @importFrom lubridate now
 #' @export
 #'
 #' @examples
@@ -19,7 +21,7 @@ save_usr_input <- function(x, dir, subdir="") {
     stopifnot(is.data.frame(x))
     if (!dir.exists(dir)) stop("Directory ", dir, " doesn't exist")
 
-    x$timestamp <- MyUtils::date_time_stamp()
+    x$timestamp <- now()
     x <- dplyr::select(x, timestamp, dplyr::everything())
 
     fn <- stringr::str_c(digest::digest(x, algo="md5"), ".csv")
@@ -69,6 +71,8 @@ load_usr_input <- function(user, dir) {
 #' @param img_id optional chr(1)
 #'
 #' @return target file path, but called for saving side effect
+#'
+#' @importFrom lubridate now
 #' @export
 #'
 #' @examples
@@ -80,7 +84,7 @@ log_usr_event <- function(usr_chr, event_chr, dir, img_id=NA_character_) {
     if (!dir.exists(dir)) stop("Directory ", dir, " doesn't exist")
 
     df <- data.frame(
-        timestamp = MyUtils::date_time_stamp(),
+        timestamp = now(),
         user_name = usr_chr,
         img_id = img_id,
         event = event_chr

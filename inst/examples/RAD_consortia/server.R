@@ -66,7 +66,7 @@ function(input, output, session) {
     ids <- reactive({
         req(!is_empty(filesInDf()))
         x <- map(kID_FIELDS, function(x) x = input[[x]])
-        x$timestamp <- Sys.time()
+        x$timestamp <- lubridate::now()
         x %<>% as.data.frame %>% purrr::set_names(c("Radiologist Name", "Image ID", "Timestamp"))
         x
     })

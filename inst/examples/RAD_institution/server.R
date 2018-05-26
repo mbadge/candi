@@ -20,7 +20,7 @@ function(input, output, session) {
     ids <- reactive({
         id_fields <- c("user_name", "imgIdIn")
         x <- map(id_fields, function(x) x=input[[x]])
-        x$timestamp <- Sys.time()
+        x$timestamp <- lubridate::now()
         x %<>% as.data.frame() %>% purrr::set_names(c("user_name", "img_id", "timestamp"))
     })
 

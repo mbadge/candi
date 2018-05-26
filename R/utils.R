@@ -68,8 +68,6 @@ Viz.Image <- function(img_arr) {
 
 
 #' @export
-date_time_stamp <- function(){format(Sys.time(), "%Y%m%d_%H%M%S")}
-#' @export
 `%ni%` <- Negate(`%in%`)
 
 # Boolean predicate fxn operators ----
