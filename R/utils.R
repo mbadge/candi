@@ -1,3 +1,31 @@
+#' Convert an object to a string representation with grammer for multiples
+#'
+#' From caret
+#'
+#' @param x object to compress.  if not x_chr, \code{\link[base]{format}} is used to coerce x to a string.
+#' @return chr(1)
+#'
+#' @export
+#'
+#' @examples
+#' stringFunc("foo")
+#' stringFunc(c("foo", "bar"))
+#' lift_vd(stringFunc)("foo", "bar")
+#' stringFunc(letters)
+stringFunc <- function (x)  {
+    if (!is.character(x)) x <- format(x)
+    numElements <- length(x)
+    out <- if (length(x) > 0) {
+        switch(min(numElements, 3), x, paste(x, collapse = " and "), {
+            x <- paste0(x, c(rep(",", numElements - 2), " and", ""))
+            paste(x, collapse = " ")
+        })
+    } else ""
+    out
+}
+
+
+
 #' Convert a matrix with rownames into a column indexed data.frame
 #'
 #' @param mtx matrix with rownames
