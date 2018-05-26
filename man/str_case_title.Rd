@@ -21,3 +21,6 @@ Third, use \code{\link[stringr]{str_to_title}} to glue pieces into title.
 \examples{
 str_case_title(rownames(mtcars))
 }
+\seealso{
+Other str_case: \code{\link{str_case_snake}}
+}

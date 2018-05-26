@@ -158,6 +158,34 @@ str_case_title <- function(x_chr) {
     x_title
 }
 
+
+#' Convert string to snake_case.
+#'
+#' Transform a character vector into a snake case representation.
+#' First, separate camelCase and alphanumeric boundaries into spaces
+#' Second, split pieces by symbols or spaces
+#' Third, convert all alpha to lower with \code{\link[stringr]{str_to_lower}}
+#' Finally, collapse with "_"
+#'
+#' @param x_chr character vector
+#'
+#' @return x_snake character vector with same length as x_chr, but snake format
+#'
+#' @importFrom stringr "str_to_lower"
+#' @importFrom stringr "str_c"
+#' @export
+#'
+#' @family str_case
+str_case_snake <- function(x_chr) {
+    pieces <- split_pieces(x_chr)
+
+    pieces %>%
+        map(stringr::str_to_lower) %>%
+        map_chr(str_c, collapse="_")
+}
+
+
+
 #' @importFrom rebus one_or_more "%R%"
 #' @export
 fp_stem <- function(x_chr) {
