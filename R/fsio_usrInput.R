@@ -16,7 +16,8 @@
 save_usr_input <- function(x, dir, subdir="") {
     # Preconditions
     dir <- file.path(dir, subdir)
-    stopifnot(is.data.frame(x), dir.exists(dir))
+    stopifnot(is.data.frame(x))
+    if (!dir.exists(dir)) stop("Directory ", dir, " doesn't exist")
 
     x$timestamp <- MyUtils::date_time_stamp()
     x <- dplyr::select(x, timestamp, dplyr::everything())
@@ -44,7 +45,7 @@ save_usr_input <- function(x, dir, subdir="") {
 #' }
 load_usr_input <- function(user, dir) {
     # precondition
-    stopifnot(dir.exists(dir))
+    if (!dir.exists(dir)) stop("Directory ", dir, " doesn't exist")
 
     record_fps <- list.files(dir, pattern = "*.csv$", full.names = TRUE)
 
@@ -75,8 +76,8 @@ load_usr_input <- function(user, dir) {
 #' read_csv(save_fp); file.remove(save_fp)            # and remove
 log_usr_event <- function(usr_chr, event_chr, dir, img_id=NA_character_) {
     # Preconditions ----
-    stopifnot(is.character(usr_chr), is.character(event_chr),
-              dir.exists(dir))
+    stopifnot(is.character(usr_chr), is.character(event_chr))
+    if (!dir.exists(dir)) stop("Directory ", dir, " doesn't exist")
 
     df <- data.frame(
         timestamp = MyUtils::date_time_stamp(),
