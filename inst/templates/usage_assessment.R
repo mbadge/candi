@@ -43,7 +43,7 @@ ggplot(log_df, aes(x=delta_t)) + geom_histogram(bins = N_cases / 2) +
     )
 
 
-ggplot(log_df, aes(x = img_id, y=delta_t)) +
+ggplot(log_df, aes(x = fct_reorder(img_id, timestamp), y=delta_t)) +
     geom_point() +
     geom_line(group = 1) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +

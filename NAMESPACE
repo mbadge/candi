@@ -3,6 +3,8 @@
 export("%ni%")
 export(Viz.Image)
 export(WindowTitle)
+export(annotationReportModule)
+export(annotationReportOutput)
 export(candiOpt)
 export(candiOpt_)
 export(case)
