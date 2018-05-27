@@ -39,5 +39,8 @@ fluidPage(
                 shinycssloaders::withSpinner(caseOutput("main_image"))
             ))
         )
-    )
+    ),
+    shiny::tags$br(), hr(), shiny::tags$br(),
+
+    annotationReportOutput("ann_report")
 )

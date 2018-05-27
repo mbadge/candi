@@ -9,6 +9,7 @@ function(input, output, session) {
     callModule(case, "main_image", caseIdIn = reactive(input$imgIdIn))
     callModule(hpiModule, "hpi_output", idIn = reactive(input$imgIdIn))
     callModule(histImpModule, "historical_impression", idIn = reactive(input$imgIdIn))
+    callModule(annotationReportModule, "ann_report", app = "rad_case", userName = reactive(input$user_name))
 
     # ---- Conductors ----
     # Create x_chr of remaining test image ids
