@@ -7,12 +7,21 @@ fluidPage(
     sidebarLayout(
         sidebarPanel(
             textInput("user_name", "User Name:", value = "Marcus"),
-            selectInput("img_id", "Fetch image from OpenI", choices=names(iu_db_lut)),
+            textInput("image_url", "Public Image URL:", value = "http://www.catster.com/wp-content/uploads/2017/12/A-gray-kitten-meowing.jpg"),
+
+            fluidRow(
+                column(width = 8,
+                    selectInput("img_id", "Fetch image from OpenI", choices=names(iu_db_lut))
+                ),
+                column(width = 4,
+                    shiny::tags$br(),
+                    actionButton("openiBtn", "Load OpenI Image")
+                )
+            ),
+
             hr(),
 
             p("Data Locations:"),
-            a(href="https://openi.nlm.nih.gov", p("Image loaded from OpenI"),
-              verbatimTextOutput("radiographURL")),
             a(href=gsURL, p("Annotations stored on Google Drive"),
               verbatimTextOutput("annotationURL")),
             hr(),

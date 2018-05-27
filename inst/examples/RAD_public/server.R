@@ -1,33 +1,9 @@
 function(input, output, session) {
-    # Serve outputs -----------------------
-    output$radiographImage <- renderImage({
-        # Fetch the requested image, save to temp file, push to client, delete temp file
-        img_url <- iu_db_lut[input$img_id]
-        img <- EBImage::readImage(img_url) %>%
-            EBImage::resize(w=299,h=299)
-        temp_fp <- tempfile(fileext = ".jpg")
-        EBImage::writeImage(img, temp_fp)
-
-        list(src = temp_fp, filetype="image/jpeg")
-    }, deleteFile = TRUE)
-
-    # Brush Coordinates
-    output$coordinatesTable <- renderTable({bboxCoordinates()})
-
-    # Downloads
-    output$downloadClassification <- handle_annotation_download("classification", f_load = load_annotation)
-    output$downloadSegmentation <- handle_annotation_download("segmentation", f_load = load_annotation)
-    output$downloadClinicalNote <- handle_annotation_download("clinical_note", f_load = load_annotation)
-
-    # Image/Annotation Sources
-    output$radiographURL <- renderText(iu_db_lut[input$img_id])
-    output$annotationURL <- renderText(gsURL)
-
     # Reactive Conductors -----------------
     ids <- reactive({
         x <- map(kID_FIELDS, function(x) x=input[[x]])
         x$timestamp <- lubridate::now()
-        x %<>% as.data.frame() %>% set_names(c("User Name", "Image ID", "Timestamp"))
+        x %<>% as.data.frame() %>% set_names(c("User Name", "Image URL", "Timestamp"))
     })
 
     bboxCoordinates <- reactive({
@@ -53,9 +29,7 @@ function(input, output, session) {
     })
 
 
-    # Reactive Observers -------------------------------------------------------
-    # I/O buttons./RAD_public/server.R:68:            add_column(Pathology=path)
-
+    # ---- Observers ----
     observeEvent(
         eventExpr = input$submit_classification,
         handlerExpr = {
@@ -63,18 +37,13 @@ function(input, output, session) {
         }
     )
 
-    save_segmentation <- function(path) {
-        stopifnot(path %in% kDXS_CHR)
-        df <- segmentationDF() %>%
-            tibble::add_column(Pathology=path)
-        save_annotation(df, "segmentation")
-    }
     observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
     observeEvent(input$submit_emphysema, save_segmentation("emphysema"))
     observeEvent(input$submit_effusion, save_segmentation("effusion"))
 
     observeEvent(input$submit_note,
                  save_annotation(clinicalNoteDF(), "clinical_note"))
+
 
     # Conditionally hide/disable segmentation submission
     observe(shinyjs::toggle("segmentation", anim=TRUE, condition=!is.null(input$pathologies)))
@@ -85,7 +54,38 @@ function(input, output, session) {
     observe(shinyjs::toggleState("submit_effusion",
                                  condition = nrow(bboxCoordinates()) > 0 && "effusion" %in% input$pathologies))
 
+    observeEvent(
+        eventExpr = input$openiBtn,
+        handlerExpr = {
+            updateTextInput(session, inputId = "image_url", value = iu_db_lut[[input$img_id]])
+        }
+    )
 
+    # ---- Outputs ----
+    output$radiographImage <- renderImage({
+        req(input$image_url)
+        # Fetch the requested image, save to temp file, push to client, delete temp file
+        img <- EBImage::readImage(input$image_url) %>%
+            EBImage::resize(w=299,h=299)
+        temp_fp <- tempfile(fileext = ".jpg")
+        EBImage::writeImage(img, temp_fp)
+
+        list(src = temp_fp, filetype="image/jpeg")
+    }, deleteFile = TRUE)
+
+    # Brush Coordinates
+    output$coordinatesTable <- renderTable({bboxCoordinates()})
+
+    # Downloads
+    output$downloadClassification <- handle_annotation_download("classification", f_load = load_annotation)
+    output$downloadSegmentation <- handle_annotation_download("segmentation", f_load = load_annotation)
+    output$downloadClinicalNote <- handle_annotation_download("clinical_note", f_load = load_annotation)
+
+    # Image/Annotation Sources
+    output$annotationURL <- renderText(gsURL)
+
+
+    # ---- Trace ----
     # Supplementary Info panel for diagnostics
     shinyjs::onclick("toggleAdvanced",
                      shinyjs::toggle("advanced"))
