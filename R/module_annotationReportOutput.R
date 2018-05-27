@@ -38,8 +38,6 @@ annotationReportOutput <- function(id) {
                     shiny::div(align = "center",
                        p(strong("Your Speeds:")),
                        textOutput(ns("speedTxt")),
-                       #tableOutput(ns("logDfTbl")),
-                       #textOutput(ns("subtitleTxt"))
                        plotOutput(ns("speedHist")),
                        plotOutput(ns("speedTimeseries"))
                     )
@@ -61,7 +59,7 @@ annotationReportModule <- function(input, output, session, app, userName) {
         ann_df <- load_usr_input(user = userName(),
                        dir = file.path(candiOpt(app_data_dir), app, "usr_input"))
 
-        if (nrow(ann_df) == 0) {
+        if (is.null(ann_df) || nrow(ann_df) == 0) {
             cat("No records found")
             return(NULL)
         }
@@ -83,6 +81,10 @@ annotationReportModule <- function(input, output, session, app, userName) {
         log_df <- load_usr_input(user = userName(),
                        dir = file.path(candiOpt(app_data_dir), app, "log"))
 
+        if (is.null(log_df) || nrow(log_df) < 2) {
+            cat("No records found")
+            return(NULL)
+        }
         log_df %<>% arrange(timestamp)
         log_df$delta_t <- log_df$timestamp - lag(log_df$timestamp)
         log_df %<>% filter(!is.na(img_id))
@@ -114,11 +116,13 @@ annotationReportModule <- function(input, output, session, app, userName) {
     })
 
     output$speedTxt <- renderText({
+        req(logDf())
         glue::glue_data(.x = ggplot2::mean_se(logDf()$delta_t),
                   "You took an average of {round(y, 1)} seconds to interpret each image (std err {round(ymin, 1)} - {round(ymax, 1)}).")
     })
 
     output$speedHist <- renderPlot({
+        req(logDf())
         p <- ggplot2::ggplot(logDf(), ggplot2::aes(x=delta_t)) +
             ggplot2::geom_histogram(bins = nrow(logDf()) / 2) +
             ggplot2::labs(
@@ -131,6 +135,7 @@ annotationReportModule <- function(input, output, session, app, userName) {
     })
 
     output$speedTimeseries <- renderPlot({
+        req(logDf())
         ggplot2::ggplot(logDf(), ggplot2::aes(x = img_id, y=delta_t)) +
             ggplot2::geom_point() +
             ggplot2::geom_line(group = 1) +
@@ -147,7 +152,3 @@ annotationReportModule <- function(input, output, session, app, userName) {
     shinyjs::onclick("toggleStats",
                      shinyjs::toggle("annStats", anim=TRUE))
 }
-
-
-
-

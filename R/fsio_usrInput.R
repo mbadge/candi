@@ -43,7 +43,7 @@ save_usr_input <- function(x, dir, subdir="") {
 #'
 #' @examples
 #' \dontrun{
-#'   load_usr_input("Marcus", dir = file.path(candiOpt(app_data_dir), "rad_image", "usr_input"))
+#'   load_usr_input("Marcus", dir = file.path(candiOpt(app_data_dir), "rad_case", "log"))
 #' }
 load_usr_input <- function(user, dir) {
     # precondition
@@ -56,8 +56,8 @@ load_usr_input <- function(user, dir) {
         return(NULL)
     }
 
-    all_records <- purrr::map_dfr(record_fps,
-            ~suppressMessages(readr::read_csv(.x)))
+    record_lst <- purrr::map(record_fps, ~suppressMessages(readr::read_csv(.x, )))
+    all_records <- lift_dl(rbind)(record_lst)
     all_records[all_records$user_name == user, ]
 }
 

@@ -19,6 +19,6 @@ By default, data is loaded form a directory indicated by a
 }
 \examples{
 \dontrun{
-  load_usr_input("Marcus", dir = file.path(candiOpt(app_data_dir), "rad_image", "usr_input"))
+  load_usr_input("Marcus", dir = file.path(candiOpt(app_data_dir), "rad_case", "log"))
 }
 }
