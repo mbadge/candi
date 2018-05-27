@@ -56,5 +56,5 @@ cases %<>% filter(case %in% kAVAIL_TEST_IDS)  # Filter cases to only test cases
 df_filter_trans <- function(df, case) {
     df[df$case == case, ] %>%
         dplyr::select(-case) %>%
-        AnalysisToolkit::t2idf()
+        t2idf()
 }

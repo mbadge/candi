@@ -1,4 +1,0 @@
-s/library(candi)/suppressPackageStartupMessages(library(candi))/p
-^ Suppress package startup warnings that are printed to console
-diff_gitlab.sh RAD_{case,multimodal}/ui.R
-Pretty Print a diff code block of case vs multimodal apps ui.R scripts

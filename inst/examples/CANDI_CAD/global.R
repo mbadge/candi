@@ -70,5 +70,5 @@ kAVAIL_TEST_IDS <- test_imgs  # CAD operates by Image
 df_filter_trans <- function(df, img_id) {
     df[df$img_id == img_id, ] %>%
         dplyr::select(-img_id) %>%
-        AnalysisToolkit::t2idf()
+        t2idf()
 }
