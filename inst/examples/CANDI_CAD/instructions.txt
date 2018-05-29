@@ -1,0 +1,28 @@
+Motivation:
+This CANDI application tests how Computer-Aided Diagnosis (CAD) utilities affect a human's interpretations.
+
+Background:
+We'll compare 2 modes of CAD delivery: concurrent and second-reader.
+- In concurrent mode, the user receives algorithm support during the entire case interpretation.
+- In second reader mode algorithm support is only provided after the user formulates an initial unaided impression.
+
+General Instructions:
+To begin, enter your user name and click "Begin Trial"
+  if you're disconnected or need a break, you can exit and resume later by returning to this page and entering your name exactly the same way (case-sensitive)
+
+A test image will be displayed along with the patient's history of present illness
+  additional CAD utilities will sometimes be provided. A banner at the top of the page declares whether CAD is provided in concurrent or second-reader mode.
+
+Select any pathology you believe is evident in the image, write a note, and click "Submit Impression"
+  if you were in concurrent reader mode, CANDI will load the subsequent test radiograph
+  if you were in second-reader mode, you'll now be provided CAD utiltiies and you can modify and resubmit your answers
+
+
+CNN Utilities:  Convolutional Neural Networks were applied in 3 ways to provide these 3 CAD utilities
+1) Classification: the network was trained to predict disease in the whole image and output a probability for each disease
+2) Segmentation: the network assesses different image regions and proposes possible locations of pathology, along with the confidence score.
+3) Image Embedding for Similarity Search
+The test image and historical images are quantified using a CNN, and then the distribution of images is displayed with
+principal components.  The current test image is denoted by a blue circle, and all historical images are denoted by black
+circles.  Use the dropbox items to change the PC axis or color by covariates to help search for historical images.  Hover over any black
+circle with the mouse to retrieve display the corresponding radiograph and its associated radiologist note and curators interpretation of findings.

@@ -1,0 +1,21 @@
+Motivation:
+This CANDI application obtains 3 different types of annotations to characterize a radiograph
+
+Background:
+Original images from openI are housed on an AWS server running CANDI that hosts this domain.  see https://openi.nlm.nih.gov/gridquery.php?q=&it=xg&coll=cxr
+
+General Instructions:
+To begin, enter your user name and click "Begin Annotating"
+  if you're disconnected or need a break, you can exit and resume later by returning to this page and entering your name exactly the same way (case-sensitive)
+
+Select any diagnosis that is evident in the radiograph.  You cannot proceed to the next radiograph until at least entering this data.
+If you indicate the presence of any diagnoses, additional submission buttons will appear to localize the disease.  Click and drag on the radiograph to indicate the pathology and submit.
+You can submit multiple boxes for a single illness if indicated.
+Optionally enter a textual description of the radiograph.
+
+Click "Next Image" to proceed to the next case.
+
+
+Supplementary Instructions:
+to download all annotations, use the correspondign "Download" links which will aggregate all records and initiate a browser download of a CSV file.
+

@@ -1,0 +1,20 @@
+Motivation:
+This CANDI application is used to generate ground truth labels to score a classification algorithm
+
+Background:
+These images were obtained from the openI chest x-ray database at https://openi.nlm.nih.gov/gridquery.php?q=&it=xg&coll=cxr
+Images are supplied with their associated original clinical radiology note and curator's structured interpretations of the note
+
+General Instructions:
+To begin, enter your user name and click "Begin Trial"
+  if you're disconnected or need a break, you can exit and resume later by returning to this page and entering your name exactly the same way (case-sensitive)
+
+A test case will be displayed along with the patient's history of present illness, original radiology note and dataset curators' abstractions of the note.
+Use the arrows above the test radiograph to scroll through all the images acquired for this case
+
+Using all available information, please indicate all diagnoses that are evident from the radiographs and supporting data
+
+Supplemenatary Instructions:
+If you'd like to review statistics on your annotated image set, click the "Show/hide annotation stats" text at the bottom of the page.
+This provides information on the disease prevalence in case you're trying to annotate a target number of pathology cases, and the time it has taken per case so you can estimate and plan further data generation.
+
