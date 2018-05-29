@@ -1,4 +1,6 @@
-library("candi")
+suppressPackageStartupMessages(library("candi"))
+# vim cmd to silence a library call
+# IsuppressPackageStartupMessages(^[A)^[
 library("dplyr")
 library("tibble")
 library("magrittr")

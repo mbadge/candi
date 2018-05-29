@@ -3,7 +3,7 @@ function(input, output, session) {
     ids <- reactive({
         x <- map(kID_FIELDS, function(x) x=input[[x]])
         x$timestamp <- lubridate::now()
-        x %<>% as.data.frame() %>% set_names(c("User Name", "Image URL", "Timestamp"))
+        x %<>% as.data.frame()
     })
 
     bboxCoordinates <- reactive({
@@ -37,9 +37,9 @@ function(input, output, session) {
         }
     )
 
-    observeEvent(input$submit_cardiomegaly, save_segmentation("cardiomegaly"))
-    observeEvent(input$submit_emphysema, save_segmentation("emphysema"))
-    observeEvent(input$submit_effusion, save_segmentation("effusion"))
+    observeEvent(input$submit_cardiomegaly, save_segmentation(segmentationDF(), "cardiomegaly"))
+    observeEvent(input$submit_emphysema, save_segmentation(segmentationDF(), "emphysema"))
+    observeEvent(input$submit_effusion, save_segmentation(segmentationDF(), "effusion"))
 
     observeEvent(input$submit_note,
                  save_annotation(clinicalNoteDF(), "clinical_note"))

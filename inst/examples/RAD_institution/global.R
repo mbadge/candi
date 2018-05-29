@@ -4,7 +4,7 @@ library(magrittr)
 
 
 # FLAGS ----
-kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion") %>% set_names(., str_case_title(.))  #candiOpt(dxs_chr)
+kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion") %>% purrr::set_names(., str_case_title(.))  #candiOpt(dxs_chr)
 kANN_TYPES <- candiOpt(annotation_types)
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE

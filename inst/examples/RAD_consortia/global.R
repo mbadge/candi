@@ -1,10 +1,10 @@
-library("candi")
+suppressPackageStartupMessages(library("candi"))
 library("googlesheets")
 library("magrittr")
 
 # FLAGS ----
 # ui config
-kID_FIELDS <- c("user_name", "img_id") %>% purrr::set_names()
+kID_FIELDS <- c("user_name", "img_id") %>% purrr::set_names(., str_case_title(.))
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE

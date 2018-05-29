@@ -1,11 +1,11 @@
-library("candi")
+suppressPackageStartupMessages(library("candi"))
 library("readr")
 library("EBImage")
 library("googlesheets")
-
+library(magrittr)
 
 # ui config
-kID_FIELDS <- c("user_name", "image_url") %>% purrr::set_names(., .)
+kID_FIELDS <- c("user_name", "image_url")
 kDXS_CHR <- c("cardiomegaly", "emphysema", "effusion")
 kINCLUDE_DEMOGRAPHICS <- FALSE
 kINCLUDE_TECHNICAL <- FALSE
@@ -36,9 +36,9 @@ iu_db_lut <- lut_img_id2original %>%
 
 
 
-save_segmentation <- function(path) {
+save_segmentation <- function(x, path) {
     stopifnot(path %in% kDXS_CHR)
-    df <- segmentationDF() %>%
+    df <- x %>%
         tibble::add_column(Pathology=path)
     save_annotation(df, "segmentation")
 }
