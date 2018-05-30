@@ -16,6 +16,9 @@ kINCLUDE_TECHNICAL <- FALSE
 data(test_imgs, package = "candi")
 data(cases, package = "candi")
 
+help_fp <- system.file('examples', 'RAD_case', 'instructions.txt', package="candi", mustWork = TRUE)
+kHELP_TXT <- readLines(help_fp)
+
 
 kDIR_LARGE_IMGS <- candiOpt(large_img_dir)
 

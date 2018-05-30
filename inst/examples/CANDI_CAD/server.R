@@ -54,6 +54,7 @@ function(input, output, session) {
             # Initially show nothing but name and begin button, then reveal impression and submit
             updateActionButton(session, "submit_btn", label = "Submit Impression")
             shinyjs::disable("user_name")
+            shinyjs::hide("init_help_panel")
             shinyjs::show("main_img_panel")
             shinyjs::show("user_impression_panel")
             log_usr_event(input$user_name, "start btn", dir = kDIR_LOG)
@@ -159,6 +160,9 @@ function(input, output, session) {
             set_colnames(c("diagnosis", "probability")) %>%
             arrange(desc(probability))
     }, hover = TRUE, spacing = "xs")
+
+    # Initial Usage Help/Instructions
+    output$helpPrint <- renderPrint({cat(kHELP_TXT, sep="\n")})
 
 
     # ---- Trace ----

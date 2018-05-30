@@ -40,6 +40,10 @@ data("radiographs", package="candi")
 data("cases", package="candi")
 data("test_imgs", package = "candi")
 
+help_fp <- system.file('examples', 'CANDI_CAD', 'instructions.txt', package="candi", mustWork = TRUE)
+kHELP_TXT <- readLines(help_fp)
+
+
 # Non-reactive data crafting
 test_img_df <- candi::radiographs %>%
     filter(img_id %in% candi::test_imgs) %>%

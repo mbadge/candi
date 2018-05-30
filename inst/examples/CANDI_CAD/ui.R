@@ -4,6 +4,7 @@ fluidPage(
     div(id="title", align="center",
         titlePanel("CAD Evaluation Trial", windowTitle=WindowTitle())),
 
+
     # Id row: user name In / progress Out / test img/case In
     fluidRow(
         column(4, div(textInput("user_name", "User Name:", value = "Marcus"), align = "center")),
@@ -36,10 +37,14 @@ fluidPage(
         column(8,
                shinyjs::hidden(div(id = "main_img_panel", align = "center",
                     shinycssloaders::withSpinner(radiographOutput("main_image", height = "500px")))
-            )
+               )
         )
+    ), hr(),
+
+    # Initial Usage Instructions
+    div(id = "init_help_panel", algin = "center",
+        verbatimTextOutput("helpPrint")
     ),
-    hr(),
 
     # CNN toolkit
     shinyjs::hidden(div(id = "cnnCadUi",

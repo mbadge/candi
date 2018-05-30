@@ -40,7 +40,13 @@ fluidPage(
             ))
         )
     ),
-    shiny::tags$br(), hr(), shiny::tags$br(),
+    shiny::tags$br(), hr(),
+
+    # Initial Usage Instructions
+    div(id = "init_help_panel", align = "center",
+        verbatimTextOutput("helpPrint")
+    ),
+    shiny::tags$br(),
 
     annotationReportOutput("ann_report")
 )

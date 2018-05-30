@@ -79,7 +79,13 @@ fluidPage(
                    downloadButton("downloadClinicalNote", label="Clinical Impression Notes")
                )
         )
+    ), hr(),
+
+    # Initial Usage Instructions
+    div(id = "init_help_panel", algin = "center",
+        verbatimTextOutput("helpPrint")
     ),
+
 
 
     # Trace ----------------------------

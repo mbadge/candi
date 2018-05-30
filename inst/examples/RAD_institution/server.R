@@ -55,7 +55,7 @@ function(input, output, session) {
             shinyjs::disable("user_name")
             updateSelectInput(session, "user_name", label = character(0))
             updateActionButton(session, "submit_btn", label = "Next Image")
-
+            shinyjs::hide("init_help_panel")
             shinyjs::show("user_impression_panel")
             shinyjs::show("image_panel")
             log_usr_event(input$user_name, "start_btn", dir = kDIR_LOG)
@@ -181,6 +181,9 @@ function(input, output, session) {
             return(glue::glue("Completed {n_complete} of {n_total} radiographs"))
         }
     })
+
+    # Initial Usage Help/Instructions
+    output$helpPrint <- renderPrint({cat(kHELP_TXT, sep="\n")})
 
 
     # ---- Trace ----
