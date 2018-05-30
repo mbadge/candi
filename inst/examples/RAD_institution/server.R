@@ -184,23 +184,4 @@ function(input, output, session) {
 
     # Initial Usage Help/Instructions
     output$helpPrint <- renderPrint({cat(kHELP_TXT, sep="\n")})
-
-
-    # ---- Trace ----
-    # Supplementary Info panel for diagnostics
-    shinyjs::onclick("toggleAdvanced",
-                     shinyjs::toggle("advanced", anim=TRUE))
-
-    # Reactive Inputs
-    output$imgIdInPrint <- renderPrint(input$imgIdIn %>% str())
-    output$userNamePrint <- renderPrint(input$user_name %>% str())
-    output$pathologiesPrint <- renderPrint(input$pathologies %>% str())
-    output$notePrint <- renderPrint(input$note %>% str())
-
-    # Reactive Conductors
-    output$idsPrint <- renderPrint(ids() %>% str())
-    output$bboxCoordinatesPrint <- renderPrint(bboxCoordinates() %>% str())
-    output$classificationDFPrint <- renderPrint(classificationDF() %>% str())
-    output$segmentationDFPrint <- renderPrint(segmentationDF() %>% str())
-    output$clinicalNoteDFPrint <- renderPrint(clinicalNoteDF() %>% str())
 }

@@ -59,8 +59,5 @@ fluidPage(
             column(3, tableOutput("cnnPyTbl"))
         ),
         similarImgUi("similarImg")
-    )),
-
-    hr(),
-    traceOutput("trace")
+    ))
 )

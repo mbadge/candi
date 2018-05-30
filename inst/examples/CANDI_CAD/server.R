@@ -153,27 +153,14 @@ function(input, output, session) {
     output$cnnPyTbl <- renderTable({
         req(input$imgIdIn)
         pY_df <- test_img_df %>%
-            select(img_id, starts_with("pY"))
+            dplyr::select(img_id, dplyr::starts_with("pY"))
         names(pY_df) <- str_replace(names(pY_df), "^pY_", "")
         pY_df %>%
             df_filter_trans(img_id = input$imgIdIn) %>%
             set_colnames(c("diagnosis", "probability")) %>%
-            arrange(desc(probability))
+            dplyr::arrange(dplyr::desc(probability))
     }, hover = TRUE, spacing = "xs")
 
     # Initial Usage Help/Instructions
     output$helpPrint <- renderPrint({cat(kHELP_TXT, sep="\n")})
-
-
-    # ---- Trace ----
-    callModule(trace, "trace",
-               user_nameIn = reactive(input$user_name),
-               usrImpressionDf = reactive(usrImpressionDf()),
-               usageLst = reactive({
-                   cdata <- session$clientData
-                   cnames <- names(cdata)
-                   cvals <- lapply(cnames, function(name) {cdata[[name]]})
-                   cvals %>% purrr::set_names(cnames)
-               })
-    )
 }
