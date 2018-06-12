@@ -3,4 +3,4 @@ output: html_document
 ---
 
 # Source
-[Bitbucket Source Link](https://bitbucket.org/MarcusBadgeley/candi)
+[Github Source Link](https://bitbucket.org/mbadge/candi)
