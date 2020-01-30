@@ -14,8 +14,6 @@ Further background and running demonstration applications can be found at the co
    * run `inst/module_demos/*.R` to launch a shiny app with one module
 * **Applications**
   * in `inst/examples` there are example applications
-    * [candi.nextgenhealthcare.org](https://candi.nextgenhealthcare.org/) is running these example applications
-
 
 # Design
 ## Use Cases / System Context
