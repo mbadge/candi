@@ -1,9 +1,6 @@
 # Description
 This repository contains packaged utilities and demonstration applications to collect user impressions on radiographic images and supporting data.
 
-Further background and running demonstration applications can be found at the companion website: [candi.nextgenhealthcare.org](https://candi.nextgenhealthcare.org/)
-
-
 # Guide
 ## Installation and Configuration Tutorial
 [![Installation and Configuration Tutorial](https://i.ytimg.com/vi/8zhaj6PgGNw/3.jpg)](https://www.youtube.com/watch?v=8zhaj6PgGNw "Installation and Configuration Tutorial")
